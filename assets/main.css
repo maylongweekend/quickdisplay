@@ -188,6 +188,10 @@
 }
 /* END DRAGGABLE */
 
+#default-font-selector {
+  display: none;
+}
+
 /* BEGIN CONTEXT MENUS */
 .context {
   display: none;
