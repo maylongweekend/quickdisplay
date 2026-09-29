@@ -19,15 +19,20 @@ QD is written in Javascript (jquery) and HTML.  It is simple, open-source, and d
 3. Press F11 on your keyboard to go into full screen mode.
 4. Right click anywhere on the smartboard to get going!
 
-![The right-click menu](readme_img/sbd_rclick.jpg)
+![The right-click menu](readme_img/qd_rclick.jpg)
 
 
 ## Adding objects
-In the right-click menu, choose `Add object` to open the file picker.  Here you can add several different types of files.  Multiple file picking (by holding the shift/ctrl keys) is supported.
+In the right-click menu, choose `Load object` to open the file picker.  Here you can add several different types of files.  Multiple file picking (by holding the shift/ctrl keys) is supported.
 - Images and videos - most popular formats including animated and transparent types are supported.
 - Text documents (.TXT) - text files are loaded as "notes" with a handwritten visual style.
 - HTML files (.HTML) - these are loaded directly into the page.  With these you can build custom elements.  See the included Google Classroom and Slides buttons in the resources folder for examples.
 - Scripts (.JS) - scripts allow you to modify the way the software behaves in a deep way.  Scripts can include custom elements, interactive tools, special effects, and more.
+
+You can also quickly add sticky notes, emojis, and large text through the right click menu.  These objects have the same right click options as others and behave the same.
+
+> [!NOTE]
+> `Title text` option is not fully implemented - use `Load object` and choose `fancy text.js`.
 
 Once an object is added, it usually appears as a draggable item that can be placed around the app as you like.  See below for more info on the ways you can interact with objects and scripts added to the page.
 
@@ -45,7 +50,7 @@ In the right-click menu, choose `Change background` to open the file picker.  He
 
 
 ## Interacting with objects
-![Object menu](readme_img/sbd_obj.jpg)
+![Object menu](readme_img/qd_obj.jpg)
 
 ### Layering
 Objects can stack in front of or behind each other.  Right-click on an object and use the `Bring forward` and `Move backward` buttons to adjust the order of objects in the stack.
@@ -77,6 +82,9 @@ Many objects will have additional features and right-click options.
 ## Page controls
 
 QD supports arranging objects into basic pages.  Right-click anywhere on the background and choose `Toggle page controls` to show the page control buttons.  Switching pages will slide all objects according to their placement in the page order.  The background of QD will remain unchanged.
+
+> [!NOTE]
+> "Pages" work in QD by sliding all objects left or right by the width of your window.  You may experience bugs if you change resolutions.
 
 > [!NOTE]
 > Revealing hidden objects will only apply to objects on the current page.  Hidden objects on pages that are not visible will be unaffected.
