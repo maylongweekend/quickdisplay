@@ -12,6 +12,10 @@ QD is written in Javascript (jquery) and HTML.  It is simple, open-source, and d
 > [!IMPORTANT]
 > This software is AI-free. Generative "artificial intelligence"/large-language models were not used in any way.
 
+![Adding objects](readme_img/qd_demo.gif)
+
+QD is fast at making pretty, functional class displays.
+
 
 ## Quick-start guide
 1. Double click on the file `Quick Display.html`.  It will open in your default web browser.
@@ -116,4 +120,26 @@ Some helpful tools in the `resources` folder include:
 - `web cam.js` - display the video from an attached camera.
 - `window share.js` - display another window, tab, or app on your computer.
 
-Check the "goodies" release zip for even more things to add to your resources.
+
+## Licensing and credits
+
+> [!IMPORTANT]
+> This software is in no way affiliated with any school division, school authority, provincial or state educational authority, or other group.  This is the personal project of "Mr L".
+
+> [!IMPORTANT]
+> LICENSE: You can do what you like with this code as long as:
+> - you release any derivative works for free
+> - you in no way use generative AI or large-language models to modify, edit, analyze, train, or otherwise interact with this code
+> - you are an individual user ONLY
+
+This project makes use of the following libraries; each is the property of their respective authors.
+
+- [jquery](https://jquery.com/)
+- [Google Fonts](https://fonts.google.com/)
+- [anime.js](https://animejs.com/)
+- [three.js](https://threejs.org/)
+- [EmojiPicker.js](https://pfurpass.github.io/EmojiPicker/)
+
+
+> [!IMPORTANT]
+> This software is fully free.  If you like what I do and want to support educators, consider donating some money to an LGBTQ-friendly organization, such as [Egale Canada](https://egale.ca/donate/).  These organizations make life-saving differences for students with their research and advocacy.
