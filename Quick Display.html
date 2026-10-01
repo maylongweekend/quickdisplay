@@ -52,10 +52,11 @@
             - build and save HTML objects like hover reveal cards, etc
         - bugs:
             - shadow on analog clock
+            - shadows on scaled emojis
+            - elements with background shadows extend too wide? - firefox only, not on text
             - dragging scaled elements is weird
             - canvas wallpapers don't switch nicely to each other
             - multiple fancy texts with rainbow don't work
-            - gradient video doesn't loop!
             - changing resolutions after adding things can be buggy
 
         */
@@ -555,7 +556,7 @@
 
     //reset the transition for setting left
     function resetTransition() {
-        $(".object-div").css('transition', ' left 0s');
+        $(".object-div").css('transition', 'left 0s');
     }
 
     //watches page button clicks
@@ -601,7 +602,7 @@
 
     //attach the background context menu to canvas
     let canvas = document.getElementById("back-canvas");
-    AddContextMenu(canvas,$("#background-context"));
+    AddContextMenu(canvas, $("#background-context"));
     
     //if the document is clicked somewhere, close all context menus
     $(document).bind("mousedown", function(e) {
