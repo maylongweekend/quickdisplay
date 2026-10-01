@@ -1,20 +1,21 @@
 # Quick Display - for interactive whiteboards
 ![Animated gif demonstrating potential layouts](readme_img/sbd_ani.gif)
 
-
 A simple display webapp intended for SMART boards and educational interactive whiteboards - created by Mr L
 
+
 ## About
-Quick Display ("QD") is a simple solution for teachers wanting to display notes, gifs, to-do lists, and more on a smartboard, without ugly user interfaces (Windows, SMART Notebook, etc) getting in the way.  QD runs in your favorite browser and is designed to load outside resources as movable "objects" that can be interacted with, on top of a video or image canvas.  QD is infinitely expandable -- with just a little coding knowledge you can create any manner of resources, effects, interactives, etc.
 
-QD is written in Javascript (jquery) and HTML.  It is simple, open-source, and designed to not make your school's IT department mad.
-
-> [!IMPORTANT]
-> This software is AI-free. Generative "artificial intelligence"/large-language models were not used in any way.
+**Quick Display is fast at making pretty and functional classroom displays.**
 
 ![Adding objects](readme_img/qd_demo.gif)
 
-QD is fast at making pretty, functional class displays.
+Quick Display is a simple solution for teachers wanting to display notes, gifs, clocks, to-do lists, and more on a smartboard, without ugly user interfaces or visual clutter getting in the way.  QD runs in your favorite browser and lets you intuitively place and resize elements on a beautiful video or wallpaper background.
+
+QD is written in Javascript and HTML.  It is open-source and shouldn't bother your school's IT person.
+
+> [!IMPORTANT]
+> This software is AI-free. Generative "artificial intelligence"/large-language models were not used in any way.
 
 
 ## Quick-start guide
@@ -101,7 +102,7 @@ QD has a simple grid to divide the screen into thirds and sixths, for easier pla
 
 ## Blur effects
 
-Many translucent objects in QD will have a visual blur applied behind them.  For slower computers, this effect can be disabled with the `Toggle blur effects` option.
+Many translucent objects in QD can have a visual blur applied behind them.  Because computers at my school are ancient, this effect is disabled by default.  For faster computers, this effect can be enabled with the `Toggle blur effects` option.
 
 
 ## Included resources
@@ -124,13 +125,12 @@ Some helpful tools in the `resources` folder include:
 ## Licensing and credits
 
 > [!IMPORTANT]
-> This software is in no way affiliated with any school division, school authority, provincial or state educational authority, or other group.  This is the personal project of "Mr L".
+> This software is in no way affiliated with any school division, school authority, provincial or state educational authority, or any other group.  This is the personal project of "Mr L".
 
-> [!IMPORTANT]
-> LICENSE: You can do what you like with this code as long as:
-> - you release any derivative works for free
-> - you in no way use generative AI or large-language models to modify, edit, analyze, train, or otherwise interact with this code
-> - you are an individual user ONLY
+LICENSE: You can do what you like with this code as long as:
+- you release any derivative works for free
+- you in no way use generative AI or large-language models to modify, edit, analyze, train, or otherwise interact with this code
+- you are an individual user ONLY
 
 This project makes use of the following libraries; each is the property of their respective authors.
 
@@ -142,4 +142,4 @@ This project makes use of the following libraries; each is the property of their
 
 
 > [!IMPORTANT]
-> This software is fully free.  If you like what I do and want to support educators, consider donating some money to an LGBTQ-friendly organization, such as [Egale Canada](https://egale.ca/donate/).  These organizations make life-saving differences for students with their research and advocacy.
+> This software is fully free.  If you like what I do and want to support educators and students, consider donating some money to an LGBTQ-friendly organization, such as [Egale Canada](https://egale.ca/donate/).  These organizations make life-saving differences for students with their research and advocacy.
