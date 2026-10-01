@@ -8,9 +8,9 @@ A simple display webapp intended for SMART boards and educational interactive wh
 
 **Quick Display is fast at making pretty and functional classroom displays.**
 
-![Adding objects](readme_img/qd_demo.gif)
-
 Quick Display is a simple solution for teachers wanting to display notes, gifs, clocks, to-do lists, and more on a smartboard, without ugly user interfaces or visual clutter getting in the way.  QD runs in your favorite browser and lets you intuitively place and resize elements on a beautiful video or wallpaper background.
+
+![Adding objects](readme_img/qd_demo.gif)
 
 QD is written in Javascript and HTML.  It is open-source and shouldn't bother your school's IT person.
 
