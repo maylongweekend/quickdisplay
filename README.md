@@ -141,5 +141,5 @@ This project makes use of the following libraries; each is the property of their
 - [EmojiPicker.js](https://pfurpass.github.io/EmojiPicker/)
 
 
-> [!IMPORTANT]
+> [!NOTE]
 > This software is fully free.  If you like what I do and want to support educators and students, consider donating some money to an LGBTQ-friendly organization, such as [Egale Canada](https://egale.ca/donate/).  These organizations make life-saving differences for students with their research and advocacy.
