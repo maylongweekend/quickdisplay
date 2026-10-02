@@ -100,7 +100,7 @@
 
 
 
-    
+
 
 
 
@@ -224,6 +224,39 @@
         y: "0px"
     }
 
+    //detects ctrl+v paste events
+    window.addEventListener("paste", (event) => {PasteData(event);});
+
+    //pastes image or text data into an appropriate object
+    //adapted from https://stackoverflow.com/a/15369753 by robintibor
+    //improve using:
+    //https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/read
+    function PasteData(event) {
+        let items = ( event.clipboardData  || event.originalEvent.clipboardData ).items;
+        let blob = null;
+        let newDiv;
+        let newMenu;
+        for ( let i = 0; i < items.length; i++) {
+            if ( items[i].type.indexOf("image") === 0 ) {
+                blob = items[i].getAsFile();
+            } else if ( items[i].type.indexOf("text/plain") === 0 ) {
+                items[i].getAsString((s) => {
+                    //TODO here drop the string into a text
+                });
+            }
+        }
+        if ( blob !== null ) {//detected an image
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                //TODO mouse position place
+                newDiv = CreateNewObj();
+                newMenu = CreateDefaultContextMenu(newDiv);
+                CreateNewImg(event.target.result, newDiv, newMenu);
+            };
+            reader.readAsDataURL(blob);
+        }
+    }
+
     //loads a new background video
     function SetBackground(src,bVid) {
         let video = document.getElementById('backgroundvid');
@@ -253,7 +286,7 @@
     }    
 
     //creates an image inside the specified div
-    function CreateNewImg(src,div,menu) {
+    function CreateNewImg(src, div, menu) {
         let img = document.createElement("img");
         img.src = src;
         img.style.objectFit = "cover";
