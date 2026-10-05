@@ -218,14 +218,81 @@
 
 
 
+
+
+
+
+
+    /*
+        ------------------------------------
+            VARIABLES AND CONSTANTS
+        ------------------------------------
+    */
+
     //mouse right click saved location
     const rcloc = {
         x: "0px",
         y: "0px"
     }
 
+    //current mouse location at all times
+    const mloc = {
+        x: "0px",
+        y: "0px"
+    }
+
+    let canvas = document.getElementById("back-canvas");
+    let myPicker = new EmojiPicker({ container: '#emoj-menu' });
+    let pager = document.getElementById('page-buttons');
+
+
+
+    /*
+        ------------------------------------
+            EVENT LISTENERS
+        ------------------------------------
+    */
+
+    //detects mouse movements
+    $("body").mousemove(function(e) {
+        mloc.x = e.pageX;
+        mloc.y = e.pageY;
+    });
+
     //detects ctrl+v paste events
     window.addEventListener("paste", (event) => {PasteData(event);});
+
+    //handles emoji selector clicks
+    myPicker.on('emojiClick', (emoji) => {
+        let newEm = CreateNewObj();
+        newEm.classList.add('emoji-div');
+        let newEmMen = CreateDefaultContextMenu(newEm);
+        let newEmH = document.createElement("h");
+        newEmH.textContent = emoji.char;
+        newEm.appendChild(newEmH);
+    });
+
+    //if the document is clicked somewhere, close all context menus
+    $(document).bind("mousedown", function(e) {
+        //if the clicked element is not the menu
+        if (!$(e.target).parents(".context").length > 0) {
+            // Hide it
+            $(".context").hide(100);
+        }
+    });
+
+    //page button actions
+    document.getElementById('pbPrev').addEventListener("click",watchButPrev);
+    document.getElementById('pbNext').addEventListener("click",watchButNext);
+
+
+
+
+
+
+
+
+
 
     //pastes image or text data into an appropriate object
     //adapted from https://stackoverflow.com/a/15369753 by robintibor
@@ -248,7 +315,8 @@
         if ( blob !== null ) {//detected an image
             var reader = new FileReader();
             reader.onload = function(event) {
-                //TODO mouse position place
+                rcloc.x = mloc.x;
+                rcloc.y = mloc.y;
                 newDiv = CreateNewObj();
                 newMenu = CreateDefaultContextMenu(newDiv);
                 CreateNewImg(event.target.result, newDiv, newMenu);
@@ -601,18 +669,6 @@
         console.log("**QUICK DISPLAY**:    " + s);
     }
 
-
-    //handles emoji selector clicks
-    let myPicker = new EmojiPicker({ container: '#emoj-menu' })
-    myPicker.on('emojiClick', (emoji) => {
-        let newEm = CreateNewObj();
-        newEm.classList.add('emoji-div');
-        let newEmMen = CreateDefaultContextMenu(newEm);
-        let newEmH = document.createElement("h");
-        newEmH.textContent = emoji.char;
-        newEm.appendChild(newEmH);
-    })
-
     //handles moving elements according to pagination
     function MovePage (dir) {
         //grab all divs to move
@@ -688,18 +744,8 @@
     }
 
     //attach the background context menu to canvas
-    let canvas = document.getElementById("back-canvas");
     AddContextMenu(canvas, $("#background-context"));
     
-    //if the document is clicked somewhere, close all context menus
-    $(document).bind("mousedown", function(e) {
-        //if the clicked element is not the menu
-        if (!$(e.target).parents(".context").length > 0) {
-            // Hide it
-            $(".context").hide(100);
-        }
-    });
-
     //actions for background context menu
     $("#background-context").on("click", "li", function() {
         let divs;
@@ -749,7 +795,6 @@
     });
 
     //set up page controls
-    let pager = document.getElementById('page-buttons');
     MakeObjScale(pager);
     $(pager).draggable();
     AddContextMenu(pager,$("#page-context"));
@@ -785,9 +830,6 @@
         }
         $(".context").hide(100);
     });
-    //button actions
-    document.getElementById('pbPrev').addEventListener("click",watchButPrev);
-    document.getElementById('pbNext').addEventListener("click",watchButNext);
 
 </script>
 </html>
