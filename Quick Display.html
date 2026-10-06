@@ -709,33 +709,26 @@
         ------------------------------------
     */
 
-    //functions:
-    //LoadObj(files)                    - iterates through files and handles according to type
-    //LoadNewScript(src)                - loads javascript file src
-
 
     //THE OBJECT CLASS
     class MoveableObject {
         div;
         menu;
-        bDrag = false;
-        bScale = false;
         self;
+        bDrag;
+        bScale;
 
-        //double click link - needs context
-        //edit text - needs context
-        //font select - needs context
-        //rainbow text - needs context
-        constructor(bCanDrag, bCanScale) {
-
+        //link, text, rainbow
+        constructor() {
             self = this;
+
             //create the div and handle basic drag/scale settings
             div = document.createElement("div");
             div.classList.add("object-div");
             document.body.appendChild(div);
-            SetDraggable(bCanDrag);
+            SetDraggable(true);
             $(div).css('transform', 'scale(1)');
-            SetScalable(bCanScale);
+            SetScalable(true);
             $(div).css({
                 top: rcloc.y,
                 left: rcloc.x,
@@ -745,58 +738,19 @@
             menu = document.getElementById("default-context").cloneNode(true);
             document.body.appendChild(menu);
             AddContextMenu(div, menu);
-            $(menu).on("click", "li", function() {
-                let zi;
-                let s;
-                //this is the triggered action name
-                switch ( $(this).attr("data-action") ) {
-                    case "up":
-                        zi = $(div).css('z-index');
-                        zi++;
-                        $(div).css('z-index',zi);
-                        break;
-                    case "down":
-                        zi = $(div).css('z-index');
-                        zi--;
-                        $(div).css('z-index',zi);
-                        break;
-                    case "lock":
-                        self.SetDraggable(!bDrag);//will this work?
+            AssignMenuChildren();
+        }
 
-                        if ( $(div).draggable("option", "disabled") ) {
-                            this.innerHTML = `<span class="material-symbols-outlined">lock</span>Lock position`;
-                            $(div).draggable("enable");
-                        } else {
-                            this.innerHTML = `<span class="material-symbols-outlined">lock_open_right</span>Allow moving`;
-                            $(div).draggable("disable");
-                        }
-                        break;
-                    case "duplicate":
-                        let newitem = div.cloneNode(true);
-                        document.body.appendChild(newitem);
-                        $(newitem).css({
-                            top: rcloc.y,
-                            left: rcloc.x,
-                        });
-                        $(newitem).draggable();
-                        CreateDefaultContextMenu(newitem);
-                        MakeObjScale(newitem);
-                        //set clone scale to old object scale
-                        s = div.getBoundingClientRect().width / div.offsetWidth;
-                        $(newitem).css('transform', `scale(${s})`);
-                        break;
-                    case "hide":
-                        $(div).css('visibility','hidden');
-                        break;
-                    case "reset":
-                        $(div).css('transform','scale(1)');
-                        break;
-                    case "delete":
-                        div.remove();
-                        break;
-                }
-                $(".context").hide(100);
-            });
+        AssignMenuChildren() {
+            let lis = menu.children("li");
+            for ( let i = 0; i < lis.length; i++ ) {
+                AssignChildAction(lis[i]);
+            }
+        }
+
+        AssignChildAction(li) {
+            //switch ( $(li).attr("data-action") )
+            log($(li).attr("data-action"));
         }
 
         SetDraggable(b) {
