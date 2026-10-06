@@ -148,9 +148,9 @@
      <ul class='context' id="default-context">
         <li data-action="up" name="up"><span class="material-symbols-outlined">keyboard_double_arrow_up</span>Bring forward</li>
         <li data-action="down" name="down"><span class="material-symbols-outlined">keyboard_double_arrow_down</span>Move backward</li>
-        <li data-action="lock" name="lock"><span class="material-symbols-outlined">lock</span>Lock position</li>
         <li data-action="duplicate" name="duplicate"><span class="material-symbols-outlined">tab_inactive</span>Clone object</li>
         <li data-action="hide" name="hide"><span class="material-symbols-outlined">visibility_off</span>Hide object</li>
+        <li data-action="lock" name="lock"><span class="material-symbols-outlined">lock</span>Lock position</li>
         <li data-action="reset" name="reset"><span class="material-symbols-outlined">photo_size_select_small</span>Reset size</li>
         <li data-action="delete" name="delete"><span class="material-symbols-outlined">delete_forever</span>Delete</li>
     </ul>
@@ -229,6 +229,10 @@
         ------------------------------------
     */
 
+
+    //master array
+    //AllObjects.push(new MoveableObject(options));
+    let AllObjects = [];
 
     //quick log
     function log(s) {
@@ -346,7 +350,7 @@
         $(".context").hide(100);
     });
 
-    //allows an object to open a specific context menu
+    //links an object to a specific context menu
     //adapted from https://stackoverflow.com/a/20471268 by Francisco Presencia
     function AddContextMenu(obj, menu) {
         obj.addEventListener('contextmenu',function(event) {
@@ -697,6 +701,190 @@
 
 
 
+
+
+    /*
+        ------------------------------------
+            OBJECT CREATION
+        ------------------------------------
+    */
+
+    //functions:
+    //LoadObj(files)                    - iterates through files and handles according to type
+    //LoadNewScript(src)                - loads javascript file src
+
+
+    //THE OBJECT CLASS
+    class MoveableObject {
+        div;
+        menu;
+        bDrag = false;
+        bScale = false;
+        self;
+
+        //double click link - needs context
+        //edit text - needs context
+        //font select - needs context
+        //rainbow text - needs context
+        constructor(bCanDrag, bCanScale) {
+
+            self = this;
+            //create the div and handle basic drag/scale settings
+            div = document.createElement("div");
+            div.classList.add("object-div");
+            document.body.appendChild(div);
+            SetDraggable(bCanDrag);
+            $(div).css('transform', 'scale(1)');
+            SetScalable(bCanScale);
+            $(div).css({
+                top: rcloc.y,
+                left: rcloc.x,
+            });
+
+            //set up the context menu
+            menu = document.getElementById("default-context").cloneNode(true);
+            document.body.appendChild(menu);
+            AddContextMenu(div, menu);
+            $(menu).on("click", "li", function() {
+                let zi;
+                let s;
+                //this is the triggered action name
+                switch ( $(this).attr("data-action") ) {
+                    case "up":
+                        zi = $(div).css('z-index');
+                        zi++;
+                        $(div).css('z-index',zi);
+                        break;
+                    case "down":
+                        zi = $(div).css('z-index');
+                        zi--;
+                        $(div).css('z-index',zi);
+                        break;
+                    case "lock":
+                        self.SetDraggable(!bDrag);//will this work?
+
+                        if ( $(div).draggable("option", "disabled") ) {
+                            this.innerHTML = `<span class="material-symbols-outlined">lock</span>Lock position`;
+                            $(div).draggable("enable");
+                        } else {
+                            this.innerHTML = `<span class="material-symbols-outlined">lock_open_right</span>Allow moving`;
+                            $(div).draggable("disable");
+                        }
+                        break;
+                    case "duplicate":
+                        let newitem = div.cloneNode(true);
+                        document.body.appendChild(newitem);
+                        $(newitem).css({
+                            top: rcloc.y,
+                            left: rcloc.x,
+                        });
+                        $(newitem).draggable();
+                        CreateDefaultContextMenu(newitem);
+                        MakeObjScale(newitem);
+                        //set clone scale to old object scale
+                        s = div.getBoundingClientRect().width / div.offsetWidth;
+                        $(newitem).css('transform', `scale(${s})`);
+                        break;
+                    case "hide":
+                        $(div).css('visibility','hidden');
+                        break;
+                    case "reset":
+                        $(div).css('transform','scale(1)');
+                        break;
+                    case "delete":
+                        div.remove();
+                        break;
+                }
+                $(".context").hide(100);
+            });
+        }
+
+        SetDraggable(b) {
+            if ( bDrag != b ) {
+                if ( b ) {
+                    $(this).draggable("enable");
+                } else {
+                    $(this).draggable("disable");
+                }
+                bDrag = b;
+            }
+        }
+
+        SetScalable(b) {
+            if ( bScale != b )
+            {
+                if ( b ) {
+                    div.addEventListener('wheel',function ObjScale(event) {
+                        event.preventDefault();
+                        let dir = event.deltaY < 0 ? 1 : -1;
+                        let scale = this.getBoundingClientRect().width / this.offsetWidth;
+                        scale += dir * 0.1;
+                        scale = Math.max(0.1, Math.min(5, scale));
+                        $(this).css('transform', `scale(${scale})`);
+                    });
+                } else {
+                    div.removeEventListener('wheel', ObjScale);
+                }
+                bScale = b;
+            }
+        }
+
+        MyDivIs() {
+            return div;
+        }
+
+        MyMenuIs() {
+            return menu;
+        }
+
+        CanDrag() {
+            return bDrag;
+        }
+
+    }
+
+    //loads an array of files, and handles them according to type
+    function LoadObj(files) {
+        for ( let m = 0; m < files.length; m++ ) {
+            let file = files[m];
+            let filesrc = URL.createObjectURL(file);
+            if ( file.type.includes("javascript") ) {
+                //scripts get loaded into the page with no need for visual
+                LoadNewScript(filesrc);
+            }
+            //all other items are visual and need to be created as a draggable element
+            else {
+                //create the draggable div outer
+                let mydiv = CreateNewObj();
+                //attach the default context menu
+                let mymenu = CreateDefaultContextMenu(mydiv);
+                if ( file.type.includes("image") ) {
+                    //images load draggable
+                    CreateNewImg(filesrc,mydiv,mymenu);
+                }
+                else if ( file.type.includes("video") ) {
+                    //videos can load like images
+                    CreateNewVid(filesrc,mydiv,mymenu);
+                }
+                else if ( file.type.includes("plain") ) {
+                    //plain text documents are loaded as a draggable note
+                    CreateNewNote(file,mydiv);
+                }
+                else if ( file.type.includes("html") ) {
+                    //load html code draggable
+                    CreateNewHMTLObj(file,mydiv);
+                }
+            }
+        }
+    }
+
+    //attempt to load javascript from file
+    function LoadNewScript(src) {
+        (async () => {
+            await import(src).catch((error) => console.log('Loading ' + src + ' failed: ' + error));
+        })();
+    }    
+
     //loads a new background video
     function SetBackground(src,bVid) {
         let video = document.getElementById('backgroundvid');
@@ -717,13 +905,6 @@
             img.src = src;
         }
     }
-
-    //attempt to load javascript from file
-    function LoadNewScript(src) {
-        (async () => {
-            await import(src).catch((error) => console.log('Loading ' + src + ' failed: ' + error));
-        })();
-    }    
 
     //creates an image inside the specified div
     function CreateNewImg(src, div, menu) {
@@ -862,41 +1043,6 @@
             scale = Math.max(0.1, Math.min(5, scale));
             $(this).css('transform', `scale(${scale})`);
         });
-    }
-
-    //loads an array of files, and handles them according to type
-    function LoadObj (files) {
-        for ( let m = 0; m < files.length; m++ ) {
-            let file = files[m];
-            let filesrc = URL.createObjectURL(file);
-            if ( file.type.includes("javascript") ) {
-                //scripts get loaded into the page with no need for visual
-                LoadNewScript(filesrc);
-            }
-            //all other items are visual and need to be created as a draggable element
-            else {
-                //create the draggable div outer
-                let mydiv = CreateNewObj();
-                //attach the default context menu
-                let mymenu = CreateDefaultContextMenu(mydiv);
-                if ( file.type.includes("image") ) {
-                    //images load draggable
-                    CreateNewImg(filesrc,mydiv,mymenu);
-                }
-                else if ( file.type.includes("video") ) {
-                    //videos can load like images
-                    CreateNewVid(filesrc,mydiv,mymenu);
-                }
-                else if ( file.type.includes("plain") ) {
-                    //plain text documents are loaded as a draggable note
-                    CreateNewNote(file,mydiv);
-                }
-                else if ( file.type.includes("html") ) {
-                    //load html code draggable
-                    CreateNewHMTLObj(file,mydiv);
-                }
-            }
-        }
     }
 
     //creates a draggable scalable div object
