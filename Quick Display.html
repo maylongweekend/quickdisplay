@@ -37,6 +37,7 @@
             - sparticles - https://github.com/simeydotme/sparticles
         - FANCY WALLPAPERS:
             - other ideas from https://htmlhub.org
+            - https://bookofshapes.com/
             - VANTA: net will be a good option
             - CSS wallpaper, paste in gradient from gradientmagic?
                 - auto remove text background-image or background if copypasted in
@@ -741,6 +742,7 @@
             AssignMenuChildren();
         }
 
+        //child classes can add menu entries here before calling super
         AssignMenuChildren() {
             let lis = menu.children("li");
             for ( let i = 0; i < lis.length; i++ ) {
@@ -748,6 +750,7 @@
             }
         }
 
+        //here set listeners for each context item
         AssignChildAction(li) {
             //switch ( $(li).attr("data-action") )
             log($(li).attr("data-action"));
