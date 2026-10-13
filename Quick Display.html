@@ -131,10 +131,10 @@
     <!-- context menu background -->
     <ul class='context' id="background-context">
         <li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load object</li>
-        <li data-action="paste" name="paste" style="display: none;"><span class="material-symbols-outlined">content_paste_go</span>Paste clipboard</li>
         <li data-action="sticky" name="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
         <li data-action="emoji" name="emoji" id="emoj-menu"><span class="material-symbols-outlined">add_reaction</span>Emoji</li>
         <li data-action="title" name="title"><span class="material-symbols-outlined">slab_serif</span>Title text</li>
+        <li data-action="paste" name="paste"><span class="material-symbols-outlined">content_paste_go</span>Paste clipboard</li>
         <li data-action="back" name="back"><span class="material-symbols-outlined">wallpaper</span>Change background</li>
         <hr />
         <li data-action="show" name="show"><span class="material-symbols-outlined">visibility</span>Show hidden objects</li>
@@ -319,6 +319,9 @@
                 break;
             case "emoji":
                 //already handled by emoji picker event
+                break;
+            case "paste":
+                PasteM();
                 break;
             case "back":
                 document.getElementById('background-input').click();
@@ -652,26 +655,61 @@
 
 
     //detects ctrl+v paste events
-    window.addEventListener("paste", (event) => { PasteData(event); });
+    window.addEventListener("paste", (event) => { PasteV(event); });
 
-    //pastes image or text data into an appropriate object
+    //pastes data with Ctrl+V
     //adapted from https://stackoverflow.com/a/15369753 by robintibor
     //improve using:
-    //https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/read
-    function PasteData(event) {
+    function PasteV(event) {
         let items = ( event.clipboardData  || event.originalEvent.clipboardData ).items;
         let blob = null;
-        let newDiv;
-        let newMenu;
         for ( let i = 0; i < items.length; i++) {
             if ( items[i].type.indexOf("image") === 0 ) {
                 blob = items[i].getAsFile();
             } else if ( items[i].type.indexOf("text/plain") === 0 ) {
                 items[i].getAsString((s) => {
-                    //TODO here drop the string into a text
+                    PasteText(s);
                 });
             }
         }
+        if ( blob !== null ) {//detected an image
+            PasteImage(blob);
+        }
+    }
+
+    //pastes data with menu
+    //NOTE
+    //In order to extract data from a Blob, you need a FileReader.
+/*
+var reader = new FileReader();
+reader.onload = function() {
+    alert(reader.result);
+}
+reader.readAsText(blob);*/
+    async function PasteM() {
+        try {
+            const clipboardContents = await navigator.clipboard.read();
+            for ( const item of clipboardContents ) {
+                for ( const type of item.types ) {
+                    const blob = await item.getType(type);
+                    if ( blob !== null ) {
+                        if ( blob.type.indexOf("image") === 0 ) {
+                            PasteImage(blob);
+                        }
+                        else if ( blob.type.indexOf("text/plain") === 0 ) {
+                            blob.getAsString((s) => {
+                                PasteText(s);
+                            });
+                        }
+                    }
+                }
+            }
+        } catch(error) {
+            log(error.message);
+        }
+    }
+
+    function PasteImage(blob) {
         if ( blob !== null ) {//detected an image
             var reader = new FileReader();
             reader.onload = function(event) {
@@ -683,6 +721,11 @@
             };
             reader.readAsDataURL(blob);
         }
+    }
+
+    function PasteText(string) {
+        //TODO
+        log(string);
     }
 
 
