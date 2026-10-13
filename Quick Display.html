@@ -52,6 +52,7 @@
             - unified UI, shadow, font loading and setting
             - build and save HTML objects like hover reveal cards, etc
         - bugs:
+            - issue with firefox paste through right click menu
             - shadow on analog clock
             - shadows on scaled emojis - FIREFOX only
             - elements with background shadows extend too wide? - firefox only, not on text
@@ -651,7 +652,7 @@
     //sets up paste listen for ctrl+v
 
     //functions:
-    //PasteData(event)             - iterates through event.clipboardData and creates image or text blocks based on contents
+    //
 
 
     //detects ctrl+v paste events
@@ -659,48 +660,33 @@
 
     //pastes data with Ctrl+V
     //adapted from https://stackoverflow.com/a/15369753 by robintibor
-    //improve using:
     function PasteV(event) {
         let items = ( event.clipboardData  || event.originalEvent.clipboardData ).items;
         let blob = null;
         for ( let i = 0; i < items.length; i++) {
-            if ( items[i].type.indexOf("image") === 0 ) {
+            if ( items[i].type.indexOf("image") == 0 ) {
                 blob = items[i].getAsFile();
-            } else if ( items[i].type.indexOf("text/plain") === 0 ) {
-                items[i].getAsString((s) => {
-                    PasteText(s);
+                if ( blob != null ) {
+                    HandlePaste(blob);
+                }
+            } else if ( items[i].type.indexOf("text/plain") == 0 ) {
+                items[i].getAsString(function(s) {
+                    log(s);
+                    //TODO
                 });
             }
-        }
-        if ( blob !== null ) {//detected an image
-            PasteImage(blob);
         }
     }
 
     //pastes data with menu
-    //NOTE
-    //In order to extract data from a Blob, you need a FileReader.
-/*
-var reader = new FileReader();
-reader.onload = function() {
-    alert(reader.result);
-}
-reader.readAsText(blob);*/
     async function PasteM() {
         try {
             const clipboardContents = await navigator.clipboard.read();
             for ( const item of clipboardContents ) {
                 for ( const type of item.types ) {
                     const blob = await item.getType(type);
-                    if ( blob !== null ) {
-                        if ( blob.type.indexOf("image") === 0 ) {
-                            PasteImage(blob);
-                        }
-                        else if ( blob.type.indexOf("text/plain") === 0 ) {
-                            blob.getAsString((s) => {
-                                PasteText(s);
-                            });
-                        }
+                    if ( blob != null ) {
+                        HandlePaste(blob);
                     }
                 }
             }
@@ -709,24 +695,27 @@ reader.readAsText(blob);*/
         }
     }
 
-    function PasteImage(blob) {
-        if ( blob !== null ) {//detected an image
-            var reader = new FileReader();
+    function HandlePaste(blob) {
+        var reader = new FileReader();
+        if ( blob.type.indexOf("image") == 0 ) {
             reader.onload = function(event) {
                 rcloc.x = mloc.x;
                 rcloc.y = mloc.y;
-                newDiv = CreateNewObj();
-                newMenu = CreateDefaultContextMenu(newDiv);
+                let newDiv = CreateNewObj();
+                let newMenu = CreateDefaultContextMenu(newDiv);
                 CreateNewImg(event.target.result, newDiv, newMenu);
             };
             reader.readAsDataURL(blob);
         }
+        else if ( blob.type.indexOf("text/plain") == 0 ) {
+            reader.onload = function () {
+                    log(reader.result);
+                    //TODO
+                }
+            reader.readAsText(blob);
+        }
     }
 
-    function PasteText(string) {
-        //TODO
-        log(string);
-    }
 
 
 
