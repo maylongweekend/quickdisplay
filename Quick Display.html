@@ -316,7 +316,8 @@
                 document.getElementById('file-input').click();
                 break;
             case "sticky":
-                CreateSticky(prompt("Enter your text", "Sticky note contents"));
+                AllObjects.push(new StickyNoteObj(prompt("Enter your text", "Sticky note contents")));
+                //CreateSticky(prompt("Enter your text", "Sticky note contents"));
                 break;
             case "emoji":
                 //already handled by emoji picker event
@@ -758,14 +759,18 @@
     */
 
 
-    //THE OBJECT CLASS
+    /* THE BASE OBJECT CLASS */
+    //a moveable scalable div with various right click options
+    //AllObjects.push(new MoveableObject(drag, scale, edit));
+
     class MoveableObject {
         
-        constructor(bdrag = true, bscale = true) {
+        constructor(bdrag = true, bscale = true, btext = false) {
 
             this.self = this;
             this.bdrag = bdrag;
             this.bscale = bscale;
+            this.text = "Edit text";
 
             //create the div and handle basic drag/scale settings
             this.div = document.createElement("div");
@@ -783,16 +788,80 @@
             this.menu = document.getElementById("default-context").cloneNode(true);
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
+            if ( btext ) {
+                let stli = AddContextItem(this.menu, "edit", `<span class="material-symbols-outlined">edit</span>Edit text`, true);
+            }
             let lis = $(this.menu).children("li");
             for ( let i = 0; i < lis.length; i++ ) {
-                this.AssignChildAction(lis[i]);
+                this.AssignMenuAction(lis[i], this.div, this.self);
             }
+            this.ChildMenuItems();
         }
 
         //here set listeners for each context item
-        AssignChildAction(li) {
-            //switch ( $(li).attr("data-action") )
-            //TODO
+        AssignMenuAction(li, elem, owner) {
+            let zi;
+            let s;
+            li.addEventListener('click', function() {
+                $(".context").hide(100);
+                switch ( $(li).attr("data-action") ) {
+                    case "edit":
+                        owner.HandleTextEdit();
+                        break;
+                    case "up":
+                        zi = $(elem).css('z-index');
+                        zi++;
+                        $(elem).css('z-index', zi);
+                        break;
+                    case "down":
+                        zi = $(elem).css('z-index');
+                        zi--;
+                        $(elem).css('z-index', zi);
+                        break;
+                    case "lock":
+                        //todo: integrate with class drag functions
+                        if ( $(elem).draggable("option", "disabled") ) {
+                            this.innerHTML = `<span class="material-symbols-outlined">lock</span>Lock position`;
+                            $(elem).draggable("enable");
+                        } else {
+                            this.innerHTML = `<span class="material-symbols-outlined">lock_open_right</span>Allow moving`;
+                            $(elem).draggable("disable");
+                        }
+                        break;
+                    case "duplicate":
+                        //todo: clone using class functions for fully functional clones
+                        let newitem = elem.cloneNode(true);
+                        document.body.appendChild(newitem);
+                        $(newitem).css({
+                            top: rcloc.y,
+                            left: rcloc.x,
+                        });
+                        $(newitem).draggable();
+                        CreateDefaultContextMenu(newitem);
+                        MakeObjScale(newitem);
+                        //set clone scale to old object scale
+                        s = elem.getBoundingClientRect().width / elem.offsetWidth;
+                        $(newitem).css('transform', `scale(${s})`);
+                        break;
+                    case "hide":
+                        $(elem).css('visibility','hidden');
+                        break;
+                    case "reset":
+                        $(elem).css('transform','scale(1)');
+                        break;
+                    case "delete":
+                        elem.remove();
+                        break;
+                }
+            });
+        }
+
+        //this lets child classes add to the context menu
+        //after the default listeners are set up
+        ChildMenuItems() {}
+
+        HandleTextEdit() {
+            this.text = prompt("Enter your text", this.text);
         }
 
         SetDraggable(b) {
@@ -819,20 +888,18 @@
         }
     }
 
+    /* STICKY NOTES */
     //a sticky note with editable text
+    //AllObjects.push(new StickyNoteObj(string));
+
     class StickyNoteObj extends MoveableObject {
 
-        constructor(text = "Sticky note", bdrag = true, bscale = true) {
-            super(bdrag, bscale);
+        constructor(text = "Sticky note contents") {
+            super(true, true, true);
             this.text = text;
             this.div.classList.add('sticky-div');
+            this.stp = document.createElement("p");
             this.BuildTextHTML();
-            //context menu
-            let stli = AddContextItem(this.menu, "edit", `<span class="material-symbols-outlined">edit</span>Edit text`, true);
-            stli.addEventListener('click', function() {
-                $(".context").hide(100);
-                stp.textContent = prompt("Enter your text", stp.textContent);
-            });
         }
 
         BuildTextHTML() {
@@ -850,12 +917,17 @@
             randnum = Math.floor(Math.random() * 4) + 1;
             stint.style.backgroundColor = `var(--sticky-c${randnum})`;
             stdiv.appendChild(stint);
-            let stp = document.createElement("P");
-            stp.textContent = this.text;
-            stint.appendChild(stp);
+            this.stp.textContent = this.text;
+            stint.appendChild(this.stp);
             let sttop = document.createElement("div");
             sttop.classList.add("sticky-top");
             stdiv.appendChild(sttop);
+        }
+
+        HandleTextEdit() {
+            //TO CALL SUPER
+            MoveableObject.prototype.HandleTextEdit.call(this);
+            this.stp.textContent = this.text;
         }
     }
 
