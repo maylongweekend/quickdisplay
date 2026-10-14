@@ -663,6 +663,9 @@
     function PasteV(event) {
         let items = ( event.clipboardData  || event.originalEvent.clipboardData ).items;
         let blob = null;
+        //set creation location to mouse location
+        rcloc.x = mloc.x;
+        rcloc.y = mloc.y;
         for ( let i = 0; i < items.length; i++) {
             if ( items[i].type.indexOf("image") == 0 ) {
                 blob = items[i].getAsFile();
@@ -701,8 +704,6 @@
         var reader = new FileReader();
         if ( blob.type.indexOf("image") == 0 ) {
             reader.onload = function(event) {
-                rcloc.x = mloc.x;
-                rcloc.y = mloc.y;
                 let newDiv = CreateNewObj();
                 let newMenu = CreateDefaultContextMenu(newDiv);
                 CreateNewImg(event.target.result, newDiv, newMenu);
@@ -725,7 +726,8 @@
             let mymenu = CreateDefaultContextMenu(mydiv);
             FillNoteContents(mydiv, "Note", string);
         } else {
-            CreateSticky(string);
+            //CreateSticky(string);
+            AllObjects.push(new StickyNoteObj(string));
         }
     }
 
@@ -759,7 +761,6 @@
     //THE OBJECT CLASS
     class MoveableObject {
         
-        //link, text, rainbow
         constructor(bdrag = true, bscale = true) {
 
             this.self = this;
@@ -770,8 +771,9 @@
             this.div = document.createElement("div");
             this.div.classList.add("object-div");
             document.body.appendChild(this.div);
-            SetDraggable(bdrag);
-            SetScalable(bscale);
+            $(this.div).draggable();
+            this.SetDraggable(bdrag);
+            this.SetScalable(bscale);
             $(this.div).css({
                 top: rcloc.y,
                 left: rcloc.x,
@@ -781,21 +783,16 @@
             this.menu = document.getElementById("default-context").cloneNode(true);
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
-            AssignMenuChildren();
-        }
-
-        //child classes can add menu entries here before calling super
-        AssignMenuChildren() {
-            let lis = this.menu.children("li");
+            let lis = $(this.menu).children("li");
             for ( let i = 0; i < lis.length; i++ ) {
-                AssignChildAction(lis[i]);
+                this.AssignChildAction(lis[i]);
             }
         }
 
         //here set listeners for each context item
         AssignChildAction(li) {
             //switch ( $(li).attr("data-action") )
-            log($(li).attr("data-action"));
+            //TODO
         }
 
         SetDraggable(b) {
@@ -820,15 +817,46 @@
             }
             this.bscale = b;
         }
+    }
 
-        MyDivIs() {
-            return this.div;
+    //a sticky note with editable text
+    class StickyNoteObj extends MoveableObject {
+
+        constructor(text = "Sticky note", bdrag = true, bscale = true) {
+            super(bdrag, bscale);
+            this.text = text;
+            this.div.classList.add('sticky-div');
+            this.BuildTextHTML();
+            //context menu
+            let stli = AddContextItem(this.menu, "edit", `<span class="material-symbols-outlined">edit</span>Edit text`, true);
+            stli.addEventListener('click', function() {
+                $(".context").hide(100);
+                stp.textContent = prompt("Enter your text", stp.textContent);
+            });
         }
 
-        MyMenuIs() {
-            return this.menu;
+        BuildTextHTML() {
+            //interior div holding everything and rotating
+            let stdiv = document.createElement("div");
+            let randnum = Math.floor(Math.random() * 10) + 2;
+            randnum *= Math.random() < 0.5? -1 : 1;
+            $(stdiv).css('transform', `rotate(${randnum}deg)`);
+            this.div.appendChild(stdiv);
+            //sticky note classes for visual
+            stdiv.classList.add("sticky-note");
+            let stint = document.createElement("div");
+            stint.classList.add("sticky-interior");
+            //randomize interior color
+            randnum = Math.floor(Math.random() * 4) + 1;
+            stint.style.backgroundColor = `var(--sticky-c${randnum})`;
+            stdiv.appendChild(stint);
+            let stp = document.createElement("P");
+            stp.textContent = this.text;
+            stint.appendChild(stp);
+            let sttop = document.createElement("div");
+            sttop.classList.add("sticky-top");
+            stdiv.appendChild(sttop);
         }
-
     }
 
     //loads an array of files, and handles them according to type
