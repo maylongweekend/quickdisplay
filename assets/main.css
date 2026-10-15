@@ -22,6 +22,13 @@
   --sticky-c4: #ff95b5c7;
 }
 
+/* COLOR PICKER */
+.color-picker {
+  display: none;
+  position: absolute;
+  z-index: 1000;
+}
+
 /* BEGIN NOTES */
 .notes {
   background-color: var(--note-bg);
