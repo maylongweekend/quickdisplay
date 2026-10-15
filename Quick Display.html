@@ -23,6 +23,7 @@
         - anime.js
         - three.js
         - EmojiPicker.js
+        - jscolor.js
 
 
         THE TODO LIST
@@ -84,6 +85,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@schwitzerskills/emojipicker/emoji-picker.js"></script>
+    <script src="assets/jscolor.js"></script>
 </head>
 <body>
 
@@ -721,8 +723,7 @@
 
     //handles text extracted from a copy/paste operation
     function HandleTextPaste(string) {
-        let regex = /\r\n/g;
-        if ( regex.test(string) ) {
+        if ( /\r?\n/g.test(string) ) {
             let mydiv = CreateNewObj();
             let mymenu = CreateDefaultContextMenu(mydiv);
             FillNoteContents(mydiv, "Note", string);
@@ -765,12 +766,13 @@
 
     class MoveableObject {
         
-        constructor(bdrag = true, bscale = true, btext = false) {
+        constructor(bdrag = true, bscale = true, btext = false, bcolor = false) {
 
             this.self = this;
             this.bdrag = bdrag;
             this.bscale = bscale;
             this.text = "Edit text";
+            this.colorinput = null;
 
             //create the div and handle basic drag/scale settings
             this.div = document.createElement("div");
@@ -788,6 +790,13 @@
             this.menu = document.getElementById("default-context").cloneNode(true);
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
+            if ( bcolor ) {
+                let ccli = AddContextItem(this.menu, "color", `<span class="material-symbols-outlined">colors</span>Change color`, true);
+                this.colorinput = document.createElement("button");
+                this.colorinput.classList.add("color-picker");
+                document.body.appendChild(this.colorinput);
+                jscolor.install();
+            }
             if ( btext ) {
                 let stli = AddContextItem(this.menu, "edit", `<span class="material-symbols-outlined">edit</span>Edit text`, true);
             }
@@ -808,6 +817,14 @@
                     case "edit":
                         owner.HandleTextEdit();
                         break;
+                    case "color":
+                        $(owner.colorinput).toggle();
+                        $(owner.colorinput).css({
+                            top: rcloc.y,
+                            left: rcloc.x,
+                        });
+                        log(owner.colorinput.outerHTML);
+                        break;
                     case "up":
                         zi = $(elem).css('z-index');
                         zi++;
@@ -819,13 +836,12 @@
                         $(elem).css('z-index', zi);
                         break;
                     case "lock":
-                        //todo: integrate with class drag functions
                         if ( $(elem).draggable("option", "disabled") ) {
                             this.innerHTML = `<span class="material-symbols-outlined">lock</span>Lock position`;
-                            $(elem).draggable("enable");
+                            owner.SetDraggable(true);
                         } else {
                             this.innerHTML = `<span class="material-symbols-outlined">lock_open_right</span>Allow moving`;
-                            $(elem).draggable("disable");
+                            owner.SetDraggable(false);
                         }
                         break;
                     case "duplicate":
@@ -895,7 +911,7 @@
     class StickyNoteObj extends MoveableObject {
 
         constructor(text = "Sticky note contents") {
-            super(true, true, true);
+            super(true, true, true, true);
             this.text = text;
             this.div.classList.add('sticky-div');
             this.stp = document.createElement("p");

@@ -139,6 +139,7 @@ This project makes use of the following libraries; each is the property of their
 - [anime.js](https://animejs.com/)
 - [three.js](https://threejs.org/)
 - [EmojiPicker.js](https://pfurpass.github.io/EmojiPicker/)
+- [jscolor.js](https://jscolor.com/)
 
 
 > [!NOTE]
