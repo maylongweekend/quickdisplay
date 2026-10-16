@@ -791,10 +791,10 @@
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
             if ( bcolor ) {
-                let ccli = AddContextItem(this.menu, "color", `<span class="material-symbols-outlined">colors</span>Change color`, true);
-                this.colorinput = document.createElement("button");
-                this.colorinput.classList.add("color-picker");
-                document.body.appendChild(this.colorinput);
+                this.colorinput = AddContextItem(this.menu, "color", "Change color", true);
+                this.colorinput.innerHTML = `<span class="material-symbols-outlined">colors</span>Change color
+                                                <span data-jscolor="{random:[80, 100, 50, 90, 0, 359]}">:)</span>
+                                                </div>`;
                 jscolor.install();
             }
             if ( btext ) {
@@ -818,12 +818,7 @@
                         owner.HandleTextEdit();
                         break;
                     case "color":
-                        $(owner.colorinput).toggle();
-                        $(owner.colorinput).css({
-                            top: rcloc.y,
-                            left: rcloc.x,
-                        });
-                        log(owner.colorinput.outerHTML);
+                        //
                         break;
                     case "up":
                         zi = $(elem).css('z-index');
