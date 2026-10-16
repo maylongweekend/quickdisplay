@@ -766,13 +766,15 @@
 
     class MoveableObject {
         
-        constructor(bdrag = true, bscale = true, btext = false, bcolor = false) {
+        constructor(bdrag = true, bscale = true, btext = false, bcolor = false, color = "#ffffffff") {
 
             this.self = this;
             this.bdrag = bdrag;
             this.bscale = bscale;
             this.text = "Edit text";
             this.colorinput = null;
+            this.color = color;
+            this.index = AllObjects.length;
 
             //create the div and handle basic drag/scale settings
             this.div = document.createElement("div");
@@ -791,11 +793,10 @@
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
             if ( bcolor ) {
-                this.colorinput = AddContextItem(this.menu, "color", "Change color", true);
-                this.colorinput.innerHTML = `<span class="material-symbols-outlined">colors</span>Change color
-                                                <span data-jscolor="{random:[80, 100, 50, 90, 0, 359]}">:)</span>
-                                                </div>`;
+                let ccli = AddContextItem(this.menu, "color", `<span class="material-symbols-outlined">colors</span>Change color`, true);
+                this.colorinput = new JSColor(ccli, {previewElement: '', format: 'rgba', onInput: `ColorUpdate(this, ${this.index})`});
                 jscolor.install();
+                this.colorinput.fromString(this.color);
             }
             if ( btext ) {
                 let stli = AddContextItem(this.menu, "edit", `<span class="material-symbols-outlined">edit</span>Edit text`, true);
@@ -818,7 +819,6 @@
                         owner.HandleTextEdit();
                         break;
                     case "color":
-                        //
                         break;
                     case "up":
                         zi = $(elem).css('z-index');
@@ -875,6 +875,10 @@
             this.text = prompt("Enter your text", this.text);
         }
 
+        SetColor(s) {
+            this.color = s;
+        }
+
         SetDraggable(b) {
             let s = b ? "enable" : "disable";
             $(this.div).draggable(s);
@@ -906,15 +910,12 @@
     class StickyNoteObj extends MoveableObject {
 
         constructor(text = "Sticky note contents") {
-            super(true, true, true, true);
+            let tc = window.getComputedStyle(document.body).getPropertyValue(`--sticky-c${Math.floor(Math.random() * 4) + 1}`);
+            super(true, true, true, true, tc);
             this.text = text;
             this.div.classList.add('sticky-div');
             this.stp = document.createElement("p");
-            this.BuildTextHTML();
-        }
-
-        BuildTextHTML() {
-            //interior div holding everything and rotating
+            this.stint = document.createElement("div");
             let stdiv = document.createElement("div");
             let randnum = Math.floor(Math.random() * 10) + 2;
             randnum *= Math.random() < 0.5? -1 : 1;
@@ -922,24 +923,33 @@
             this.div.appendChild(stdiv);
             //sticky note classes for visual
             stdiv.classList.add("sticky-note");
-            let stint = document.createElement("div");
-            stint.classList.add("sticky-interior");
-            //randomize interior color
-            randnum = Math.floor(Math.random() * 4) + 1;
-            stint.style.backgroundColor = `var(--sticky-c${randnum})`;
-            stdiv.appendChild(stint);
+            this.stint.classList.add("sticky-interior");
+            this.stint.style.backgroundColor = this.color;
+            stdiv.appendChild(this.stint);
             this.stp.textContent = this.text;
-            stint.appendChild(this.stp);
+            this.stint.appendChild(this.stp);
             let sttop = document.createElement("div");
             sttop.classList.add("sticky-top");
             stdiv.appendChild(sttop);
         }
 
         HandleTextEdit() {
-            //TO CALL SUPER
             MoveableObject.prototype.HandleTextEdit.call(this);
             this.stp.textContent = this.text;
         }
+
+        SetColor(s) {
+            MoveableObject.prototype.SetColor.call(this, s);
+            this.stint.style.backgroundColor = this.color;
+            this.stint.style.color = this.colorinput.isLight() ? 'var(--note-text);' : 'var(--note-text-light);';
+        }
+    }
+
+    //called by a colorpicker
+    //sends the color to the object with index i
+    function ColorUpdate(picker, i)
+    {
+        AllObjects[i].SetColor(picker.toRGBAString());
     }
 
     //loads an array of files, and handles them according to type
