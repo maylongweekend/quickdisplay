@@ -5,6 +5,7 @@
 :root {
   --note-bg: #d1d10ea7;
   --note-text: #1d1d1d;
+  --note-text-light: #c9c9c9;
   --note-font: "Indie Flower", cursive;
   --text-shadow: 0.3vh 0.3vh 0.5vh #0000003e;
   --ui-bg: #ececece0;
@@ -22,13 +23,6 @@
   --sticky-c4: #ff95b5c7;
 }
 
-/* COLOR PICKER */
-.color-picker {
-  display: none;
-  position: absolute;
-  z-index: 1000;
-}
-
 /* BEGIN NOTES */
 .notes {
   background-color: var(--note-bg);
@@ -41,6 +35,8 @@
   position: relative;
   backdrop-filter: var(--sb-blur);
   -webkit-backdrop-filter: var(--sb-blur);
+  cursor: default;
+  user-select: none;
 }
 
 .notes pre {
@@ -153,6 +149,8 @@
 /* sticky notes */
 .sticky-note {
   width: 16vw;
+  cursor: default;
+  user-select: none;
 }
 
 .sticky-div {
@@ -227,11 +225,13 @@
   list-style-type: none;
   transition: all .2s ease;
   user-select: none;
+  z-index: 1001;
 }
 
 /* Padding for google font icons */
 .context span {
   padding: 0 1vw 0 0;
+  pointer-events: none;
 }
 
 .context p {
