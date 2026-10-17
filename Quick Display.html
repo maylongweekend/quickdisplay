@@ -726,7 +726,8 @@
         if ( /\r?\n/g.test(string) ) {
             let mydiv = CreateNewObj();
             let mymenu = CreateDefaultContextMenu(mydiv);
-            FillNoteContents(mydiv, "Note", string);
+            //FillNoteContents(mydiv, "Note", string);
+            AllObjects.push(new NoteObj("Note", string));
         } else {
             //CreateSticky(string);
             AllObjects.push(new StickyNoteObj(string));
@@ -805,7 +806,6 @@
             for ( let i = 0; i < lis.length; i++ ) {
                 this.AssignMenuAction(lis[i], this.div, this.self);
             }
-            this.ChildMenuItems();
         }
 
         //here set listeners for each context item
@@ -866,10 +866,6 @@
                 }
             });
         }
-
-        //this lets child classes add to the context menu
-        //after the default listeners are set up
-        ChildMenuItems() {}
 
         HandleTextEdit() {
             this.text = prompt("Enter your text", this.text);
@@ -945,6 +941,48 @@
         }
     }
 
+    /* NOTES */
+    //a note with editable title
+    //AllObjects.push(new NoteObj(title, body));
+
+    class NoteObj extends MoveableObject {
+
+        constructor(text = "Note", body = "Note body text") {
+            let tc = window.getComputedStyle(document.body).getPropertyValue('--note-bg');
+            super(true, true, true, true, tc);
+            this.div.classList.add('notes');
+            this.text = text;
+            this.div.style.backgroundColor = this.color;
+            this.h = document.createElement("h3");
+            this.h.textContent = this.text;
+            this.div.appendChild(this.h);
+            this.pre = document.createElement("pre");
+            this.div.appendChild(this.pre);
+            this.body = body;
+            this.pre.textContent = this.body;
+            $(this.div).css('min-width', this.div.offsetWidth);//force min width
+        }
+
+        AssignMenuAction(li, elem, owner) {
+            MoveableObject.prototype.AssignMenuAction.call(this, li, elem, owner);
+            if ( ( $(li).attr("data-action") ) == "edit" ) {
+                li.innerHTML = `<span class="material-symbols-outlined">border_color</span>Edit title`;
+            }
+        }
+
+        HandleTextEdit() {
+            this.text = prompt("Enter a title for this note", this.text);
+            this.h.textContent = this.text;
+        }
+
+        SetColor(s) {
+            MoveableObject.prototype.SetColor.call(this, s);
+            this.div.style.backgroundColor = this.color;
+            this.pre.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
+            this.h.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
+        }
+    }
+
     //called by a colorpicker
     //sends the color to the object with index i
     function ColorUpdate(picker, i)
@@ -961,8 +999,13 @@
                 //scripts get loaded into the page with no need for visual
                 LoadNewScript(filesrc);
             }
-            //all other items are visual and need to be created as a draggable element
-            else {
+            else if ( file.type.includes("plain") ) {
+                let reader = new FileReader();
+                reader.onload = function () {
+                    AllObjects.push(new NoteObj(file.name.slice(0,-4), reader.result));
+                }
+                reader.readAsText(file);
+            } else {
                 //create the draggable div outer
                 let mydiv = CreateNewObj();
                 //attach the default context menu
@@ -974,10 +1017,6 @@
                 else if ( file.type.includes("video") ) {
                     //videos can load like images
                     CreateNewVid(filesrc,mydiv,mymenu);
-                }
-                else if ( file.type.includes("plain") ) {
-                    //plain text documents are loaded as a draggable note
-                    CreateNewNoteFromFile(file,mydiv);
                 }
                 else if ( file.type.includes("html") ) {
                     //load html code draggable
