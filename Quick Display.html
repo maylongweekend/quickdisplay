@@ -941,7 +941,7 @@
         SetColor(s) {
             MoveableObject.prototype.SetColor.call(this, s);
             this.stint.style.backgroundColor = this.color;
-            this.stint.style.color = this.colorinput.isLight() ? 'var(--note-text);' : 'var(--note-text-light);';
+            this.stp.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
         }
     }
 
