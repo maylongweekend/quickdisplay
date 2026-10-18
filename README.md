@@ -36,9 +36,6 @@ In the right-click menu, choose `Load object` to open the file picker.  Here you
 
 You can also quickly add sticky notes, emojis, and large text through the right click menu.  These objects have the same right click options as others and behave the same.
 
-> [!NOTE]
-> `Title text` option is not fully implemented - use `Load object` and choose `fancy text.js`.
-
 Once an object is added, it usually appears as a draggable item that can be placed around the app as you like.  See below for more info on the ways you can interact with objects and scripts added to the page.
 
 

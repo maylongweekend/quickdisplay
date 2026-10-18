@@ -767,7 +767,7 @@
 
     class MoveableObject {
         
-        constructor(bdrag = true, bscale = true, btext = false, bcolor = false, bfont = false) {
+        constructor(bdrag = true, bscale = true, btext = false, bcolor = false, bfont = false, banimate = false) {
 
             this.self = this;
             this.bdrag = bdrag;
@@ -778,6 +778,8 @@
             this.font = "";
             this.color = "";
             this.index = AllObjects.length;
+            this.banimate = banimate;
+            this.isanimating = false;
 
             //create the div and handle basic drag/scale settings
             this.div = document.createElement("div");
@@ -795,6 +797,10 @@
             this.menu = document.getElementById("default-context").cloneNode(true);
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
+
+            if ( banimate ) {
+                let ccli = AddContextItem(this.menu, "animate", `<span class="material-symbols-outlined">motion_play</span>Toggle animation`, true);
+            }
 
             //set up the color picker
             if ( bcolor ) {
@@ -852,6 +858,9 @@
                         owner.HandleTextEdit();
                         break;
                     case "color":
+                        break;
+                    case "animate":
+                        owner.ToggleAnimate();
                         break;
                     case "up":
                         zi = $(elem).css('z-index');
@@ -914,6 +923,20 @@
         SetFont(s) {
             this.font = s;
         }
+
+        ToggleAnimate() {
+            this.isanimating = !this.isanimating;
+        }
+
+        //called by master animation loop
+        AnimateFrame(delta) {
+            if ( this.isanimating ) {
+                this.Frame(delta);
+            }
+        }
+
+        //call on a child to handle animation
+        Frame(delta) {}
 
         SetDraggable(b) {
             let s = b ? "enable" : "disable";
@@ -1111,13 +1134,52 @@
     class TextObj extends MoveableObject {
 
         constructor(text = "") {
-            super(true, true, true, true, true);
+            super(true, true, true, true, true, true);
             this.text = text.length > 0 ? text : prompt("Enter your text", "Welcome");
             this.div.classList.add('text-div');
             this.h = document.createElement("h");
-            this.h.textContent = this.text;
+            this.h.innerHTML = this.UpdateTextForAnimation(this.text);
             this.div.appendChild(this.h);
             this.NewSetScalable(true);
+
+            this.aniIter = 0;
+            this.aniLen = this.text.length;
+            this.aniPhase = 360 / this.aniLen;
+            this.aniSpans = this.h.children;
+
+            //set the font selector to the default font for text
+            for ( let i = 0; i < this.fontselector.options.length; i++ ) {
+                if ( this.fontselector.options[i].value.includes("Archivo Black") ) {
+                    this.fontselector.selectedIndex = i;
+                    this.font = this.fontselector.options[i].value;
+                }
+            }
+        }
+
+        //animate for rainbow effect
+        Frame(delta) {
+            for ( let i = 0; i < this.aniLen; i++ ) {
+                //contains code adapted from Rainbow Text by Riley Shaw
+                //https://codepen.io/rileyjshaw/pen/vExWpe
+                this.aniSpans[i].style.color = 'hsl(' + (this.aniIter + Math.floor(-i * this.aniPhase)) + ', 70%, 70%)';
+            }
+            this.aniIter++;
+        }
+
+        UpdateTextForAnimation(string) {
+            let s = string.split('').map(function(char) {
+                return `<span>${char}</span>`;
+            }).join('');
+            return s;
+        }
+
+        ToggleAnimate() {
+            MoveableObject.prototype.ToggleAnimate.call(this);
+            if ( !this.isanimating ) {
+                for ( let i = 0; i < this.aniLen; i++ ) {
+                    this.aniSpans[i].style.color = this.color;
+                }
+            }
         }
 
         SetScalable(b) {}
@@ -1148,12 +1210,19 @@
 
         HandleTextEdit() {
             MoveableObject.prototype.HandleTextEdit.call(this);
-            this.h.textContent = this.text;
+            this.h.innerHTML = this.UpdateTextForAnimation(this.text);
+            this.aniIter = 0;
+            this.aniLen = this.text.length;
+            this.aniPhase = 360 / this.aniLen;
+            this.aniSpans = this.h.children;
         }
 
         SetColor(s) {
             MoveableObject.prototype.SetColor.call(this, s);
             this.h.style.color = this.color;
+            for ( let i = 0; i < this.aniLen; i++ ) {
+                this.aniSpans[i].style.color = this.color;
+            }
         }
 
         SetFont(s) {
@@ -1183,6 +1252,22 @@
     function FontUpdate(i, font) {
         AllObjects[i].SetFont(font);
     }
+
+    //object animation
+    let lastdelta = document.timeline.currentTime;
+    requestAnimationFrame(AnimationStep);
+
+    function AnimationStep(timestamp) {
+        let delta = timestamp - lastdelta;
+        if ( delta > 0 ) {
+            lastdelta = timestamp;
+            for ( let Obj of AllObjects ) {
+                Obj.AnimateFrame(delta);
+            }
+        }
+        requestAnimationFrame(AnimationStep);
+    }
+
 
 
 
