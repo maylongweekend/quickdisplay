@@ -13,7 +13,8 @@
   --ui-text: #3e3e3e;
   --ui-deselect: #777777c6;
   --ui-hover: #439efada;
-  --ui-border: 1px solid #bec4ced2;
+  --ui-border: 1px solid var(--ui-border-c);
+  --ui-border-c: #bec4ced2;
   --ui-radius: 5px;
   --ui-font: Verdana, Geneva, Tahoma, sans-serif;
   --sb-blur: blur(0);
