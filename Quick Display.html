@@ -795,6 +795,8 @@
             this.menu = document.getElementById("default-context").cloneNode(true);
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
+
+            //set up the color picker
             if ( bcolor ) {
                 let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
                 let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
@@ -812,9 +814,13 @@
                 jscolor.install();
                 this.colorinput.fromString(this.color);
             }
+
+            //set up text editing
             if ( btext ) {
                 let stli = AddContextItem(this.menu, "edit", `<span class="material-symbols-outlined">edit</span>Edit text`, true);
             }
+
+            //set up the font selector
             if ( bfont ) {
                 let fsp = document.createElement("p");
                 this.fontselector = document.getElementById("default-font-selector").cloneNode(true);
@@ -936,8 +942,11 @@
     class StickyNoteObj extends MoveableObject {
 
         constructor(text = "Sticky note contents") {
+            //get random sticky color first
             let tc = window.getComputedStyle(document.body).getPropertyValue(`--sticky-c${Math.floor(Math.random() * 4) + 1}`);
             super(true, true, true, true, tc, true);
+
+            //build sticky note structure
             this.text = text;
             this.div.classList.add('sticky-div');
             this.stp = document.createElement("p");
@@ -947,7 +956,6 @@
             randnum *= Math.random() < 0.5? -1 : 1;
             $(stdiv).css('transform', `rotate(${randnum}deg)`);
             this.div.appendChild(stdiv);
-            //sticky note classes for visual
             stdiv.classList.add("sticky-note");
             this.stint.classList.add("sticky-interior");
             this.stint.style.backgroundColor = this.color;
@@ -957,6 +965,7 @@
             let sttop = document.createElement("div");
             sttop.classList.add("sticky-top");
             stdiv.appendChild(sttop);
+
             //set the font selector to the default font for notes
             for ( let i = 0; i < this.fontselector.options.length; i++ ) {
                 if ( window.getComputedStyle(document.body).getPropertyValue('--note-font').includes(this.fontselector.options[i].value) ) {
@@ -990,8 +999,11 @@
     class NoteObj extends MoveableObject {
 
         constructor(text = "Note", body = "Note body text") {
+            //get note color
             let tc = window.getComputedStyle(document.body).getPropertyValue('--note-bg');
             super(true, true, true, true, tc, true);
+
+            //build note structure
             this.div.classList.add('notes');
             this.text = text;
             this.div.style.backgroundColor = this.color;
@@ -1003,6 +1015,7 @@
             this.body = body;
             this.pre.textContent = this.body;
             $(this.div).css('min-width', this.div.offsetWidth);//force min width
+
             //set the font selector to the default font for notes
             for ( let i = 0; i < this.fontselector.options.length; i++ ) {
                 if ( window.getComputedStyle(document.body).getPropertyValue('--note-font').includes(this.fontselector.options[i].value) ) {
@@ -1014,6 +1027,7 @@
 
         AssignMenuAction(li, elem, owner) {
             MoveableObject.prototype.AssignMenuAction.call(this, li, elem, owner);
+            //after calling super, change edit text option to edit title
             if ( ( $(li).attr("data-action") ) == "edit" ) {
                 li.innerHTML = `<span class="material-symbols-outlined">border_color</span>Edit title`;
             }
