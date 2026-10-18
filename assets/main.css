@@ -24,51 +24,6 @@
   --sticky-c4: #ff95b5c7;
 }
 
-/* BEGIN NOTES */
-.notes {
-  background-color: var(--note-bg);
-  border: var(--ui-border);
-  color: var(--note-text);
-  background-image: url("lines.png");
-  background-size: 0.2vw;
-  max-width: 34vw;
-  padding: 0.4vw;
-  position: relative;
-  backdrop-filter: var(--sb-blur);
-  -webkit-backdrop-filter: var(--sb-blur);
-  cursor: default;
-  user-select: none;
-}
-
-.notes pre {
-  font-size: 1.65vw;
-  font-family: var(--note-font);
-  font-weight: 400;
-  text-align: left;
-  padding: 0.7vw;
-  white-space: pre-wrap;
-  white-space: -moz-pre-wrap;
-  white-space: -pre-wrap;
-  white-space: -o-pre-wrap;
-  word-wrap: break-word;
-}
-
-.notes h3 {
-  font-size: 2.6vw;
-  font-style: italic;
-  font-family: var(--note-font);
-  font-weight: 700;
-  text-align: center;
-  text-shadow: 0.3vh 0.3vh 0.5vh #00000030;
-  padding: 0.1vw;
-  white-space: pre-wrap;
-  white-space: -moz-pre-wrap;
-  white-space: -pre-wrap;
-  white-space: -o-pre-wrap;
-  word-wrap: break-word;
-}
-/* END text note appearance */
-
 /* foreground overlay for effects */
 .foreground-overlay {
   z-index: 400;
@@ -128,10 +83,67 @@
   font-size: 1.5vh;
 }
 
+/* BEGIN NOTES */
+.notes {
+  background-color: var(--note-bg);
+  border: var(--ui-border);
+  color: var(--note-text);
+  background-image: url("lines.png");
+  background-size: 0.2vw;
+  max-width: 34vw;
+  padding: 0.4vw;
+  position: relative;
+  backdrop-filter: var(--sb-blur);
+  -webkit-backdrop-filter: var(--sb-blur);
+  cursor: default;
+  user-select: none;
+}
+
+.notes pre {
+  font-size: 1.65vw;
+  font-family: var(--note-font);
+  font-weight: 400;
+  text-align: left;
+  padding: 0.7vw;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.notes h3 {
+  font-size: 2.6vw;
+  font-style: italic;
+  font-family: var(--note-font);
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0.3vh 0.3vh 0.5vh #00000030;
+  padding: 0.1vw;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+/* END text note appearance */
+
 /* EMOJI */
 .emoji-div h {
   font-size: 12vh;
   text-shadow: var(--text-shadow);
+  user-select: none;
+  cursor: default;
+}
+
+/* FANCY TEXT */
+
+.text-div h {
+  font-size: 7vh;
+  font-weight: 400;
+  font-family: "Archivo Black";
+  text-shadow: var(--text-shadow);
+  color: var(--note-text-light);
   user-select: none;
   cursor: default;
 }
