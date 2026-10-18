@@ -132,7 +132,7 @@
 
     <!-- context menu background -->
     <ul class='context' id="background-context">
-        <li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load object</li>
+        <li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load file</li>
         <li data-action="sticky" name="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
         <li data-action="emoji" name="emoji" id="emoj-menu"><span class="material-symbols-outlined">add_reaction</span>Emoji</li>
         <li data-action="title" name="title"><span class="material-symbols-outlined">slab_serif</span>Title text</li>
@@ -763,11 +763,11 @@
 
     /* THE BASE OBJECT CLASS */
     //a moveable scalable div with various right click options
-    //AllObjects.push(new MoveableObject(drag, scale, edit));
+    //subclasses handle specific implementation of various features
 
     class MoveableObject {
         
-        constructor(bdrag = true, bscale = true, btext = false, bcolor = false, color = "#ffffffff") {
+        constructor(bdrag = true, bscale = true, btext = false, bcolor = false, color = "#ffffffff", bfont = false) {
 
             this.self = this;
             this.bdrag = bdrag;
@@ -775,6 +775,8 @@
             this.text = "Edit text";
             this.colorinput = null;
             this.color = color;
+            this.bfont = bfont;
+            this.font = "";
             this.index = AllObjects.length;
 
             //create the div and handle basic drag/scale settings
@@ -812,6 +814,19 @@
             }
             if ( btext ) {
                 let stli = AddContextItem(this.menu, "edit", `<span class="material-symbols-outlined">edit</span>Edit text`, true);
+            }
+            if ( bfont ) {
+                let fsp = document.createElement("p");
+                this.fontselector = document.getElementById("default-font-selector").cloneNode(true);
+                this.fontselector.style.display = "inline";
+                this.font = "Verdana, Geneva, Tahoma, sans-serif";
+                fsp.appendChild(this.fontselector);
+                let temp = this.index;
+                this.fontselector.addEventListener("change", function(event) {
+                    FontUpdate(temp, event.target.value);
+                    $(".context").hide(100);
+                });
+                this.menu.insertBefore(fsp,this.menu.children[0]);
             }
             let lis = $(this.menu).children("li");
             for ( let i = 0; i < lis.length; i++ ) {
@@ -886,6 +901,10 @@
             this.color = s;
         }
 
+        SetFont(s) {
+            this.font = s;
+        }
+
         SetDraggable(b) {
             let s = b ? "enable" : "disable";
             $(this.div).draggable(s);
@@ -918,7 +937,7 @@
 
         constructor(text = "Sticky note contents") {
             let tc = window.getComputedStyle(document.body).getPropertyValue(`--sticky-c${Math.floor(Math.random() * 4) + 1}`);
-            super(true, true, true, true, tc);
+            super(true, true, true, true, tc, true);
             this.text = text;
             this.div.classList.add('sticky-div');
             this.stp = document.createElement("p");
@@ -938,6 +957,13 @@
             let sttop = document.createElement("div");
             sttop.classList.add("sticky-top");
             stdiv.appendChild(sttop);
+            //set the font selector to the default font for notes
+            for ( let i = 0; i < this.fontselector.options.length; i++ ) {
+                if ( window.getComputedStyle(document.body).getPropertyValue('--note-font').includes(this.fontselector.options[i].value) ) {
+                    this.fontselector.selectedIndex = i;
+                    this.font = this.fontselector.options[i].value;
+                }
+            }
         }
 
         HandleTextEdit() {
@@ -950,6 +976,11 @@
             this.stint.style.backgroundColor = this.color;
             this.stp.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
         }
+
+        SetFont(s) {
+            MoveableObject.prototype.SetFont.call(this, s);
+            this.stp.style.fontFamily = this.font;
+        }
     }
 
     /* NOTES */
@@ -960,7 +991,7 @@
 
         constructor(text = "Note", body = "Note body text") {
             let tc = window.getComputedStyle(document.body).getPropertyValue('--note-bg');
-            super(true, true, true, true, tc);
+            super(true, true, true, true, tc, true);
             this.div.classList.add('notes');
             this.text = text;
             this.div.style.backgroundColor = this.color;
@@ -972,6 +1003,13 @@
             this.body = body;
             this.pre.textContent = this.body;
             $(this.div).css('min-width', this.div.offsetWidth);//force min width
+            //set the font selector to the default font for notes
+            for ( let i = 0; i < this.fontselector.options.length; i++ ) {
+                if ( window.getComputedStyle(document.body).getPropertyValue('--note-font').includes(this.fontselector.options[i].value) ) {
+                    this.fontselector.selectedIndex = i;
+                    this.font = this.fontselector.options[i].value;
+                }
+            }
         }
 
         AssignMenuAction(li, elem, owner) {
@@ -992,13 +1030,24 @@
             this.pre.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
             this.h.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
         }
+
+        SetFont(s) {
+            MoveableObject.prototype.SetFont.call(this, s);
+            this.h.style.fontFamily = this.font;
+            this.pre.style.fontFamily = this.font;
+        }
     }
 
     //called by a colorpicker
     //sends the color to the object with index i
-    function ColorUpdate(picker, i)
-    {
+    function ColorUpdate(picker, i) {
         AllObjects[i].SetColor(picker.toRGBAString());
+    }
+
+    //called by a fontpicker
+    //sends the font to the object with index i
+    function FontUpdate(i, font) {
+        AllObjects[i].SetFont(font);
     }
 
     //loads an array of files, and handles them according to type
