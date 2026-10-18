@@ -794,8 +794,19 @@
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
             if ( bcolor ) {
+                let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
+                let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
                 let ccli = AddContextItem(this.menu, "color", `<span class="material-symbols-outlined">colors</span>Change color`, true);
-                this.colorinput = new JSColor(ccli, {previewElement: '', format: 'rgba', onInput: `ColorUpdate(this, ${this.index})`});
+                this.colorinput = new JSColor(ccli, {
+                    previewElement: '',
+                    format: 'rgba',
+                    preset:'large',
+                    backgroundColor: bgc,
+                    borderColor: bdc,
+                    borderRadius: 5,
+                    padding: 15,
+                    onInput: `ColorUpdate(this, ${this.index})`
+                });
                 jscolor.install();
                 this.colorinput.fromString(this.color);
             }
