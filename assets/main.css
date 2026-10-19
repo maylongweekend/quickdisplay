@@ -3,25 +3,25 @@
 
 /* DEFAULT VARIABLES */
 :root {
-  --note-bg: rgba(209, 209, 14, 0.655);
+  --note-bg: rgba(210, 210, 15, 0.655);
   --note-text: #181818;
-  --note-text-light: rgb(234, 234, 234);
+  --note-text-light: #eaeaea;
   --note-font: "Indie Flower", cursive;
-  --text-shadow: 0.3vh 0.3vh 0.5vh rgba(0, 0, 0, 0.243);
-  --ui-bg: rgba(236, 236, 236, 0.878);
-  --ui-bg-trans: rgba(236, 236, 236, 0.627);
-  --ui-text: rgb(62, 62, 62);
-  --ui-deselect: rgba(119, 119, 119, 0.776);
-  --ui-hover: rgba(67, 158, 250, 0.855);
+  --text-shadow: 0.3vh 0.3vh 0.5vh #0000003e;
+  --ui-bg: #ececece0;
+  --ui-bg-trans: #ecececa0;
+  --ui-text: #3e3e3e;
+  --ui-deselect: #777777c6;
+  --ui-hover: #439efada;
   --ui-border: 1px solid var(--ui-border-c);
-  --ui-border-c: rgba(190, 196, 206, 0.824);
+  --ui-border-c: #bec4ced2;
   --ui-radius: 5px;
   --ui-font: Verdana, Geneva, Tahoma, sans-serif;
   --sb-blur: blur(0);
-  --sticky-c1: rgba(217, 255, 49, 0.78);
-  --sticky-c2: rgba(49, 255, 221, 0.78);
-  --sticky-c3: rgba(255, 190, 49, 0.78);
-  --sticky-c4: rgba(255, 149, 181, 0.78);
+  --sticky-c1: rgba(218, 255, 51, 0.78);
+  --sticky-c2: rgba(51, 255, 221, 0.78);
+  --sticky-c3: rgba(255, 190, 51, 0.78);
+  --sticky-c4: rgba(255, 148, 180, 0.78);
 }
 
 /* foreground overlay for effects */
