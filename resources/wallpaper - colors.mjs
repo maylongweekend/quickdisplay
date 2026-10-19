@@ -205,8 +205,8 @@ function animate() {
 }
 
 //utility to convert hex color value to hsl
-// Source - https://css-tricks.com/converting-color-spaces-in-javascript/
-// by John Kantner
+//Source - https://css-tricks.com/converting-color-spaces-in-javascript/
+//by John Kantner
 function HextoHSL(color) {
   // Convert hex to RGB first
   let r = 0, g = 0, b = 0;
