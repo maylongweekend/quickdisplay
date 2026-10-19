@@ -795,6 +795,7 @@
 
             //set up the context menu
             this.menu = document.getElementById("default-context").cloneNode(true);
+            this.menu.id = "context-" + this.index;
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
 
@@ -831,6 +832,7 @@
             if ( bfont ) {
                 let fsp = document.createElement("p");
                 this.fontselector = document.getElementById("default-font-selector").cloneNode(true);
+                this.fontselector.id = "font-" + this.index;
                 this.fontselector.style.display = "inline";
                 this.font = "Verdana, Geneva, Tahoma, sans-serif";
                 fsp.appendChild(this.fontselector);
@@ -970,7 +972,7 @@
     class StickyNoteObj extends MoveableObject {
 
         constructor(text = "") {
-            super(true, true, true, true, true);
+            super(true, true, true, true, true, true);
 
             //build sticky note structure
             this.text = text.length > 0 ? text : prompt("Enter your text", "Sticky note contents");
@@ -1001,9 +1003,29 @@
             }
         }
 
+        
+        //animate for rainbow effect
+        Frame(delta) {
+            this.anicolor.h = ( this.anicolor.h + 0.1 )  % 360;
+            this.stint.style.backgroundColor = `hsl(${this.anicolor.h}, ${this.anicolor.s}%, ${this.anicolor.l}%)`;
+        }
+
+        ToggleAnimate() {
+            MoveableObject.prototype.ToggleAnimate.call(this);
+            if ( !this.isanimating ) {
+                this.stint.style.backgroundColor = this.color;
+            }
+        }
+
         HandleInitialColor() {
             //get random sticky color
             this.color = window.getComputedStyle(document.body).getPropertyValue(`--sticky-c${Math.floor(Math.random() * 4) + 1}`);
+            //animate color
+            this.anicolor = {};
+            this.anicolor.rgba = this.color;
+            log(this.anicolor.rgba);
+            RGBAToHSLA(this.anicolor);
+
         }
 
         HandleTextEdit() {
@@ -1015,6 +1037,8 @@
             MoveableObject.prototype.SetColor.call(this, s);
             this.stint.style.backgroundColor = this.color;
             this.stp.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
+            this.anicolor.rgba = this.color;
+            RGBAToHSLA(this.anicolor);
         }
 
         SetFont(s) {
@@ -1543,5 +1567,107 @@
         return div;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+        ------------------------------------
+            UTILITY
+        ------------------------------------
+    */
+
+
+    //adapted from https://css-tricks.com/converting-color-spaces-in-javascript/
+    function RGBAToHSLA(color) {
+        let rgba = color.rgba;
+        let sep = rgba.indexOf(",") > -1 ? "," : " ";
+        rgba = rgba.substr(5).split(")")[0].split(sep);
+
+        // Strip the slash if using space-separated syntax
+        if (rgba.indexOf("/") > -1) 
+            rgba.splice(3,1);
+
+        for (let R in rgba) {
+            let r = rgba[R];
+            if (r.indexOf("%") > -1) {
+                let p = r.substr(0,r.length - 1) / 100;
+
+                if (R < 3) { 
+                    rgba[R] = Math.round(p * 255);
+                } else {
+                    rgba[R] = p;
+                }
+            }
+        }
+
+        // Make r, g, and b fractions of 1
+        let r = rgba[0] / 255,
+            g = rgba[1] / 255,
+            b = rgba[2] / 255,
+            a = rgba[3];
+
+            log(rgba);
+
+        // Find greatest and smallest channel values
+        let cmin = Math.min(r,g,b),
+            cmax = Math.max(r,g,b),
+            delta = cmax - cmin,
+            h = 0,
+            s = 0,
+            l = 0;
+        
+        // Calculate hue
+        // No difference
+        if (delta == 0)
+            h = 0;
+        // Red is max
+        else if (cmax == r)
+            h = ((g - b) / delta) % 6;
+        // Green is max
+        else if (cmax == g)
+            h = (b - r) / delta + 2;
+        // Blue is max
+        else
+            h = (r - g) / delta + 4;
+
+        h = Math.round(h * 60);
+            
+        // Make negative hues positive behind 360°
+        if (h < 0)
+            h += 360;
+
+        // Calculate lightness
+        l = (cmax + cmin) / 2;
+
+        // Calculate saturation
+        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+            
+        // Multiply l and s by 100
+        s = +(s * 100).toFixed(1);
+        l = +(l * 100).toFixed(1);
+
+        log("hsla(" + h + "," + s + "%," +l + "%," + a + ")");
+        color.h = h;
+        color.s = s;
+        color.l = l;
+        color.a = a;
+    }
 </script>
-</html>
+</body>
