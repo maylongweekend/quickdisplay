@@ -1005,8 +1005,8 @@
         
         //animate for rainbow effect
         Frame(delta) {
-            //this.anicolor.h = ( this.anicolor.h + 0.1 )  % 360;
-            //this.stint.style.backgroundColor = `hsl(${this.anicolor.h}, ${this.anicolor.s}%, ${this.anicolor.l}%)`;
+            this.anicolor.h = ( this.anicolor.h + 1.5 )  % 360;
+            this.stint.style.backgroundColor = `hsla(${this.anicolor.h}, ${this.anicolor.s}%, ${this.anicolor.l}%, ${this.anicolor.a})`;
         }
 
         ToggleAnimate() {
@@ -1020,8 +1020,12 @@
             //get random sticky color
             this.color = window.getComputedStyle(document.body).getPropertyValue(`--sticky-c${Math.floor(Math.random() * 4) + 1}`);
             //animate color
-            this.anicolor = {};
-            //rgba = "rgba(" + hsl2rgb(h, s, l).join(", ") + ", " + a + ")";
+            this.anicolor = {
+                h: 283,
+                s: 100,
+                l: 70,
+                a: 0.78
+            };
         }
 
         HandleTextEdit() {
@@ -1339,7 +1343,7 @@
     //attempt to load javascript from file
     function LoadNewScript(src) {
         (async () => {
-            await import(src).catch((error) => console.log('Loading ' + src + ' failed: ' + error));
+            await import(src).catch((error) => log('Loading ' + src + ' failed: ' + error));
         })();
     }    
 
