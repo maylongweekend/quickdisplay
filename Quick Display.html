@@ -125,6 +125,7 @@
     <!-- context menu background -->
     <ul class='context' id="background-context">
 
+        <!-- main menu -->
         <div class='menu-main'>
             <li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load file</li>
             <li data-action="sticky" name="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
@@ -140,19 +141,34 @@
             <li data-action="settings" name="settings"><span class="material-symbols-outlined">tv_options_input_settings</span>Settings ...</li>
         </div>
 
-        <div class='menu-backg' style="display: none;">
+        <!-- more items submenu -->
+        <div class="menu-more" style="display: none;">
             <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
-            <li data-action="backg" name="backg"><span class="material-symbols-outlined">add_photo_alternate</span>Load file</li>
             <hr />
-            <li data-action="scripts" name="scripts"><span class="material-symbols-outlined">javascript</span>Scripts ...</li>
-        </div>
-            
-        <div class="menu-search" style="display: none;">
-            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
         </div>
 
+        <!-- background options submenu -->
+        <div class='menu-backg' style="display: none;">
+            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+            <hr />
+            <li data-action="backg" name="backg"><span class="material-symbols-outlined">add_photo_alternate</span>Load file</li>
+            <li data-action="resetb" name="resetb"><span class="material-symbols-outlined">reset_image</span>Reset background</li>
+        </div>
+        
+        <!-- search submenu -->
+        <div class="menu-search" style="display: none;">
+            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+            <hr />
+            <li data-action="ddg" name="ddg"><span class="material-symbols-outlined">policy</span>DuckDuckGo</li>
+            <li data-action="google" name="google"><span class="material-symbols-outlined">g_mobiledata_badge</span>Google</li>
+            <li data-action="yout" name="yout"><span class="material-symbols-outlined">video_search</span>YouTube</li>
+            <li data-action="maps" name="maps"><span class="material-symbols-outlined">travel_explore</span>Maps</li>
+        </div>
+
+        <!-- settings submenu -->
         <div class='menu-settings' style="display: none;">
             <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+            <hr />
             <li data-action="show" name="show"><span class="material-symbols-outlined">visibility</span>Show hidden objects</li>
             <li data-action="page" name="page"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls</li>
             <li data-action="grid" name="grid"><span class="material-symbols-outlined">border_inner</span>Toggle helper grid</li>
@@ -287,7 +303,7 @@
             $(".context").hide(100, function() {
                 let thismenu = $('#background-context');
                 thismenu.children("div").hide();
-                thismenu.children(".menu-main").css('display', 'inline');
+                thismenu.children(".menu-main").show();
             });
         }
     });
@@ -316,12 +332,6 @@
     //adds the background context menu to the canvas right click
     //then assigns actions for each context menu item
 
-    //functions:
-    //AddContextMenu(obj, menu)                             - attaches menu to obj
-    //CreateDefaultContextMenu(elem)                        - sets up default menu with items for elem
-    //CreateContextMenu(elem)                               - sets up empty menu for elem
-    //AddContextItem(menu, action, text, bBefore)           - adds a li item with text and data-action to top (bBefore) or bottom of menu
-
 
     //attach the background context menu to canvas
     AddContextMenu(canvas, $("#background-context"));
@@ -335,6 +345,14 @@
         let thismenu = $('#background-context');
         //this is the triggered action name
         switch($(this).attr("data-action")) {
+
+            //BACK TO MAIN MENU
+            case "back":
+                thismenu.children("div").hide(100);
+                thismenu.children(".menu-main").show(100);
+                break;
+
+            //NEW ITEMS
             case "add":
                 $(".context").hide(100);
                 document.getElementById('file-input').click();
@@ -352,9 +370,55 @@
                 $(".context").hide(100);
                 AllObjects.push(new TextObj());
                 break;
+            case "more":
+                thismenu.children(".menu-main").toggle(100);
+                thismenu.children(".menu-more").toggle(100);
+                break;
+
+            //BACKGROUND
+            case "backmenu":
+                thismenu.children(".menu-main").toggle(100);
+                thismenu.children(".menu-backg").toggle(100);
+                break;
             case "backg":
                 $(".context").hide(100);
                 document.getElementById('background-input').click();
+                break;
+            case "resetb":
+                $(".context").hide(100);
+                SetBackground("assets/colorful.mp4", true);
+                break;
+
+            //SEARCH
+            case "searchmenu":
+                thismenu.children(".menu-main").toggle(100);
+                thismenu.children(".menu-search").toggle(100);
+                break;
+            case "ddg":
+                $(".context").hide(100);
+                s = prompt("Search DuckDuckGo for","");
+                window.open(`https://duckduckgo.com/?q=${s}`,'Search','width=900,height=600');
+                break;
+            case "google":
+                $(".context").hide(100);
+                s = prompt("Search Google for","");
+                window.open(`https://www.google.ca/search?q=${s}&udm=web`,'Search','width=900,height=600');
+                break;
+            case "yout":
+                $(".context").hide(100);
+                s = prompt("Search Youtube for","");
+                window.open(`https://www.youtube.com/results?search_query=${s}`,'Search','width=900,height=600');
+                break;
+            case "maps":
+                $(".context").hide(100);
+                s = prompt("Search Google Maps for","");
+                window.open(`https://www.google.com/maps/search/${s}`,'Search','width=900,height=600');
+                break;
+            
+            //SETTINGS
+            case "settings":
+                thismenu.children(".menu-main").toggle(100);
+                thismenu.children(".menu-settings").toggle(100);
                 break;
             case "show":
                 $(".context").hide(100);
@@ -368,22 +432,6 @@
                 }
                 thismenu.children("div").hide();
                 thismenu.children(".menu-main").show();
-                break;
-            case "settings":
-                thismenu.children(".menu-main").toggle(100);
-                thismenu.children(".menu-settings").toggle(100);
-                break;
-            case "backmenu":
-                thismenu.children(".menu-main").toggle(100);
-                thismenu.children(".menu-backg").toggle(100);
-                break;
-            case "searchmenu":
-                thismenu.children(".menu-main").toggle(100);
-                thismenu.children(".menu-search").toggle(100);
-                break;
-            case "back":
-                thismenu.children("div").hide(100);
-                thismenu.children(".menu-main").show(100);
                 break;
             case "page":
                 $(".context").hide(100);
@@ -590,12 +638,6 @@
 
     //sets up click listen for page buttons
 
-    //functions:
-    //MovePage(dir)                     - slides objects width*dir pixels
-    //resetTransition()                 - sets left transition back to instant after animating page slide
-    //watchButNext()                    - next page button click
-    //watchButPrev()                    - previous page button click
-
 
     let pager = document.getElementById('page-buttons');
 
@@ -709,9 +751,6 @@
 
     //sets up paste listen for ctrl+v
 
-    //functions:
-    //
-
 
     //detects ctrl+v paste events
     window.addEventListener("paste", (event) => { PasteV(event); });
@@ -815,10 +854,10 @@
         ------------------------------------
     */
 
-
     /* THE BASE OBJECT CLASS */
     //a moveable scalable div with various right click options
     //subclasses handle specific implementation of various features
+    
 
     class MoveableObject {
         
@@ -1403,7 +1442,7 @@
     }    
 
     //loads a new background video
-    function SetBackground(src,bVid) {
+    function SetBackground(src, bVid) {
         let video = document.getElementById('backgroundvid');
         let img = document.getElementById('backgroundimg');
         if ( bVid ) {
