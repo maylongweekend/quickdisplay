@@ -28,13 +28,15 @@ QD is written in Javascript and HTML.  It is open-source and shouldn't bother yo
 
 
 ## Adding objects
-In the right-click menu, choose `Load object` to open the file picker.  Here you can add several different types of files.  Multiple file picking (by holding the shift/ctrl keys) is supported.
-- Images and videos - most popular formats including animated and transparent types are supported.
-- Text documents (.TXT) - text files are loaded as "notes" with a handwritten visual style.
-- HTML files (.HTML) - these are loaded directly into the page.  With these you can build custom elements.  See the included Google Classroom and Slides buttons in the resources folder for examples.
-- Scripts (.JS) - scripts allow you to modify the way the software behaves in a deep way.  Scripts can include custom elements, interactive tools, special effects, and more.
+In the right-click menu, you can choose a variety of quick options to add to your SMART Board.
+- `Load file` will open the file picker.  Here you can add gifs, images, videos, text files, and more to the screen.
+- `Sticky note` creates a quick note with a fun visual style.  You can right-click on this note to change thetext, font, and color, animate it in rainbow colors, etc.
+- `Emoji` opens a quick emoji picker to add fun icons to your screen.
+- `Title text` creates a large text item.  You can right click on it to change its text, font, and color, animate it in rainbow colors, etc.
 
-You can also quickly add sticky notes, emojis, and large text through the right click menu.  These objects have the same right click options as others and behave the same.
+**More about the file picker**
+
+You can add more than just images and videos.  Text files are loaded as "notes" with a handwritten visual style.  HTML files are loaded directly into the page.  With these you can build custom elements.  See the included Google Classroom and Slides buttons in the resources folder for examples.  You can also load Javascript code that allows you to modify how the software behaves in a deep way.  Scripts can include custom elements, interactive tools, special effects, and more.
 
 Once an object is added, it usually appears as a draggable item that can be placed around the app as you like.  See below for more info on the ways you can interact with objects and scripts added to the page.
 
@@ -45,10 +47,7 @@ In the right-click menu, choose `Change background` to open the file picker.  He
 - Scripts (.MJS) - scripts can give greater control over various ways the background appears.
 
 > [!NOTE]
-> Script backgrounds may not play nicely with each other and can cause glitches if not used carefully.
-
-> [!NOTE]
-> There is no functional difference between the JS files loaded with the `Add object` option and the MJS files loaded with the `Change background` option - both are simple Javascript.  The file extension tells QD whether the script is to be an object or a background.
+> Script backgrounds may not play nicely with each other and can cause glitches if not used carefully. Reload your page before swapping script backgrounds.
 
 
 ## Interacting with objects
@@ -78,7 +77,7 @@ Surprisingly, the `Delete` option in the right-click menu lets you delete an obj
 ### More actions
 Many objects will have additional features and right-click options.
 - images and videos allow you to add a hyperlink in their right-click menu.  Use this to set a link that can be opened by double-clicking on the item.
-- scripts such as `fancy text.js` will let you edit the text content through the right-click menu.
+- text items will let you edit the text content through the right-click menu.
 
 
 ## Page controls
@@ -111,7 +110,6 @@ Some helpful tools in the `resources` folder include:
 - `clock - analog.js` - an elegant clock face with adjustable transparency.
 - `clock - digital.js` - a digital clock with some color/font formatting options.
 - `clock - teaching tool.js` - an analog clock with hidden number values that can be revealed to help teach students.
-- `fancy text.js` - formattable large text.  Has an animated rainbow option.
 - `graph paper.js` - adjustable grid lines for your smartboard.
 - `todo list.js` - a customizable to-do list.  Right-click or click underneath to add a new item.  Click on any time to check it off.  Drag items by the handles to reorder.
 - `wallpaper - colors.mjs` - build your own color gradients for your background.  Allows blending with images/videos underneath.
