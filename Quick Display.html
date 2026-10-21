@@ -124,18 +124,35 @@
 
     <!-- context menu background -->
     <ul class='context' id="background-context">
+
         <div class='menu-main'>
             <li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load file</li>
             <li data-action="sticky" name="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
             <li data-action="emoji" name="emoji" id="emoj-menu"><span class="material-symbols-outlined">add_reaction</span>Emoji</li>
             <li data-action="title" name="title"><span class="material-symbols-outlined">new_label</span>Title text</li>
             <li data-action="paste" name="paste" style="display: none;"><span class="material-symbols-outlined">content_paste_go</span>Paste clipboard</li>
-            <li data-action="backg" name="backg"><span class="material-symbols-outlined">wallpaper</span>Change background</li>
+            <li data-action="more" name="more"><span class="material-symbols-outlined">list_alt_add</span>More items ...</li>
+            <hr />
+            <li data-action="backmenu" name="backmenu"><span class="material-symbols-outlined">wallpaper</span>Backgrounds ...</li>
+            <hr />
+            <li data-action="searchmenu" name="searchmenu"><span class="material-symbols-outlined">search</span>Search ...</li>
             <hr />
             <li data-action="settings" name="settings"><span class="material-symbols-outlined">tv_options_input_settings</span>Settings ...</li>
         </div>
+
+        <div class='menu-backg' style="display: none;">
+            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+            <li data-action="backg" name="backg"><span class="material-symbols-outlined">add_photo_alternate</span>Load file</li>
+            <hr />
+            <li data-action="scripts" name="scripts"><span class="material-symbols-outlined">javascript</span>Scripts ...</li>
+        </div>
+            
+        <div class="menu-search" style="display: none;">
+            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+        </div>
+
         <div class='menu-settings' style="display: none;">
-            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back ...</li>
+            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
             <li data-action="show" name="show"><span class="material-symbols-outlined">visibility</span>Show hidden objects</li>
             <li data-action="page" name="page"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls</li>
             <li data-action="grid" name="grid"><span class="material-symbols-outlined">border_inner</span>Toggle helper grid</li>
@@ -143,7 +160,7 @@
             <hr />
             <li data-action="reset" name="reset"><span class="material-symbols-outlined">restart_alt</span>Reset all</li>
         </div>
-            
+
     </ul>
 
     <!-- context menu default object -->
@@ -265,9 +282,13 @@
     //if the document is clicked somewhere, close all context menus
     $(document).bind("mousedown", function(e) {
         //if the clicked element is not the menu
-        if (!$(e.target).parents(".context").length > 0) {
+        if ( !$(e.target).parents(".context").length > 0 ) {
             // Hide it
-            $(".context").hide(100);
+            $(".context").hide(100, function() {
+                let thismenu = $('#background-context');
+                thismenu.children("div").hide();
+                thismenu.children(".menu-main").css('display', 'inline');
+            });
         }
     });
 
@@ -351,6 +372,14 @@
             case "settings":
                 thismenu.children(".menu-main").toggle(100);
                 thismenu.children(".menu-settings").toggle(100);
+                break;
+            case "backmenu":
+                thismenu.children(".menu-main").toggle(100);
+                thismenu.children(".menu-backg").toggle(100);
+                break;
+            case "searchmenu":
+                thismenu.children(".menu-main").toggle(100);
+                thismenu.children(".menu-search").toggle(100);
                 break;
             case "back":
                 thismenu.children("div").hide(100);
