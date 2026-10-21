@@ -30,35 +30,27 @@
 
         - WISHLIST:
             - desk pet
-            - force canvas size - OR just draw a line at given points?
             - click to reveal boxes that dynamically grow to reveal the answer - https://codepen.io/jtcattelan/pen/RwKdjdm
             - layout saving
             - rainbow borders? https://codepen.io/simeydotme/pen/eYXPLEP
             - sparticles - https://github.com/simeydotme/sparticles
-        - FANCY WALLPAPERS:
-            - other ideas from https://htmlhub.org
-            - https://bookofshapes.com/
-            - VANTA: net will be a good option
-            - CSS wallpaper, paste in gradient from gradientmagic?
-                - auto remove text background-image or background if copypasted in
-            - better matrix implementation
+            - FANCY WALLPAPERS:
+                - other ideas from https://htmlhub.org
+                - https://bookofshapes.com/
+                - VANTA net will be a good option
+                - flow field - https://codepen.io/lukeslp/pen/VYjpBzx
+                - CSS wallpaper, paste in gradient from gradientmagic?
+                    - auto remove text background-image or background if copypasted in
+                - better matrix implementation
         - CLOCK AND TIME:
             - stopwatch/timer
-        - SOFTWARE IMPROVEMENT
-            - make a class w constructor for objects
-            - right click menu - sub menus clear and redraw the whole menu, with back option
-            - implement best JS modules as tools
-            - unified fonts - load them all in app then add-ons just show the fonts we have access to
-            - toolbar
-            - unified UI, shadow, font loading and setting
-            - build and save HTML objects like hover reveal cards, etc
+            - flip clock - https://codepen.io/editor/lukeslp/pen/019f62ae-89ac-7dc7-98f7-f4f7cfe8d392
         - bugs:
             - right click paste > menu item appears if clipboard has item, fix firefox issues
             - shadow on analog clock
             - elements with background shadows extend too wide? - firefox only, not on text
             - dragging scaled elements is weird
             - canvas wallpapers don't switch nicely to each other
-            - multiple fancy texts with rainbow don't work
             - changing resolutions after adding things can be buggy
 
         */
@@ -132,19 +124,26 @@
 
     <!-- context menu background -->
     <ul class='context' id="background-context">
-        <li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load file</li>
-        <li data-action="sticky" name="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
-        <li data-action="emoji" name="emoji" id="emoj-menu"><span class="material-symbols-outlined">add_reaction</span>Emoji</li>
-        <li data-action="title" name="title"><span class="material-symbols-outlined">slab_serif</span>Title text</li>
-        <li data-action="paste" name="paste" style="display: none;"><span class="material-symbols-outlined">content_paste_go</span>Paste clipboard</li>
-        <li data-action="back" name="back"><span class="material-symbols-outlined">wallpaper</span>Change background</li>
-        <hr />
-        <li data-action="show" name="show"><span class="material-symbols-outlined">visibility</span>Show hidden objects</li>
-        <li data-action="page" name="page"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls</li>
-        <li data-action="grid" name="grid"><span class="material-symbols-outlined">border_inner</span>Toggle helper grid</li>
-        <li data-action="blur" name="blur"><span class="material-symbols-outlined">lens_blur</span>Toggle blur effects</li>
-        <hr />
-        <li data-action="reset" name="reset"><span class="material-symbols-outlined">restart_alt</span>Reset all</li>
+        <div class='menu-main'>
+            <li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load file</li>
+            <li data-action="sticky" name="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
+            <li data-action="emoji" name="emoji" id="emoj-menu"><span class="material-symbols-outlined">add_reaction</span>Emoji</li>
+            <li data-action="title" name="title"><span class="material-symbols-outlined">new_label</span>Title text</li>
+            <li data-action="paste" name="paste" style="display: none;"><span class="material-symbols-outlined">content_paste_go</span>Paste clipboard</li>
+            <li data-action="backg" name="backg"><span class="material-symbols-outlined">wallpaper</span>Change background</li>
+            <hr />
+            <li data-action="settings" name="settings"><span class="material-symbols-outlined">tv_options_input_settings</span>Settings ...</li>
+        </div>
+        <div class='menu-settings' style="display: none;">
+            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back ...</li>
+            <li data-action="show" name="show"><span class="material-symbols-outlined">visibility</span>Show hidden objects</li>
+            <li data-action="page" name="page"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls</li>
+            <li data-action="grid" name="grid"><span class="material-symbols-outlined">border_inner</span>Toggle helper grid</li>
+            <li data-action="blur" name="blur"><span class="material-symbols-outlined">lens_blur</span>Toggle blur effects</li>
+            <hr />
+            <li data-action="reset" name="reset"><span class="material-symbols-outlined">restart_alt</span>Reset all</li>
+        </div>
+            
     </ul>
 
     <!-- context menu default object -->
@@ -312,25 +311,32 @@
         let l;
         let r;
         let s;
+        let thismenu = $('#background-context');
         //this is the triggered action name
         switch($(this).attr("data-action")) {
             case "add":
+                $(".context").hide(100);
                 document.getElementById('file-input').click();
                 break;
             case "sticky":
+                $(".context").hide(100);
                 AllObjects.push(new StickyNoteObj());
                 //CreateSticky(prompt("Enter your text", "Sticky note contents"));
                 break;
             case "emoji":
+                $(".context").hide(100);
                 //already handled by emoji picker event
                 break;
             case "title":
+                $(".context").hide(100);
                 AllObjects.push(new TextObj());
                 break;
-            case "back":
+            case "backg":
+                $(".context").hide(100);
                 document.getElementById('background-input').click();
                 break;
             case "show":
+                $(".context").hide(100);
                 divs = document.getElementsByClassName("object-div");
                 for ( let i = 0; i < divs.length; i++ ) {
                     //reveal hidden items only on current page
@@ -339,23 +345,42 @@
                         $(divs[i]).css('visibility', 'visible');
                     }
                 }
+                thismenu.children("div").hide();
+                thismenu.children(".menu-main").show();
+                break;
+            case "settings":
+                thismenu.children(".menu-main").toggle(100);
+                thismenu.children(".menu-settings").toggle(100);
+                break;
+            case "back":
+                thismenu.children("div").hide(100);
+                thismenu.children(".menu-main").show(100);
                 break;
             case "page":
+                $(".context").hide(100);
                 $('#page-buttons').toggle();
+                thismenu.children("div").hide();
+                thismenu.children(".menu-main").show();
                 break;
             case "grid":
+                $(".context").hide(100);
                 $(".grid-overlay").toggle();
+                thismenu.children("div").hide();
+                thismenu.children(".menu-main").show();
                 break;
             case "blur":
+                $(".context").hide(100);
                 r = $(":root").css("--sb-blur");
                 s = r ==  "blur(12px)" ? "blur(0)" : "blur(12px)";
                 $(":root").css("--sb-blur", s);
+                thismenu.children("div").hide();
+                thismenu.children(".menu-main").show();
                 break;
             case "reset":
+                $(".context").hide(100);
                 location.reload();
                 break;
         }
-        $(".context").hide(100);
     });
 
     //links an object to a specific context menu
