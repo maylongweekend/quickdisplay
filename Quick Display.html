@@ -166,6 +166,7 @@
             <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
             <hr />
             <li data-action="wshare" name="wshare"><span class="material-symbols-outlined">video_frame_copy</span>Window share</li>
+            <li data-action="camera" name="camera"><span class="material-symbols-outlined">videocam</span>Camera</li>
         </div>
 
         <!-- background options submenu -->
@@ -433,6 +434,10 @@
             case "wshare":
                 $(".context").hide(100);
                 AllObjects.push(new WindowObj());
+                break;
+            case "camera":
+                $(".context").hide(100);
+                AllObjects.push(new CameraObj());
                 break;
 
             //BACKGROUND
@@ -1428,13 +1433,17 @@
             this.video.autoplay = true;
             this.video.muted = true;
             this.div.appendChild(this.video);
+            this.SetMenuItem();
+            this.SetWindow();
+        }
+
+        SetMenuItem() {
             this.li = AddContextItem(this.menu, "neww", `<span class="material-symbols-outlined">video_frame_copy</span>Select window to share`, true);
             this.li.owner = this.self;
             this.li.addEventListener('click', function() {
                 $(".context").hide(100);
                 this.owner.SetWindow();
             });
-            this.SetWindow();
         }
 
         SetWindow() {
@@ -1447,10 +1456,23 @@
         }
 
         handleError(error) {
-            alert('Window share error: \n'+ error);
+            alert('Video stream error: \n'+ error);
         }
     }
 
+
+    /* CAMERA */
+    //a window for the computer's attached camera
+    //AllObjects.push(new CameraObj());
+
+    class CameraObj extends WindowObj {
+
+        SetMenuItem() {}
+
+        SetWindow() {
+            navigator.mediaDevices.getUserMedia(vidconstraints).then((value) => {this.handleSuccess(value);}).catch((value) => {this.handleError(value);});
+        }
+    }
 
 
 
