@@ -1432,12 +1432,12 @@
             this.li.owner = this.self;
             this.li.addEventListener('click', function() {
                 $(".context").hide(100);
-                this.owner.SetWindow(this.owner.video);
+                this.owner.SetWindow();
             });
-            this.SetWindow(this.video);
+            this.SetWindow();
         }
 
-        SetWindow(obj) {
+        SetWindow() {
             navigator.mediaDevices.getDisplayMedia(vidconstraints).then((value) => {this.handleSuccess(value);}).catch((value) => {this.handleError(value);});
         }
 
