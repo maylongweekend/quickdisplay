@@ -306,9 +306,11 @@
     */
 
 
-    //master array
-    //AllObjects.push(new MoveableObject(options));
+    //master object array
     let AllObjects = [];
+
+    //background layer array
+    let AllBackgrounds = [];
 
     //quick log
     function log(s) {
@@ -1430,13 +1432,13 @@
             this.li.owner = this.self;
             this.li.addEventListener('click', function() {
                 $(".context").hide(100);
-                this.owner.SetWindow();
+                this.owner.SetWindow(this.owner.video);
             });
-            this.SetWindow();
+            this.SetWindow(this.video);
         }
 
-        SetWindow() {
-            navigator.mediaDevices.getDisplayMedia(vidconstraints).then(this.handleSuccess).catch(this.handleError);
+        SetWindow(obj) {
+            navigator.mediaDevices.getDisplayMedia(vidconstraints).then((value) => {this.handleSuccess(value);}).catch((value) => {this.handleError(value);});
         }
 
         handleSuccess(stream) {
