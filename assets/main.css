@@ -22,6 +22,7 @@
   --sticky-c2: rgba(51, 255, 221, 0.78);
   --sticky-c3: rgba(255, 190, 51, 0.78);
   --sticky-c4: rgba(255, 148, 180, 0.78);
+  --body-bg-color: #080808;
 }
 
 /* foreground overlay for effects */
@@ -354,4 +355,5 @@ html,body {
    height: 100%;
    margin: 0;
    overflow: hidden;
+   background-color: #cccccc;
 }
