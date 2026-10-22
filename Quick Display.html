@@ -101,6 +101,26 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- HTML PAGE STRUCTURE -->
 
 
@@ -145,6 +165,7 @@
         <div class="menu-more" style="display: none;">
             <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
             <hr />
+            <li data-action="wshare" name="wshare"><span class="material-symbols-outlined">video_frame_copy</span>Window share</li>
         </div>
 
         <!-- background options submenu -->
@@ -259,6 +280,25 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*
         ------------------------------------
             SET UP
@@ -307,6 +347,14 @@
             });
         }
     });
+
+
+
+
+
+
+
+
 
 
 
@@ -373,6 +421,12 @@
             case "more":
                 thismenu.children(".menu-main").toggle(100);
                 thismenu.children(".menu-more").toggle(100);
+                break;
+
+            //MORE ITEMS
+            case "wshare":
+                $(".context").hide(100);
+                AllObjects.push(new WindowObj());
                 break;
 
             //BACKGROUND
@@ -589,6 +643,11 @@
 
 
 
+
+
+
+
+
     /*
         ------------------------------------
             EMOJIS
@@ -611,6 +670,7 @@
         //newEm.appendChild(newEmH);
         AllObjects.push(new EmojiObj(emoji.char));
     });
+
 
 
 
@@ -1348,6 +1408,71 @@
     }
 
 
+    /* WINDOW SHARE */
+    //a mirror of another window
+    //AllObjects.push(new WindowObj());
+
+    class WindowObj extends MoveableObject {
+        
+        constructor() {
+            super(true, true);
+            this.constraints = {
+                video: true
+            };
+            this.video = document.createElement("video");
+            this.video.style.objectFit = "cover";
+            this.video.style.zIndex = 1;
+            this.video.autoplay = true;
+            this.video.muted = true;
+            this.div.appendChild(this.video);
+            this.li = AddContextItem(this.menu, "neww", `<span class="material-symbols-outlined">video_frame_copy</span>Select window to share`, true);
+            this.li.owner = this.self;
+            this.li.addEventListener('click', function() {
+                $(".context").hide(100);
+                this.owner.SetWindow();
+            });
+            this.SetWindow();
+        }
+
+        SetWindow() {
+            navigator.mediaDevices.getDisplayMedia(this.constraints).then(this.handleSuccess).catch(this.handleError);
+        }
+
+        handleSuccess(stream) {
+            window.stream = stream;
+            video.srcObject = stream;
+        }
+
+        handleError(error) {
+            alert('Window share error: \n'+ error);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /*
@@ -1387,6 +1512,24 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 
 
