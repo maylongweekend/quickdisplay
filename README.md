@@ -105,16 +105,12 @@ Many translucent objects in QD can have a visual blur applied behind them.  Beca
 
 Some helpful tools in the `resources` folder include:
 
-- `add search options.js` - adds four easy search tools to your right click menu, including Youtube and Maps.
-- `button - [..].html` - two sample buttons.  Open in any text editor to change them to go directly to your Classroom, slideshow, etc.
 - `clock - analog.js` - an elegant clock face with adjustable transparency.
 - `clock - digital.js` - a digital clock with some color/font formatting options.
 - `clock - teaching tool.js` - an analog clock with hidden number values that can be revealed to help teach students.
 - `graph paper.js` - adjustable grid lines for your smartboard.
 - `todo list.js` - a customizable to-do list.  Right-click or click underneath to add a new item.  Click on any time to check it off.  Drag items by the handles to reorder.
 - `wallpaper - colors.mjs` - build your own color gradients for your background.  Allows blending with images/videos underneath.
-- `web cam.js` - display the video from an attached camera.
-- `window share.js` - display another window, tab, or app on your computer.
 
 
 ## Licensing and credits
