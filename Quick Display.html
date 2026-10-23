@@ -872,9 +872,7 @@
         var reader = new FileReader();
         if ( blob.type.indexOf("image") == 0 ) {
             reader.onload = function(event) {
-                let newDiv = CreateNewObj();
-                let newMenu = CreateDefaultContextMenu(newDiv);
-                CreateNewImg(event.target.result, newDiv, newMenu);
+                AllObjects.push(new ImageObj(event.target.result));
             };
             reader.readAsDataURL(blob);
         }
@@ -889,12 +887,8 @@
     //handles text extracted from a copy/paste operation
     function HandleTextPaste(string) {
         if ( /\r?\n/g.test(string) ) {
-            let mydiv = CreateNewObj();
-            let mymenu = CreateDefaultContextMenu(mydiv);
-            //FillNoteContents(mydiv, "Note", string);
             AllObjects.push(new NoteObj("Note", string));
         } else {
-            //CreateSticky(string);
             AllObjects.push(new StickyNoteObj(string));
         }
     }
@@ -932,7 +926,7 @@
 
     class MoveableObject {
         
-        constructor(bdrag = true, bscale = true, btext = false, bcolor = false, bfont = false, banimate = false) {
+        constructor(bdrag = true, bscale = true, btext = false, bcolor = false, bfont = false, banimate = false, blink = false) {
 
             this.self = this;
             this.bdrag = bdrag;
@@ -945,6 +939,8 @@
             this.index = AllObjects.length;
             this.banimate = banimate;
             this.isanimating = false;
+            this.blink = blink;
+            this.link = "";
 
             //create the div and handle basic drag/scale settings
             this.div = document.createElement("div");
@@ -957,6 +953,7 @@
                 top: rcloc.y,
                 left: rcloc.x,
             });
+            this.div.owner = this.self;
 
             //set up the context menu
             this.menu = document.getElementById("default-context").cloneNode(true);
@@ -964,8 +961,24 @@
             document.body.appendChild(this.menu);
             AddContextMenu(this.div, this.menu);
 
+            //set up link menu item
+            if ( blink ) {
+                //add edit entry to top of menu
+                let lili = AddContextItem(this.menu,"link",`<span class="material-symbols-outlined">add_link</span>Edit link`,true);
+                this.div.addEventListener('click', function GoToLink() {
+                    let s = this.owner.link;
+                    if ( s != "" ) {
+                        if ( !s.includes("http") ) {
+                            s = "http://" + s;
+                        }
+                        window.open(s, 'Link', 'width=900,height=600');
+                    }
+                });
+            }
+
+            //set up animation menu item
             if ( banimate ) {
-                let ccli = AddContextItem(this.menu, "animate", `<span class="material-symbols-outlined">motion_play</span>Toggle animation`, true);
+                let anli = AddContextItem(this.menu, "animate", `<span class="material-symbols-outlined">motion_play</span>Toggle animation`, true);
             }
 
             //set up the color picker
@@ -999,11 +1012,12 @@
                 this.fontselector = document.getElementById("default-font-selector").cloneNode(true);
                 this.fontselector.id = "font-" + this.index;
                 this.fontselector.style.display = "inline";
+                this.fontselector.owner = this.self;
                 this.font = "Verdana, Geneva, Tahoma, sans-serif";
                 fsp.appendChild(this.fontselector);
                 let temp = this.index;
                 this.fontselector.addEventListener("change", function(event) {
-                    FontUpdate(temp, event.target.value);
+                    this.owner.SetFont(event.target.value);
                     $(".context").hide(100);
                 });
                 this.menu.insertBefore(fsp,this.menu.children[0]);
@@ -1018,9 +1032,16 @@
         AssignMenuAction(li, elem, owner) {
             let zi;
             let s;
+            let t;
             li.addEventListener('click', function() {
                 $(".context").hide(100);
                 switch ( $(li).attr("data-action") ) {
+                    case "link":
+                        t = $(li).attr("data-url") != undefined ? $(li).attr("data-url") : "www.example.ca";
+                        s = prompt("Enter URL to open when double-clicked", t);
+                        li.setAttribute('data-url', s);
+                        owner.HandleLinkEdit(s);
+                        break;
                     case "edit":
                         owner.HandleTextEdit();
                         break;
@@ -1074,6 +1095,10 @@
                         break;
                 }
             });
+        }
+
+        HandleLinkEdit(s) {
+            this.link = s;
         }
 
         HandleTextEdit() {
@@ -1282,7 +1307,7 @@
     class EmojiObj extends MoveableObject {
 
         constructor(emoji = `🐱`) {
-            super();
+            super(true, true, false, false, false, false, true);
             this.emoji = emoji;
             this.div.classList.add('emoji-div');
             this.h = document.createElement("h");
@@ -1475,6 +1500,47 @@
     }
 
 
+    /* IMAGE */
+    //a box that holds an image
+    //AllObjects.push(new ImageObj(src));
+
+    class ImageObj extends MoveableObject {
+
+        constructor(src) {
+            super(true, true, false, false, false, false, true);
+            this.src = src;
+            this.CreateVisual(src);
+        }
+
+        CreateVisual(src) {
+            this.img = document.createElement("img");
+            this.img.src = src;
+            this.img.style.objectFit = "cover";
+            this.img.style.zIndex = 1;
+            this.div.appendChild(this.img);
+        }
+    }
+
+
+    /* VIDEO */
+    //a box that holds a video
+    //AllObjects.push(new VideoObj(filesrc));
+
+    class VideoObj extends ImageObj {
+
+        CreateVisual(src) {
+            this.video = document.createElement("video");
+            this.video.src = src;
+            this.video.style.objectFit = "cover";
+            this.video.style.zIndex = 1;
+            this.video.autoplay = true;
+            this.video.loop = true;
+            this.video.muted = true;
+            this.div.appendChild(this.video);
+        }
+    }
+
+
 
 
 
@@ -1511,12 +1577,6 @@
     //sends the color to the object with index i
     function ColorUpdate(picker, i) {
         AllObjects[i].SetColor(picker.toRGBAString());
-    }
-
-    //called by a fontpicker
-    //sends the font to the object with index i
-    function FontUpdate(i, font) {
-        AllObjects[i].SetFont(font);
     }
 
     //object animation
@@ -1581,20 +1641,16 @@
                     AllObjects.push(new NoteObj(file.name.slice(0,-4), reader.result));
                 }
                 reader.readAsText(file);
+            } else if ( file.type.includes("image") ) {
+                AllObjects.push(new ImageObj(filesrc));
+            } else if ( file.type.includes("video") ) {
+                AllObjects.push(new VideoObj(filesrc));
             } else {
                 //create the draggable div outer
                 let mydiv = CreateNewObj();
                 //attach the default context menu
                 let mymenu = CreateDefaultContextMenu(mydiv);
-                if ( file.type.includes("image") ) {
-                    //images load draggable
-                    CreateNewImg(filesrc,mydiv,mymenu);
-                }
-                else if ( file.type.includes("video") ) {
-                    //videos can load like images
-                    CreateNewVid(filesrc,mydiv,mymenu);
-                }
-                else if ( file.type.includes("html") ) {
+                if ( file.type.includes("html") ) {
                     //load html code draggable
                     CreateNewHMTLObj(file,mydiv);
                 }
@@ -1630,119 +1686,6 @@
         }
     }
 
-    //creates an image inside the specified div
-    function CreateNewImg(src, div, menu) {
-        let img = document.createElement("img");
-        img.src = src;
-        img.style.objectFit = "cover";
-        img.style.zIndex = 1;
-        div.appendChild(img);
-        //add edit entry to top of menu
-        let limg = AddContextItem(menu,"link",`<span class="material-symbols-outlined">open_in_new</span>Edit link`,true);
-        limg.addEventListener('click', function() {
-            let pres = "www.example.ca";
-            $(".context").hide(100);
-            if ( $(limg).attr("data-url") != undefined ) { pres = $(limg).attr("data-url"); }
-            limg.setAttribute('data-url', prompt("Enter URL to open when double-clicked",pres));
-        });
-        img.addEventListener('dblclick', function() {
-            if ( $(limg).attr("data-url") != undefined ) {
-                let s = $(limg).attr("data-url");
-                if ( !s.includes("http") ) { s = "http://" + s; }
-                window.open(s,'Link','width=900,height=600');
-            }
-        });
-
-        return img;
-    }
-
-    function CreateNewVid(src, div, menu) {
-        let video = document.createElement("video");
-        video.src = src;
-        video.style.objectFit = "cover";
-        video.style.zIndex = 1;
-        video.autoplay = true;
-        video.loop = true;
-        video.muted = true;
-        div.appendChild(video);
-        //add edit entry to top of menu
-        let liv = AddContextItem(menu,"link",`<span class="material-symbols-outlined">open_in_new</span>Edit link`,true);
-        liv.addEventListener('click', function() {
-            let upres = "www.example.ca";
-            $(".context").hide(100);
-            if ( $(liv).attr("data-url") != undefined ) { upres = $(liv).attr("data-url"); }
-            liv.setAttribute('data-url', prompt("Enter URL to open when double-clicked",upres));
-        });
-        video.addEventListener('dblclick', function() {
-            if ( $(liv).attr("data-url") != undefined ) {
-                let s = $(liv).attr("data-url");
-                if ( !s.includes("http") ) { s = "http://" + s; }
-                window.open(s,'Link','width=900,height=600');
-            }
-        });
-
-        return video;
-    }
-
-    //extracts title and text data from file for note
-    function CreateNewNoteFromFile(file, div) {
-        let reader = new FileReader();
-        reader.onload = function () {
-            FillNoteContents(div, file.name.slice(0,-4), reader.result);
-        }
-        reader.readAsText(file);
-    }
-
-    //creates a note with a title and body text
-    function FillNoteContents(div, name, text) {
-        let note = document.createElement("div");
-        note.classList.add('notes');
-        div.appendChild(note);
-        let h = document.createElement("h3");
-        h.textContent = name;
-        note.appendChild(h);
-        let pre = document.createElement("pre");
-        note.appendChild(pre);
-        pre.textContent = text;
-        $(div).css('min-width', div.offsetWidth);//force min width
-        return note;
-    }
-
-    //creates a sticky note
-    function CreateSticky(text) {
-        //outer container for dragging and resizing
-        let outer = CreateNewObj();
-        //fix wrap issues
-        outer.classList.add('sticky-div');
-        //interior div holding everything and rotating
-        let stdiv = document.createElement("div");
-        let randnum = Math.floor(Math.random() * 10) + 2;
-        randnum *= Math.random() < 0.5? -1 : 1;
-        $(stdiv).css('transform', `rotate(${randnum}deg)`);
-        outer.appendChild(stdiv);
-        //context menu
-        let stmenu = CreateDefaultContextMenu(outer);
-        let stli = AddContextItem(stmenu,"edit",`<span class="material-symbols-outlined">edit</span>Edit text`,true);
-        stli.addEventListener('click', function() {
-            $(".context").hide(100);
-            stp.textContent = prompt("Enter your text", stp.textContent);
-        });
-        //sticky note classes for visual
-        stdiv.classList.add("sticky-note");
-        let stint = document.createElement("div");
-        stint.classList.add("sticky-interior");
-        //randomize interior color
-        randnum = Math.floor(Math.random() * 4) + 1;
-        stint.style.backgroundColor = `var(--sticky-c${randnum})`;
-        stdiv.appendChild(stint);
-        let stp = document.createElement("P");
-        stp.textContent = text;
-        stint.appendChild(stp);
-        let sttop = document.createElement("div");
-        sttop.classList.add("sticky-top");
-        stdiv.appendChild(sttop);
-    }
-
     //creates an html div containing all the contents of the file
     function CreateNewHMTLObj (file,div) {
         let container = document.createElement("div");
@@ -1776,6 +1719,7 @@
 
     //creates a draggable scalable div object
     //good for wrapping anything visible that can be manipulated
+    //TODO: make this a class object
     function CreateNewObj() {
         let div = document.createElement("div");
         div.classList.add("object-div");
