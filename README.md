@@ -1,5 +1,5 @@
 # Quick Display - for interactive whiteboards
-![Animated gif demonstrating potential layouts](readme_img/qd_intro.avif)
+![Animated gif demonstrating potential layouts](readme_img/sbd_ani.gif)
 
 A simple display webapp intended for SMART boards and educational interactive whiteboards - created by Mr L
 
