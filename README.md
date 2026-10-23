@@ -33,10 +33,9 @@ In the right-click menu, you can choose a variety of quick options to add to you
 - `Sticky note` creates a quick note with a fun visual style.  You can right-click on this note to change thetext, font, and color, animate it in rainbow colors, etc.
 - `Emoji` opens a quick emoji picker to add fun icons to your screen.
 - `Title text` creates a large text item.  You can right click on it to change its text, font, and color, animate it in rainbow colors, etc.
+- `More items ...` opens a secondary list of other things you can add such as a camera video stream or a mirrored app.
 
-**More about the file picker**
-
-You can add more than just images and videos.  Text files are loaded as "notes" with a handwritten visual style.  HTML files are loaded directly into the page.  With these you can build custom elements.  See the included Google Classroom and Slides buttons in the resources folder for examples.  You can also load Javascript code that allows you to modify how the software behaves in a deep way.  Scripts can include custom elements, interactive tools, special effects, and more.
+With the file picker, you can add more than just images and videos.  Text files are loaded as "notes" with a handwritten visual style.  You can also load Javascript code that allows you to modify how the software behaves in a deep way.  Scripts can include custom elements, interactive tools, special effects, and more.
 
 Once an object is added, it usually appears as a draggable item that can be placed around the app as you like.  See below for more info on the ways you can interact with objects and scripts added to the page.
 
@@ -76,8 +75,9 @@ Surprisingly, the `Delete` option in the right-click menu lets you delete an obj
 
 ### More actions
 Many objects will have additional features and right-click options.
-- images and videos allow you to add a hyperlink in their right-click menu.  Use this to set a link that can be opened by double-clicking on the item.
+- emojis, images, and videos allow you to add a hyperlink in their right-click menu.  Use this to set a link that can be opened by double-clicking on the item.
 - text items will let you edit the text content through the right-click menu.
+- some items have animated features that can be toggled through the right-click menu.
 
 
 ## Page controls
