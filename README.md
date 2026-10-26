@@ -19,10 +19,11 @@ QD is written in Javascript and HTML.  It is open-source and shouldn't bother yo
 
 
 ## Quick-start guide
-1. Double click on the file `Quick Display.html`.  It will open in your default web browser.
-2. Drag the tab containing QD over to your smartboard so the window is visible.
-3. Press F11 on your keyboard to go into full screen mode.
-4. Right click anywhere on the smartboard to get going!
+1. EITHER download the code package and open `index.html`.  It will open in your default web browser.
+2. OR visit the live demo site at [https://maylongweekend.github.io/quickdisplay/](https://maylongweekend.github.io/quickdisplay/).
+3. Drag the tab containing QD over to your smartboard so the window is visible.
+4. Press F11 on your keyboard to go into full screen mode.
+5. Right click anywhere on the smartboard to get going!
 
 ![The right-click menu](readme_img/qd_rclick.jpg)
 
