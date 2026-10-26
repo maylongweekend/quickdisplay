@@ -302,7 +302,7 @@
 }
 
 .background-overlay {
-  z-index: 5;
+  z-index: 1;
   height: 100%;
   width: 100%;
   position: absolute;
@@ -313,36 +313,15 @@
   align-items: center;
   pointer-events: none;
   background-image: none;
+  margin: 0;
+  padding: 0;
 }
 
-.video-container {
-  z-index: 1;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #dc0000;
-  margin:0;
-  padding:0;
-}
-
-.video-container video {
+.background-overlay video, img {
   width: 100%;
   height: 100%;
   position: absolute;
-  object-fit:cover;
-  z-index: 0;
-}
-
-.video-container img {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  object-fit:cover;
+  object-fit: cover;
   z-index: 0;
 }
 
