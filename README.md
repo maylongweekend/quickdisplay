@@ -12,18 +12,17 @@ Quick Display is a simple solution for teachers wanting to display notes, gifs, 
 
 ![Adding objects](readme_img/qd_demo.webp)
 
-QD is written in Javascript and HTML.  It is open-source and shouldn't bother your school's IT person.
+QD is written in Javascript and HTML.  It runs locally, is open-source, and shouldn't bother your school's IT person.
 
 > [!IMPORTANT]
 > This software is AI-free. Generative "artificial intelligence"/large-language models were not used in any way.
 
 
 ## Quick-start guide
-1. EITHER download the code package and open `index.html`.  It will open in your default web browser.
-2. OR visit the live demo site at [https://maylongweekend.github.io/quickdisplay/](https://maylongweekend.github.io/quickdisplay/).
-3. Drag the tab containing QD over to your smartboard so the window is visible.
-4. Press F11 on your keyboard to go into full screen mode.
-5. Right click anywhere on the smartboard to get going!
+1. [Click here to open the live demo page](https://maylongweekend.github.io/quickdisplay/), or alternately you can download the whole package using the green `Code` button above and choosing `Download ZIP`.
+2. Drag the tab containing Quick Display over to your smartboard so the window is visible.
+3. Press F11 on your keyboard to go into full screen mode.
+4. Right click anywhere on the smartboard to add objects.
 
 ![The right-click menu](readme_img/qd_rclick.jpg)
 
@@ -42,9 +41,7 @@ Once an object is added, it usually appears as a draggable item that can be plac
 
 
 ## Changing the background
-In the right-click menu, choose `Change background` to open the file picker.  Here you can change the background with two different options:
-- Images and videos - the selected media is stretched over the whole background and plays in a loop if animated.
-- Scripts (.MJS) - scripts can give greater control over various ways the background appears.
+In the right-click menu, choose `Backgrounds ...` to open the background menu and file picker.
 
 > [!NOTE]
 > Script backgrounds may not play nicely with each other and can cause glitches if not used carefully. Reload your page before swapping script backgrounds.
@@ -52,6 +49,7 @@ In the right-click menu, choose `Change background` to open the file picker.  He
 
 ## Interacting with objects
 ![Object menu](readme_img/qd_obj.jpg)
+Right-click on objects to see options for interacting.  You can also use the scroll-wheel to resize, and click+drag to move items.
 
 ### Layering
 Objects can stack in front of or behind each other.  Right-click on an object and use the `Bring forward` and `Move backward` buttons to adjust the order of objects in the stack.
@@ -104,7 +102,7 @@ Many translucent objects in QD can have a visual blur applied behind them.  Beca
 
 ## Included resources
 
-Some helpful tools in the `resources` folder include:
+If you download the whole source package, there are some helpful tools in the `resources` folder including:
 
 - `clock - analog.js` - an elegant clock face with adjustable transparency.
 - `clock - digital.js` - a digital clock with some color/font formatting options.
