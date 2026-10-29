@@ -16,21 +16,73 @@ class UIObj extends MoveableObject {
 
 //GRAPH PAPER
 //a grid overlay that's adjustable
+//TODO: grid divisions and size sliders
 //AllObjects.push(new GraphPaperObj());
 
-class GraphPaperObj extends UIObj {
+class GraphPaperObj extends MoveableObject {
 
     constructor() {
-        super();
+        super(true, true, false, true);
 
         this.gsize = 15;
         this.gdivide = 5;
-        this.gtransp = 20;
-        this.color = "#deddda";
 
-        this.grid = AddElement("div", document.body);
+        this.div.classList.add("ui-div");
+
+        this.grid = this.AddElement("div", document.body);
         this.grid.classList.add("foreground-overlay");
         this.grid.style.zIndex = 19;//draggables are 20 so just behind but changeable
+        this.SetBackground();
+
+        this.cbut = this.AddElement("button", this.div, "click");
+        this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
+        this.AddElement("br");
+        this.zup = this.AddElement("button", this.div, "click");
+        this.zup.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_up</span>`;
+        this.zdown = this.AddElement("button", this.div, "click");
+        this.zdown.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_down</span>`;
+    }
+
+    handleEvent(e) {
+        if ( e.target == this.zup ) {
+            this.grid.style.zIndex++;
+        } else if ( e.target == this.zdown ) {
+            this.grid.style.zIndex--;
+        } else if ( e.target == this.cbut ) {
+            this.colorinput.show();
+        }
+    }
+
+    HandleInitialColor() {
+        this.color = "rgba(196,196,196,0.4)";
+    }
+
+    SetColor(s) {
+        MoveableObject.prototype.SetColor.call(this, s);
+        this.SetBackground();
+    }
+
+    SetBackground() {
+        //split the color, extract the alpha
+        //reduce for the between lines
+        //and put back into a color
+        let temps = this.color.split(',');
+        temps[3] = temps[3].slice(0, 3);
+        temps[3] = "" + ( Number(temps[3]) / 2.5 );
+        temps[3] += ")";
+        let tempc = temps.toString();
+        let p = `
+            repeating-linear-gradient(90deg, ${tempc} 0px, ${tempc} 1px, transparent 1px, transparent ${this.gsize * 10 / this.gdivide}px),
+            repeating-linear-gradient(0deg, ${tempc} 0px, ${tempc} 1px, transparent 1px, transparent ${this.gsize * 10 / this.gdivide}px),
+            repeating-linear-gradient(90deg, ${this.color} 0px, ${this.color} 1px, transparent 1px, transparent ${this.gsize * 10}px),
+            repeating-linear-gradient(0deg, ${this.color} 0px, ${this.color} 1px, transparent 1px, transparent ${this.gsize * 10}px)
+        `;
+        $(this.grid).css('background-image', p);
+    }
+
+    remove() {
+        this.grid.remove();
+        MoveableObject.prototype.remove.call(this);
     }
 }
 

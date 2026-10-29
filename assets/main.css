@@ -252,6 +252,10 @@
   pointer-events: none;
 }
 
+.ui-span {
+  pointer-events: none;
+}
+
 .context p {
   padding: 0;
   text-align: center;
