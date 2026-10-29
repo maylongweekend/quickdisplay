@@ -133,6 +133,12 @@ class GradientLayer extends BackgroundLayer {
         super(true, true, true);
     }
 
+    //use switch ( e.type ) to detect eg "click" and call function on this
+    //you can pass the background to the ui to make ui clicks come back here
+    handleEvent(e) {
+
+    }
+
     Frame(delta) {
 
     }
