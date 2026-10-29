@@ -4,8 +4,9 @@
 
 class BackgroundLayer {
     
-    constructor(isanimating = false, hasui = false) {
+    constructor(isanimating = false, hascanvas = false, hasui = false) {
         this.isanimating = isanimating;
+        this.hascanvas = hascanvas;
         this.hasui = hasui;
         this.self = this;
         this.index = AllBackgrounds.length;
@@ -20,16 +21,28 @@ class BackgroundLayer {
     }
 
     CreateHTMLStructure() {
-        //create the div
-        this.div = document.createElement("div");
-        this.div.classList.add("background-overlay");
-        document.body.appendChild(this.div);
-        this.div.owner = this.self;
+        if ( this.hascanvas ) {
+            this.canvas = document.createElement("canvas");
+            this.canvas.classList.add("background-overlay");
+            document.body.appendChild(this.canvas);
+            this.canvas.owner = this.self;
+        } else {
+            //create the div
+            this.div = document.createElement("div");
+            this.div.classList.add("background-overlay");
+            document.body.appendChild(this.div);
+            this.div.owner = this.self;
+        }
     }
 
     //called by child class to build the ui elements
-    //use AddElement("type", to) to build
+    //use AddElement, eg AddElement("button", , "click", this.self) to build
     initUI() {}
+
+    //handles passing event listeners to child classes
+    //use switch ( e.type ) to detect eg "click" and call function on this
+    //you can pass the background to the ui to make ui clicks come back here
+    handleEvent(e) {}
 
     ToggleAnimate() {
         this.isanimating = !this.isanimating;
@@ -45,13 +58,16 @@ class BackgroundLayer {
     //call on a child to handle animation
     Frame(delta) {}
 
-    //handles passing event listeners to child classes
-    //use switch ( e.type ) to detect eg "click" and call function on this
-    //you can pass the background to the ui to make ui clicks come back here
-    handleEvent(e) {}
-
     remove() {
-        this.div.remove();
+        if ( this.div !== undefined ) {
+            this.div.remove();
+        }
+        if ( this.canvas !== undefined ) {
+            this.canvas.remove();
+        }
+        if ( this.hasui ) {
+            this.ui.remove();
+        }
         AllBackgrounds.splice(this.index, 1);
     }
 }
@@ -106,26 +122,18 @@ class ImageLayer extends BackgroundLayer {
 }
 
 
-/* CANVASLAYER */
-//a background that holds a canvas object
-//AllBackgrounds.push(new CanvasLayer());
+/* GRADIENTLAYER */
+//a background that lets you build gradients
+//can animate them
+//AllBackgrounds.push(new GradientLayer());
 
-class CanvasLayer extends BackgroundLayer {
-    
-    CreateHTMLStructure() {
-        //create the canvas
-        this.canvas = document.createElement("canvas");
-        document.body.appendChild(this.canvas);
-        this.canvas.owner = this.self;
+class GradientLayer extends BackgroundLayer {
+
+    constructor() {
+        super(true, true, true);
     }
 
-    remove() {
-        this.canvas.remove();
-        AllBackgrounds.splice(this.index, 1);
+    Frame(delta) {
+
     }
-}
-
-
-class ColorGradientLayer extends CanvasLayer {
-
 }
