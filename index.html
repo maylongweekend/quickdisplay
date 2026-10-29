@@ -169,8 +169,9 @@
             <hr />
             <li data-action="backg"><span class="material-symbols-outlined">add_photo_alternate</span>Load file</li>
             <li data-action="tealb"><span class="material-symbols-outlined">movie</span>Bright teal</li>
-            <li data-action="purpb"><span class="material-symbols-outlined">movie</span>Purple blue</li>
             <li data-action="greenb"><span class="material-symbols-outlined">movie</span>Green Bokeh</li>
+            <li data-action="purps"><span class="material-symbols-outlined">imagesmode</span>Purple splatter</li>
+            <li data-action="blues"><span class="material-symbols-outlined">imagesmode</span>Blue scratches</li>
             <li data-action="resetb"><span class="material-symbols-outlined">movie</span>Default</li>
         </div>
         
@@ -512,15 +513,20 @@
                 ClearBackground();
                 AllBackgrounds.push(new VideoLayer("assets/wall_teal.webm"));
                 break;
-            case "purpb":
-                $(".context").hide(100);
-                ClearBackground();
-                AllBackgrounds.push(new VideoLayer("assets/wall_purple.webm"));
-                break;
             case "greenb":
                 $(".context").hide(100);
                 ClearBackground();
                 AllBackgrounds.push(new VideoLayer("assets/wall_green.webm"));
+                break;
+            case "purps":
+                $(".context").hide(100);
+                ClearBackground();
+                AllBackgrounds.push(new ImageLayer("assets/wall_purp.jpg"));
+                break;
+            case "blues":
+                $(".context").hide(100);
+                ClearBackground();
+                AllBackgrounds.push(new ImageLayer("assets/wall_scratch.jpg"));
                 break;
             case "resetb":
                 $(".context").hide(100);
