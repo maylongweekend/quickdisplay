@@ -3,6 +3,7 @@
 //AllObjects.push(new UIObj());
 
 class UIObj extends MoveableObject {
+
     constructor() {
         super();
 
@@ -10,6 +11,27 @@ class UIObj extends MoveableObject {
     }
 
     handleEvent(e) {}
+}
+
+
+//GRAPH PAPER
+//a grid overlay that's adjustable
+//AllObjects.push(new GraphPaperObj());
+
+class GraphPaperObj extends UIObj {
+
+    constructor() {
+        super();
+
+        this.gsize = 15;
+        this.gdivide = 5;
+        this.gtransp = 20;
+        this.color = "#deddda";
+
+        this.grid = AddElement("div", document.body);
+        this.grid.classList.add("foreground-overlay");
+        this.grid.style.zIndex = 19;//draggables are 20 so just behind but changeable
+    }
 }
 
 
