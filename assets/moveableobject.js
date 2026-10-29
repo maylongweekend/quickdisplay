@@ -230,6 +230,24 @@ class MoveableObject {
         this.bscale = b;
     }
 
+    //creates an HTML dom object
+    //and appends it to anything (default this.div)
+    //pass an event to it for an event listener
+    //pass a class reference in order to have that.handleEvent() called instead of a function
+    AddElement(type, to = this.div, ev = "", ref = this) {
+        let newelem = document.createElement(type);
+        to.appendChild(newelem);
+        if ( ev != "" ) {
+            //if ref is not a function, it will look for handleEvent() inside ref
+            newelem.addEventListener(ev, ref);
+        }
+        return newelem;
+    }
+
+    //handles passing event listeners to child classes
+    //use switch ( e.type ) to detect eg "click" and call function on this
+    handleEvent(e) {}
+
     remove() {
         this.div.remove();
         this.menu.remove();

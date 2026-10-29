@@ -1,3 +1,18 @@
+//UI
+//a ui object
+//AllObjects.push(new UIObj());
+
+class UIObj extends MoveableObject {
+    constructor() {
+        super();
+
+        this.div.classList.add("ui-div");
+    }
+
+    handleEvent(e) {}
+}
+
+
 //STICKY NOTES
 //a sticky note with editable text
 //AllObjects.push(new StickyNoteObj(string));
