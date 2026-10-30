@@ -652,6 +652,7 @@
         $(mymenu).on("click", "li", function() {
             let zi;
             let s;
+            let b;
             //this is the triggered action name
             switch ( $(this).attr("data-action") ) {
                 case "up":
@@ -694,7 +695,16 @@
                     $(elem).css('transform','scale(1)');
                     break;
                 case "delete":
-                    elem.remove();
+                    b = false;
+                    for ( let Obj of AllObjects ) {
+                        if ( Obj.div == elem ) {
+                            Obj.remove();
+                            b = true;
+                        }
+                    }
+                    if ( !b ) {
+                        elem.remove();
+                    }
                     break;
             }
             $(".context").hide(100);
