@@ -252,6 +252,11 @@
   pointer-events: none;
 }
 
+/* quick add a little space to ui elements */
+.margin-10 {
+  margin: 10px;
+}
+
 .ui-span {
   pointer-events: none;
 }

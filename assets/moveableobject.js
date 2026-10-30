@@ -169,7 +169,7 @@ class MoveableObject {
                     $(elem).css('transform','scale(1)');
                     break;
                 case "delete":
-                    elem.remove();
+                    owner.remove();//call remove on class instance and it will handle deleting needed dom elements
                     break;
             }
         });

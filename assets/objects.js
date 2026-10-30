@@ -36,11 +36,13 @@ class GraphPaperObj extends MoveableObject {
 
         this.cbut = this.AddElement("button", this.div, "click");
         this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
-        this.AddElement("br");
+        this.cbut.classList.add("margin-10");
         this.zup = this.AddElement("button", this.div, "click");
         this.zup.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_up</span>`;
+        this.zup.classList.add("margin-10");
         this.zdown = this.AddElement("button", this.div, "click");
         this.zdown.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_down</span>`;
+        this.zdown.classList.add("margin-10");
     }
 
     handleEvent(e) {
