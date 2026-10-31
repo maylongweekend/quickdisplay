@@ -21,13 +21,15 @@ class MoveableObject {
         this.link = "";
 
         //create the div and handle basic drag/scale settings
+        this.outerdiv = document.createElement("div");
+        document.body.appendChild(this.outerdiv);
         this.div = document.createElement("div");
         this.div.classList.add("object-div");
-        document.body.appendChild(this.div);
-        $(this.div).draggable();
+        this.outerdiv.appendChild(this.div);
+        $(this.outerdiv).draggable();
         this.SetDraggable(bdrag);
         this.SetScalable(bscale);
-        $(this.div).css({
+        $(this.outerdiv).css({
             top: rcloc.y,
             left: rcloc.x,
         });
@@ -213,7 +215,7 @@ class MoveableObject {
 
     SetDraggable(b) {
         let s = b ? "enable" : "disable";
-        $(this.div).draggable(s);
+        $(this.outerdiv).draggable(s);
         this.bdrag = b;
     }
 
@@ -253,7 +255,7 @@ class MoveableObject {
     handleEvent(e) {}
 
     remove() {
-        this.div.remove();
+        this.outerdiv.remove();
         this.menu.remove();
         AllObjects.splice(this.index, 1);
     }
