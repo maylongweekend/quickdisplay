@@ -19,20 +19,17 @@ class UIObj extends MoveableObject {
 //TODO: grid divisions and size sliders
 //AllObjects.push(new GraphPaperObj());
 
-class GraphPaperObj extends MoveableObject {
+class GraphPaperObj extends UIObj {
 
     constructor() {
-        super(true, true, false, true);
+        super();
 
         this.gsize = 15;
         this.gdivide = 5;
 
-        this.div.classList.add("ui-div");
-
         this.grid = this.AddElement("div", document.body);
         this.grid.classList.add("foreground-overlay");
         this.grid.style.zIndex = 19;//draggables are 20 so just behind but changeable
-        this.SetBackground();
 
         this.cbut = this.AddElement("button", this.div, "click");
         this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
@@ -43,6 +40,27 @@ class GraphPaperObj extends MoveableObject {
         this.zdown = this.AddElement("button", this.div, "click");
         this.zdown.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_down</span>`;
         this.zdown.classList.add("margin-10");
+
+        //duplicated from moveableobject because we want it focused on the ui button not right click menu
+        let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
+        let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
+        this.colorinput = new JSColor(this.cbut, {
+            format: 'rgba',
+            preset:'large',
+            backgroundColor: bgc,
+            borderColor: bdc,
+            borderRadius: 5,
+            padding: 15
+        });
+        jscolor.install();
+        this.color = "rgba(196,196,196,0.4)";
+        this.colorinput.fromString(this.color);
+        this.colorinput.owner = this.self;
+        this.colorinput.option('onInput', function() {
+            this.owner.SetColor(this.toRGBAString());
+        });
+
+        this.SetBackground();
     }
 
     handleEvent(e) {
@@ -51,12 +69,8 @@ class GraphPaperObj extends MoveableObject {
         } else if ( e.target == this.zdown ) {
             this.grid.style.zIndex--;
         } else if ( e.target == this.cbut ) {
-            this.colorinput.show();
+            //this.colorinput.show();
         }
-    }
-
-    HandleInitialColor() {
-        this.color = "rgba(196,196,196,0.4)";
     }
 
     SetColor(s) {

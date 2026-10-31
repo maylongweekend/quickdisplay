@@ -71,12 +71,16 @@ class MoveableObject {
                 backgroundColor: bgc,
                 borderColor: bdc,
                 borderRadius: 5,
-                padding: 15,
-                onInput: `ColorUpdate(this, ${this.index})`
+                padding: 15
             });
             jscolor.install();
             this.HandleInitialColor();
             this.colorinput.fromString(this.color);
+            //give the picker a reference to this class and set the callback function to this class setcolor
+            this.colorinput.owner = this.self;
+            this.colorinput.option('onInput', function() {
+                this.owner.SetColor(this.toRGBAString());
+            });
         }
 
         //set up text editing
