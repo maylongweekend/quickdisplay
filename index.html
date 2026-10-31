@@ -310,12 +310,6 @@
     */
 
 
-    //called by a colorpicker
-    //sends the color to the object with index i
-    function ColorUpdate(picker, i) {
-        AllObjects[i].SetColor(picker.toRGBAString());
-    }
-
     //object animation
     let lastdelta = document.timeline.currentTime;
     requestAnimationFrame(AnimationStep);
