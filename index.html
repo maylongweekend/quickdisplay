@@ -838,10 +838,11 @@
     //handles moving elements according to pagination
     function MovePage(dir) {
         //grab all divs to move
-        let Objs = $(".object-div, .foreground-overlay");
+        //let Objs = $(".object-div, .foreground-overlay");
         let w = window.innerWidth * dir;
         let x;
-        let oscale;
+        //let oscale;
+        /*
         for ( let i = 0; i < Objs.length; i++ ) {
             if ( Objs[i] != pager ) {
                 //get current scale
@@ -859,13 +860,26 @@
                     'transition': "left 0.5s",
                 });
             }
+        }*/
+        for ( let Obj of AllObjects ) {
+            x = Obj.outerdiv.getBoundingClientRect().left;
+            //set new location
+            x -= w;
+            //transition for smooth page move
+            $(Obj.outerdiv).css({
+                'left': x,
+                'transition': "left 0.5s",
+            });
         }
         setTimeout(resetTransition,500);
     }
 
     //reset the transition for setting left
     function resetTransition() {
-        $(".object-div").css('transition', 'left 0s');
+        //$(".object-div").css('transition', 'left 0s');
+        for ( let Obj of AllObjects ) {
+            $(Obj.outerdiv).css('transition', 'left 0s');
+        }
     }
 
     //watches page button clicks
