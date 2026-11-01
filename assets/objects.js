@@ -477,7 +477,7 @@ class PokemonObj extends ImageObj {
     CreateVisual(src) {
         ImageObj.prototype.CreateVisual.call(this, src);
         this.img.style.imageRendering = "pixelated";
-        this.img.style.scale = "2.5";
+        this.img.style.scale = "2.0";
     }
 }
 
