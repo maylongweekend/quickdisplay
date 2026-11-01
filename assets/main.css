@@ -94,7 +94,6 @@
   background-size: 0.2vw;
   max-width: 34vw;
   padding: 0.4vw;
-  position: relative;
   backdrop-filter: var(--sb-blur);
   -webkit-backdrop-filter: var(--sb-blur);
   cursor: default;
