@@ -105,6 +105,8 @@ This project makes use of the following libraries; each is the property of their
 - [anime.js](https://animejs.com/)
 - [three.js](https://threejs.org/)
 
+This project uses the likeness of characters from [Pokémon](https://www.pokemon.com/us), property of Nintendo.
+
 > [!IMPORTANT]
 > This software is in no way affiliated with any school division, school authority, provincial or state educational authority, or any other group.  This is the personal project of "Mr L".
 
