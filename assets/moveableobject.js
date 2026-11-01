@@ -145,7 +145,7 @@ class MoveableObject {
                     $(elem).css('z-index', zi);
                     break;
                 case "lock":
-                    if ( $(elem).draggable("option", "disabled") ) {
+                    if ( $(owner.outerdiv).draggable("option", "disabled") ) {
                         this.innerHTML = `<span class="material-symbols-outlined">lock</span>Lock position`;
                         owner.SetDraggable(true);
                     } else {
