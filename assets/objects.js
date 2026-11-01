@@ -446,7 +446,7 @@ class CameraObj extends WindowObj {
 }
 
 
-//IMAGE */
+//IMAGE
 //a box that holds an image
 //AllObjects.push(new ImageObj(src));
 
@@ -464,6 +464,20 @@ class ImageObj extends MoveableObject {
         this.img.style.objectFit = "cover";
         this.img.style.zIndex = 1;
         this.div.appendChild(this.img);
+    }
+}
+
+
+//POKEMONOBJ
+//an image that scales with pixel scaling
+//AllObjects.push(new PokemonObj(src));
+
+class PokemonObj extends ImageObj {
+
+    CreateVisual(src) {
+        ImageObj.prototype.CreateVisual.call(this, src);
+        this.img.style.imageRendering = "pixelated";
+        this.img.style.scale = "2.5";
     }
 }
 

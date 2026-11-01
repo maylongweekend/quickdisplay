@@ -161,6 +161,7 @@
             <li data-action="graphp"><span class="material-symbols-outlined">grid_4x4</span>Graph paper</li>
             <li data-action="wshare"><span class="material-symbols-outlined">select_window</span>Window share</li>
             <li data-action="camera"><span class="material-symbols-outlined">videocam</span>Camera</li>
+            <li data-action="pokem"><span class="material-symbols-outlined">egg</span>Pokémon</li>
         </div>
 
         <!-- background options submenu -->
@@ -385,6 +386,9 @@
         video: true
     };
 
+    //update this list if you add/remove pokemon from assets/poke_gifs director
+    const PokeList = `abra.gif,aerodactyl.gif,alakazam.gif,articuno.gif,beautifly.gif,beedrill.gif,bellossom.gif,bellsprout.gif,blastoise.gif,bulbasaur.gif,butterfree.gif,caterpie.gif,celebi.gif,chansey.gif,charizard.gif,charmander.gif,charmeleon.gif,chespin.gif,chikorita.gif,clefable.gif,clefairy.gif,cleffa.gif,cloyster.gif,corsola.gif,cubone.gif,cyndaquil.gif,dedenne.gif,dewgong.gif,diglett.gif,ditto.gif,dragonite.gif,dratini.gif,dugtrio.gif,eevee1.gif,eevee2-starter.gif,electabuzz.gif,espeon.gif,farfetchd.gif,fennekin.gif,flareon.gif,flygon.gif,froakie.gif,furret.gif,gastly.gif,gengar.gif,girafarig.gif,glaceon.gif,groudon.gif,growlithe.gif,gyarados.gif,heracross.gif,hooh.gif,horsea.gif,houndoom.gif,igglybuff.gif,jigglypuff.gif,jolteon.gif,kyogre.gif,lapras.gif,latias.gif,latios.gif,leafeon.gif,litten.gif,lugia.gif,marill.gif,meowth.gif,mew.gif,mewtwo.gif,milotic.gif,mimikyu.gif,minun.gif,moltres.gif,mudkip.gif,ninetales.gif,onix.gif,pachirisu.gif,pichu.gif,pidgeot.gif,pidgey.gif,pikachu1.gif,pikachu2-f.gif,pikachu3-starter.gif,piplup.gif,plusle.gif,ponyta.gif,psyduck.gif,raichu.gif,raikou.gif,rattata.gif,rayquaza.gif,scorbunny.gif,scyther.gif,skitty.gif,slowpoke.gif,snorlax.gif,squirtle.gif,starmie.gif,sylveon.gif,teddiursa.gif,tepig.gif,togepi.gif,torchic.gif,torterra.gif,totodile.gif,turtwig.gif,typhlosion.gif,tyranitar.gif,umbreon.gif,vaporeon.gif,venomoth.gif,venonat.gif,venusaur.gif,vulpix.gif,weedle.gif,wigglytuff.gif,wobbuffet.gif,yamper.gif,zapdos.gif`;
+
     let canvas = document.getElementById("back-canvas");
 
     //detects mouse movements
@@ -447,9 +451,11 @@
     //actions for background context menu
     $("#background-context").on("click", "li", function() {
         let divs;
+        let k;
         let l;
         let r;
         let s;
+        let t;
         let thismenu = $('#background-context');
         //this is the triggered action name
         switch($(this).attr("data-action")) {
@@ -496,7 +502,20 @@
                 $(".context").hide(100);
                 AllObjects.push(new CameraObj());
                 break;
-
+            case "pokem":
+                $(".context").hide(100);
+                r = prompt("Type part or all of a Pokémon's name", "Squirtle").toLowerCase();
+                k = PokeList.indexOf(r);
+                if ( k == -1 ) {
+                    alert(`No Pokémon gif matching "${r}" found ...`);
+                } else {
+                    l = PokeList.indexOf(".gif", k);
+                    s = PokeList.slice(0, l + 4);
+                    k = s.lastIndexOf(",");
+                    s = s.slice(k + 1);
+                    AllObjects.push(new PokemonObj("assets/poke_gifs/" + s));
+                }
+                break;
             //BACKGROUND
             case "backmenu":
                 thismenu.children(".menu-main").toggle(100);
@@ -632,6 +651,7 @@
             //save mouse click location for item creation
             rcloc.x = event.pageX + "px";
             rcloc.y = event.pageY + "px";
+            log("new mouse pos x " + rcloc.x + " y " + rcloc.y)
         });
     }
 
