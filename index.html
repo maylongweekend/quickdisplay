@@ -16,16 +16,6 @@
         - you are an individual user ONLY
 
 
-        Makes use of the following libraries.
-        Each library is property of its respective authors and must be used according to the terms of its own license.
-        - jquery
-        - google fonts
-        - jscolor.js
-        - EmojiPicker.js
-        - vanta.js
-        - anime.js
-        - three.js
-
 
         THE TODO LIST
 
@@ -651,7 +641,6 @@
             //save mouse click location for item creation
             rcloc.x = event.pageX + "px";
             rcloc.y = event.pageY + "px";
-            log("new mouse pos x " + rcloc.x + " y " + rcloc.y)
         });
     }
 
@@ -857,48 +846,18 @@
 
     //handles moving elements according to pagination
     function MovePage(dir) {
-        //grab all divs to move
-        //let Objs = $(".object-div, .foreground-overlay");
         let w = window.innerWidth * dir;
         let x;
-        //let oscale;
-        /*
-        for ( let i = 0; i < Objs.length; i++ ) {
-            if ( Objs[i] != pager ) {
-                //get current scale
-                oscale = Objs[i].getBoundingClientRect().width / Objs[i].offsetWidth;
-                //reset scale so it doesn't mess up location math
-                $(Objs[i]).css('transform', 'scale(1)');
-                //get the location after resetting scale, then put scale back
-                x = Objs[i].getBoundingClientRect().left;
-                $(Objs[i]).css('transform', `scale(${oscale})`);
-                //set new location
-                x -= w;
-                //transition for smooth page move
-                $(Objs[i]).css({
-                    'left': x,
-                    'transition': "left 0.5s",
-                });
-            }
-        }*/
         for ( let Obj of AllObjects ) {
-            x = Obj.outerdiv.getBoundingClientRect().left;
-            //set new location
-            x -= w;
-            //transition for smooth page move
-            $(Obj.outerdiv).css({
-                'left': x,
-                'transition': "left 0.5s",
-            });
+            Obj.HandleMove(w);
         }
         setTimeout(resetTransition,500);
     }
 
     //reset the transition for setting left
     function resetTransition() {
-        //$(".object-div").css('transition', 'left 0s');
         for ( let Obj of AllObjects ) {
-            $(Obj.outerdiv).css('transition', 'left 0s');
+            Obj.resetTransition();
         }
     }
 
