@@ -99,10 +99,11 @@ This project makes use of the following libraries; each is the property of their
 
 - [jquery](https://jquery.com/)
 - [Google Fonts](https://fonts.google.com/)
+- [jscolor.js](https://jscolor.com/)
+- [EmojiPicker.js](https://pfurpass.github.io/EmojiPicker/)
+- [Vanta.js](https://www.vantajs.com/)
 - [anime.js](https://animejs.com/)
 - [three.js](https://threejs.org/)
-- [EmojiPicker.js](https://pfurpass.github.io/EmojiPicker/)
-- [jscolor.js](https://jscolor.com/)
 
 > [!IMPORTANT]
 > This software is in no way affiliated with any school division, school authority, provincial or state educational authority, or any other group.  This is the personal project of "Mr L".

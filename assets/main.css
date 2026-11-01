@@ -68,6 +68,7 @@
 /* draggable UI subclass */
 .ui-div {
   background: var(--ui-bg);
+  z-index: 21;
   color: var(--ui-text);
   border: var(--ui-border);
   padding: 0.9vh;
