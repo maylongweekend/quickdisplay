@@ -31,6 +31,26 @@ class GraphPaperObj extends UIObj {
         this.grid.classList.add("foreground-overlay");
         this.grid.style.zIndex = 19;//draggables are 20 so just behind but changeable
 
+        this.slidsize = this.AddElement("input", this.div, "input");
+        this.slidsize.type = "range";
+        this.slidsize.value = this.gsize;
+        this.slidsize.min = "6";
+        this.slidsize.max = "60";
+        let p = this.AddElement("label");
+        p.textContent = "Size";
+
+        this.AddElement("br");
+
+        this.sliddiv = this.AddElement("input", this.div, "input");
+        this.sliddiv.type = "range";
+        this.sliddiv.value = this.gdivide;
+        this.sliddiv.min = "3";
+        this.sliddiv.max = "10";
+        p = this.AddElement("label");
+        p.textContent = "Divisions";
+
+        this.AddElement("br");
+
         this.cbut = this.AddElement("button", this.div, "click");
         this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
         this.cbut.classList.add("margin-10");
@@ -68,6 +88,12 @@ class GraphPaperObj extends UIObj {
             this.grid.style.zIndex++;
         } else if ( e.target == this.zdown ) {
             this.grid.style.zIndex--;
+        } else if ( e.target == this.slidsize ) {
+            this.gsize = e.target.value;
+            this.SetBackground();
+        } else if ( e.target == this.sliddiv ) {
+            this.gdivide = e.target.value;
+            this.SetBackground();
         } else if ( e.target == this.cbut ) {
             //this.colorinput.show();
         }
@@ -94,6 +120,23 @@ class GraphPaperObj extends UIObj {
             repeating-linear-gradient(0deg, ${this.color} 0px, ${this.color} 1px, transparent 1px, transparent ${this.gsize * 10}px)
         `;
         $(this.grid).css('background-image', p);
+    }
+
+    HandleMove(w) {
+        MoveableObject.prototype.HandleMove.call(this, w);
+        let x = this.grid.getBoundingClientRect().left;
+        //set new location
+        x -= w;
+        //transition for smooth page move
+        $(this.grid).css({
+            'left': x,
+            'transition': "left 0.5s",
+        });
+    }
+
+    resetTransition() {
+        MoveableObject.prototype.resetTransition.call(this);
+        $(this.grid).css('transition', 'left 0s');
     }
 
     remove() {

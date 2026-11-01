@@ -191,6 +191,21 @@ class MoveableObject {
      //children can this to set the default color for picker
     HandleInitialColor() {}
 
+    HandleMove(w) {
+        let x = this.outerdiv.getBoundingClientRect().left;
+        //set new location
+        x -= w;
+        //transition for smooth page move
+        $(this.outerdiv).css({
+            'left': x,
+            'transition': "left 0.5s",
+        });
+    }
+
+    resetTransition() {
+        $(this.outerdiv).css('transition', 'left 0s');
+    }
+
     SetColor(s) {
         this.color = s;
     }
