@@ -86,7 +86,6 @@ If you download the whole source package, there are some helpful tools in the `r
 - `clock - analog.js` - an elegant clock face with adjustable transparency.
 - `clock - digital.js` - a digital clock with some color/font formatting options.
 - `clock - teaching tool.js` - an analog clock with hidden number values that can be revealed to help teach students.
-- `graph paper.js` - adjustable grid lines for your smartboard.
 - `todo list.js` - a customizable to-do list.  Right-click or click underneath to add a new item.  Click on any time to check it off.  Drag items by the handles to reorder.
 - `wallpaper - colors.mjs` - build your own color gradients for your background.  Allows blending with images/videos underneath.
 
