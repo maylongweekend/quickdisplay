@@ -355,6 +355,9 @@
     //background layer array
     let AllBackgrounds = [];
 
+    //currently animating a page change
+    let pageIsChanging = false;
+
     //quick log
     function log(s) {
         console.log("**QUICK DISPLAY**:    " + s);
@@ -848,14 +851,18 @@
     function MovePage(dir) {
         let w = window.innerWidth * dir;
         let x;
-        for ( let Obj of AllObjects ) {
-            Obj.HandleMove(w);
+        if ( !pageIsChanging ) {
+            pageIsChanging = true;
+            for ( let Obj of AllObjects ) {
+                Obj.HandleMove(w);
+            }
+            setTimeout(resetTransition, 510);
         }
-        setTimeout(resetTransition,500);
     }
 
     //reset the transition for setting left
     function resetTransition() {
+        pageIsChanging = false;
         for ( let Obj of AllObjects ) {
             Obj.resetTransition();
         }
