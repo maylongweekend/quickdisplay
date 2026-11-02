@@ -168,12 +168,13 @@
         
         <!-- search submenu -->
         <div class="menu-search" style="display: none;">
-            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+            <li data-action="back"><span class="material-symbols-outlined">undo</span>Go back</li>
             <hr />
-            <li data-action="ddg" name="ddg"><span class="material-symbols-outlined">policy</span>DuckDuckGo</li>
-            <li data-action="google" name="google"><span class="material-symbols-outlined">g_mobiledata_badge</span>Google</li>
-            <li data-action="yout" name="yout"><span class="material-symbols-outlined">video_search</span>YouTube</li>
-            <li data-action="maps" name="maps"><span class="material-symbols-outlined">travel_explore</span>Maps</li>
+            <li data-action="ddg"><span class="material-symbols-outlined">policy</span>DuckDuckGo</li>
+            <li data-action="google"><span class="material-symbols-outlined">g_mobiledata_badge</span>Google</li>
+            <li data-action="yout"><span class="material-symbols-outlined">video_search</span>YouTube</li>
+            <li data-action="maps"><span class="material-symbols-outlined">travel_explore</span>Maps</li>
+            <li data-action="giphy"><span class="material-symbols-outlined">animated_images</span>Giphy</li>
         </div>
 
         <!-- settings submenu -->
@@ -509,6 +510,7 @@
                     AllObjects.push(new PokemonObj("assets/poke_gifs/" + s));
                 }
                 break;
+
             //BACKGROUND
             case "backmenu":
                 thismenu.children(".menu-main").toggle(100);
@@ -568,6 +570,11 @@
                 $(".context").hide(100);
                 s = prompt("Search Google Maps for","");
                 window.open(`https://www.google.com/maps/search/${s}`,'Search','width=900,height=600');
+                break;
+            case "giphy":
+                $(".context").hide(100);
+                s = prompt("Search Giphy for","");
+                window.open(`https://giphy.com/search/${s}`,'Search','width=900,height=600');
                 break;
             
             //SETTINGS

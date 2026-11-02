@@ -47,7 +47,7 @@ QD supports directly pasting text and image data onto your smartboard with Contr
 
 ## Quick search options
 
-QD supports quickly searching some popular sites directly from the right-click menu.  You can choose DuckDuckGo's privacy-focused search, Google's web search (AI-free), Youtube search, or Google Maps.
+QD supports quickly searching some popular sites directly from the right-click menu.  You can choose DuckDuckGo's privacy-focused search, Google's web search (AI-free), Youtube search, Google Maps, or Giphy's animated images.
 
 ![Search menu](readme_img/qd_search.jpg)
 
