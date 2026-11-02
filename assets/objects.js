@@ -326,6 +326,11 @@ class EmojiObj extends MoveableObject {
         }
         this.bscale = b;
     }
+
+    resetTransform() {
+        MoveableObject.prototype.resetTransform.call(this);
+        $(this.h).css('font-size', "12vh");
+    }
 }
 
 
@@ -403,6 +408,11 @@ class TextObj extends MoveableObject {
             this.div.removeEventListener('wheel', ObjScale);
         }
         this.bscale = b;
+    }
+
+    resetTransform() {
+        MoveableObject.prototype.resetTransform.call(this);
+        $(this.h).css('font-size', "7vh");
     }
 
     HandleInitialColor() {
