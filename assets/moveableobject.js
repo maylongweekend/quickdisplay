@@ -188,8 +188,7 @@ class MoveableObject {
                     $(elem).css('visibility','hidden');
                     break;
                 case "reset":
-                    $(elem).css('transform','scale(1, 1)');
-                    owner.isflipped = false;
+                    owner.resetTransform();
                     break;
                 case "delete":
                     owner.remove();//call remove on class instance and it will handle deleting needed dom elements
@@ -266,6 +265,11 @@ class MoveableObject {
             this.div.removeEventListener('wheel', ObjScale);
         }
         this.bscale = b;
+    }
+
+    resetTransform() {
+        $(this.div).css('transform','scale(1, 1)');
+        this.isflipped = false;
     }
 
     //creates an HTML dom object
