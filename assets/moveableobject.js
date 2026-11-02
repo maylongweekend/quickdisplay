@@ -2,6 +2,13 @@
 //a moveable scalable div with various right click options
 //subclasses handle specific implementation of various features
 
+//structure note:
+//the outermost div is this.outerdiv
+// - handles dragging and flipping
+//inside this is this.div
+// - handles scaling and all else
+//use this.div for everything unless you need to mess with the outerdiv
+
 class MoveableObject {
 
     constructor(bdrag = true, bscale = true, btext = false, bcolor = false, bfont = false, banimate = false, blink = false) {
@@ -143,6 +150,14 @@ class MoveableObject {
                     zi = $(elem).css('z-index');
                     zi--;
                     $(elem).css('z-index', zi);
+                    break;
+                case "mirror":
+                    zi = $(owner.div).css('transform');
+                    if ( zi.includes("-1") ) {
+                        zi = $(owner.div).css('transform', "scaleX(1)");
+                    } else {
+                        zi = $(owner.div).css('transform', "scaleX(-1)");
+                    }
                     break;
                 case "lock":
                     if ( $(owner.outerdiv).draggable("option", "disabled") ) {
