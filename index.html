@@ -181,10 +181,10 @@
         <div class='menu-settings' style="display: none;">
             <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
             <hr />
-            <li data-action="show" name="show"><span class="material-symbols-outlined">visibility</span>Show hidden objects</li>
-            <li data-action="page" name="page"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls</li>
-            <li data-action="grid" name="grid"><span class="material-symbols-outlined">border_inner</span>Toggle helper grid</li>
-            <li data-action="blur" name="blur"><span class="material-symbols-outlined">lens_blur</span>Toggle blur effects</li>
+            <li data-action="show" name="show"><span class="material-symbols-outlined">visibility</span>Show hidden objects (s)</li>
+            <li data-action="page" name="page"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls (arrows)</li>
+            <li data-action="grid" name="grid"><span class="material-symbols-outlined">border_inner</span>Toggle helper grid (;)</li>
+            <li data-action="blur" name="blur"><span class="material-symbols-outlined">lens_blur</span>Toggle blur effects (b)</li>
             <hr />
             <li data-action="reset" name="reset"><span class="material-symbols-outlined">restart_alt</span>Reset all</li>
         </div>
@@ -364,6 +364,27 @@
     function log(s) {
         console.log("**QUICK DISPLAY**:    " + s);
     }
+
+    //keypress detect
+    document.addEventListener('keyup', function(event) {
+        switch ( event.key ) {
+            case "b":
+                ToggleBlur();
+                break;
+            case ";":
+                $(".grid-overlay").toggle();
+                break;
+            case "s":
+                ShowHidden();
+                break;
+            case "ArrowLeft":
+                MovePage(-1);
+                break;
+            case "ArrowRight":
+                MovePage(1);
+                break;
+        }
+    });
 
     //mouse right click saved location
     const rcloc = {
@@ -585,14 +606,7 @@
                 break;
             case "show":
                 $(".context").hide(100);
-                divs = document.getElementsByClassName("object-div");
-                for ( let i = 0; i < divs.length; i++ ) {
-                    //reveal hidden items only on current page
-                    l = divs[i].getBoundingClientRect().left;
-                    if ( ( l >= 0 ) && ( l < window.innerWidth )) {
-                        $(divs[i]).css('visibility', 'visible');
-                    }
-                }
+                ShowHidden();
                 thismenu.children("div").hide();
                 thismenu.children(".menu-main").show();
                 break;
@@ -610,9 +624,7 @@
                 break;
             case "blur":
                 $(".context").hide(100);
-                r = $(":root").css("--sb-blur");
-                s = r ==  "blur(12px)" ? "blur(0)" : "blur(12px)";
-                $(":root").css("--sb-blur", s);
+                ToggleBlur();
                 thismenu.children("div").hide();
                 thismenu.children(".menu-main").show();
                 break;
@@ -1127,6 +1139,25 @@
         }
         reader.readAsText(file);
         return container;
+    }
+
+    //changes blur setting
+    function ToggleBlur() {
+        let r = $(":root").css("--sb-blur");
+        let s = r ==  "blur(12px)" ? "blur(0)" : "blur(12px)";
+        $(":root").css("--sb-blur", s);
+    }
+
+    //show hidden objects on current page
+    function ShowHidden() {
+        let divs = document.getElementsByClassName("object-div");
+        for ( let i = 0; i < divs.length; i++ ) {
+            //reveal hidden items only on current page
+            let l = divs[i].getBoundingClientRect().left;
+            if ( ( l >= 0 ) && ( l < window.innerWidth )) {
+                $(divs[i]).css('visibility', 'visible');
+            }
+        }
     }
 
     //loads a script image or video and sets it as the background
