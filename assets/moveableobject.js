@@ -4,9 +4,9 @@
 
 //structure note:
 //the outermost div is this.outerdiv
-// - handles dragging and flipping
+// - handles dragging
 //inside this is this.div
-// - handles scaling and all else
+// - handles scaling/flipping and all else
 //use this.div for everything unless you need to mess with the outerdiv
 
 class MoveableObject {
@@ -26,6 +26,7 @@ class MoveableObject {
         this.isanimating = false;
         this.blink = blink;
         this.link = "";
+        this.isflipped = false;
 
         //create the div and handle basic drag/scale settings
         this.outerdiv = document.createElement("div");
@@ -35,12 +36,14 @@ class MoveableObject {
         this.outerdiv.appendChild(this.div);
         $(this.outerdiv).draggable();
         this.SetDraggable(bdrag);
+        $(this.div).css('transform', 'scale(1, 1)');//init the transform style for later scaling/flipping
         this.SetScalable(bscale);
         $(this.outerdiv).css({
             top: rcloc.y,
             left: rcloc.x,
         });
         this.div.owner = this.self;
+        this.outerdiv.owner = this.self;
 
         //set up the context menu
         this.menu = document.getElementById("default-context").cloneNode(true);
@@ -152,12 +155,10 @@ class MoveableObject {
                     $(elem).css('z-index', zi);
                     break;
                 case "mirror":
-                    zi = $(owner.div).css('transform');
-                    if ( zi.includes("-1") ) {
-                        zi = $(owner.div).css('transform', "scaleX(1)");
-                    } else {
-                        zi = $(owner.div).css('transform', "scaleX(-1)");
-                    }
+                    owner.isflipped = !owner.isflipped;
+                    let scale = elem.getBoundingClientRect().width / elem.offsetWidth;
+                    let xscale = owner.isflipped ? scale * -1 : scale;
+                    $(elem).css('transform', `scale(${xscale}, ${scale})`);
                     break;
                 case "lock":
                     if ( $(owner.outerdiv).draggable("option", "disabled") ) {
@@ -187,7 +188,8 @@ class MoveableObject {
                     $(elem).css('visibility','hidden');
                     break;
                 case "reset":
-                    $(elem).css('transform','scale(1)');
+                    $(elem).css('transform','scale(1, 1)');
+                    owner.isflipped = false;
                     break;
                 case "delete":
                     owner.remove();//call remove on class instance and it will handle deleting needed dom elements
@@ -250,7 +252,6 @@ class MoveableObject {
     }
 
     SetScalable(b) {
-        $(this.div).css('transform', 'scale(1)');
         if ( b ) {
             this.div.addEventListener('wheel',function ObjScale(event) {
                 event.preventDefault();
@@ -258,7 +259,8 @@ class MoveableObject {
                 let scale = this.getBoundingClientRect().width / this.offsetWidth;
                 scale += dir * 0.1;
                 scale = Math.max(0.1, Math.min(5, scale));
-                $(this).css('transform', `scale(${scale})`);
+                let xscale = this.owner.isflipped ? scale * -1 : scale;
+                $(this).css('transform', `scale(${xscale}, ${scale})`);
             });
         } else {
             this.div.removeEventListener('wheel', ObjScale);
