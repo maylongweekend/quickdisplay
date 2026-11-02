@@ -163,6 +163,7 @@
             <li data-action="greenb"><span class="material-symbols-outlined">movie</span>Green Bokeh</li>
             <li data-action="purps"><span class="material-symbols-outlined">imagesmode</span>Purple splatter</li>
             <li data-action="blues"><span class="material-symbols-outlined">imagesmode</span>Blue scratches</li>
+            <li data-action="gradient"><span class="material-symbols-outlined">gradient</span>Gradient creator</li>
             <li data-action="resetb"><span class="material-symbols-outlined">movie</span>Default</li>
         </div>
         
@@ -561,6 +562,11 @@
                 $(".context").hide(100);
                 ClearBackground();
                 AllBackgrounds.push(new ImageLayer("assets/wall_scratch.jpg"));
+                break;
+            case "gradient":
+                $(".context").hide(100);
+                ClearBackground();
+                AllBackgrounds.push(new GradientLayer());
                 break;
             case "resetb":
                 $(".context").hide(100);
