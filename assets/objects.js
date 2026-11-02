@@ -53,7 +53,7 @@ class GraphPaperObj extends UIObj {
 
         this.AddElement("br");
 
-        this.cbut = this.AddElement("button", this.div, "click");
+        this.cbut = this.AddElement("button");
         this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
         this.cbut.classList.add("margin-10");
         this.zup = this.AddElement("button", this.div, "click");
@@ -96,8 +96,6 @@ class GraphPaperObj extends UIObj {
         } else if ( e.target == this.sliddiv ) {
             this.gdivide = e.target.value;
             this.SetBackground();
-        } else if ( e.target == this.cbut ) {
-            //this.colorinput.show();
         }
     }
 
