@@ -75,14 +75,25 @@
   border-radius: var(--ui-radius);
   backdrop-filter: var(--sb-blur);
   -webkit-backdrop-filter: var(--sb-blur);
+  cursor: default;
+  user-select: none;
 }
 
-.ui-div input, button, label, p, select, br {
+.ui-div input, .ui-div button, .ui-div label, .ui-div p, .ui-div select, .ui-div br {
   padding: 0.5vh;
   font-family: var(--ui-font);
   color: var(--ui-text);
   text-shadow: 0.3vh 0.3vh 0.5vh #00000030;
   font-size: 1.5vh;
+}
+
+.ui-div h3 {
+  padding: 0.5vh;
+  font-family: var(--ui-font);
+  color: var(--ui-text);
+  text-shadow: 0.3vh 0.3vh 0.5vh #00000030;
+  font-size: 1.8vh;
+  text-align: center;
 }
 
 /* BEGIN NOTES */

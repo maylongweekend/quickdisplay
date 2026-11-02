@@ -4,10 +4,12 @@
 
 class UIObj extends MoveableObject {
 
-    constructor() {
+    constructor(title = "Settings panel") {
         super();
 
         this.div.classList.add("ui-div");
+        let h = this.AddElement("h3");
+        h.textContent = title;
     }
 
     handleEvent(e) {}
@@ -22,7 +24,7 @@ class UIObj extends MoveableObject {
 class GraphPaperObj extends UIObj {
 
     constructor() {
-        super();
+        super("Graph settings");
 
         this.gsize = 15;
         this.gdivide = 5;
