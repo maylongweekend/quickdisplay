@@ -56,7 +56,7 @@ QD supports quickly searching some popular sites directly from the right-click m
 
 ### Page controls
 
-QD supports arranging objects into basic pages.  Choose `Toggle page controls` in the Settings menu to show the page control buttons.  Switching pages will slide all objects according to their placement in the page order.  The background of QD will remain unchanged.
+QD supports arranging objects into basic pages.  Use the keyboard arrow keys, or choose `Toggle page controls` in the Settings menu to show the page control buttons.  Switching pages will slide all objects according to their placement in the page order.  The background of QD will remain unchanged.
 
 ![Pages in action](readme_img/qd_pages.webp)
 
@@ -64,14 +64,19 @@ QD supports arranging objects into basic pages.  Choose `Toggle page controls` i
 > "Pages" work in QD by sliding all objects left or right by the width of your window.  You may experience bugs if you change resolutions.
 
 
+## Hidden objects
+
+You can reveal hidden objects on the current page by pressing the `s` key or choosing `Show hidden options` in the settings menu.
+
+
 ### Helper grid
 
-QD has a simple grid to divide the screen into thirds and sixths, for easier placement.  Choose `Toggle helper grid` to reveal.
+QD has a simple grid to divide the screen into thirds and sixths, for easier placement.  Press the `semicolon` key or choose `Toggle helper grid` in the settings menu to reveal.
 
 
 ### Blur effects
 
-Many translucent objects in QD can have a visual blur applied behind them.  Because computers at my school are ancient, this effect is disabled by default.  For faster computers, this effect can be enabled with the `Toggle blur effects` option.
+Many translucent objects in QD can have a visual blur applied behind them.  Because computers at my school are ancient, this effect is disabled by default.  For faster computers, this effect can be enabled with the `b` key or the `Toggle blur effects` option.
 
 
 ## Included resources
