@@ -64,7 +64,7 @@ QD supports arranging objects into basic pages.  Use the keyboard arrow keys, or
 > "Pages" work in QD by sliding all objects left or right by the width of your window.  You may experience bugs if you change resolutions.
 
 
-## Hidden objects
+### Hidden objects
 
 You can reveal hidden objects on the current page by pressing the `s` key or choosing `Show hidden options` in the settings menu.
 
