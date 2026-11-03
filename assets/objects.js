@@ -4,10 +4,12 @@
 
 class UIObj extends MoveableObject {
 
-    constructor() {
+    constructor(title = "Settings panel") {
         super();
 
         this.div.classList.add("ui-div");
+        let h = this.AddElement("h3");
+        h.textContent = title;
     }
 
     handleEvent(e) {}
@@ -22,7 +24,7 @@ class UIObj extends MoveableObject {
 class GraphPaperObj extends UIObj {
 
     constructor() {
-        super();
+        super("Graph settings");
 
         this.gsize = 15;
         this.gdivide = 5;
@@ -51,7 +53,7 @@ class GraphPaperObj extends UIObj {
 
         this.AddElement("br");
 
-        this.cbut = this.AddElement("button", this.div, "click");
+        this.cbut = this.AddElement("button");
         this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
         this.cbut.classList.add("margin-10");
         this.zup = this.AddElement("button", this.div, "click");
@@ -94,8 +96,6 @@ class GraphPaperObj extends UIObj {
         } else if ( e.target == this.sliddiv ) {
             this.gdivide = e.target.value;
             this.SetBackground();
-        } else if ( e.target == this.cbut ) {
-            //this.colorinput.show();
         }
     }
 

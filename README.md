@@ -38,6 +38,11 @@ Right-click on objects to see options for interacting.  You can also use the scr
 Be aware that cloned objects may be buggy or not have the same interaction options.  They should be used for visuals only.
 
 
+## Backgrounds
+
+QD supports the use of pictures, videos, and scripts for your wallpaper.  Choose from built-in options or `Load file` to set.  Script backgrounds may have further settings available in a settings panel.
+
+
 ## Pasting
 
 QD supports directly pasting text and image data onto your smartboard with Control + V.  Single-line text will be pasted as a sticky note, multi-line text will become a note, and images will paste as a draggable scalable object.  You can copy/paste transparent layer image data from an editor such as Paint or Photoshop, and its transparency will be preserved.
@@ -56,7 +61,7 @@ QD supports quickly searching some popular sites directly from the right-click m
 
 ### Page controls
 
-QD supports arranging objects into basic pages.  Choose `Toggle page controls` in the Settings menu to show the page control buttons.  Switching pages will slide all objects according to their placement in the page order.  The background of QD will remain unchanged.
+QD supports arranging objects into basic pages.  Use the keyboard arrow keys, or choose `Toggle page controls` in the Settings menu to show the page control buttons.  Switching pages will slide all objects according to their placement in the page order.  The background of QD will remain unchanged.
 
 ![Pages in action](readme_img/qd_pages.webp)
 
@@ -64,14 +69,19 @@ QD supports arranging objects into basic pages.  Choose `Toggle page controls` i
 > "Pages" work in QD by sliding all objects left or right by the width of your window.  You may experience bugs if you change resolutions.
 
 
+### Hidden objects
+
+You can reveal hidden objects on the current page by pressing the `s` key or choosing `Show hidden options` in the settings menu.
+
+
 ### Helper grid
 
-QD has a simple grid to divide the screen into thirds and sixths, for easier placement.  Choose `Toggle helper grid` to reveal.
+QD has a simple grid to divide the screen into thirds and sixths, for easier placement.  Press the `semicolon` key or choose `Toggle helper grid` in the settings menu to reveal.
 
 
 ### Blur effects
 
-Many translucent objects in QD can have a visual blur applied behind them.  Because computers at my school are ancient, this effect is disabled by default.  For faster computers, this effect can be enabled with the `Toggle blur effects` option.
+Many translucent objects in QD can have a visual blur applied behind them.  Because computers at my school are ancient, this effect is disabled by default.  For faster computers, this effect can be enabled with the `b` key or the `Toggle blur effects` option.
 
 
 ## Included resources
@@ -81,9 +91,7 @@ If you download the whole source package, there are some helpful tools in the `r
 - `clock - analog.js` - an elegant clock face with adjustable transparency.
 - `clock - digital.js` - a digital clock with some color/font formatting options.
 - `clock - teaching tool.js` - an analog clock with hidden number values that can be revealed to help teach students.
-- `graph paper.js` - adjustable grid lines for your smartboard.
 - `todo list.js` - a customizable to-do list.  Right-click or click underneath to add a new item.  Click on any time to check it off.  Drag items by the handles to reorder.
-- `wallpaper - colors.mjs` - build your own color gradients for your background.  Allows blending with images/videos underneath.
 
 As I update the webapp, more of these resources will become available through the right-click menu.
 

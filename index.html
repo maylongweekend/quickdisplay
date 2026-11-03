@@ -163,6 +163,7 @@
             <li data-action="greenb"><span class="material-symbols-outlined">movie</span>Green Bokeh</li>
             <li data-action="purps"><span class="material-symbols-outlined">imagesmode</span>Purple splatter</li>
             <li data-action="blues"><span class="material-symbols-outlined">imagesmode</span>Blue scratches</li>
+            <li data-action="gradient"><span class="material-symbols-outlined">gradient</span>Gradient creator</li>
             <li data-action="resetb"><span class="material-symbols-outlined">movie</span>Default</li>
         </div>
         
@@ -195,11 +196,11 @@
      <ul class='context' id="default-context">
         <li data-action="up"><span class="material-symbols-outlined">keyboard_double_arrow_up</span>Bring forward</li>
         <li data-action="down"><span class="material-symbols-outlined">keyboard_double_arrow_down</span>Move backward</li>
-        <li data-action="duplicate"><span class="material-symbols-outlined">tab_inactive</span>Clone</li>
         <li data-action="mirror"><span class="material-symbols-outlined">flip</span>Mirror</li>
-        <li data-action="hide"><span class="material-symbols-outlined">visibility_off</span>Hide</li>
         <li data-action="lock"><span class="material-symbols-outlined">lock</span>Lock position</li>
         <li data-action="reset"><span class="material-symbols-outlined">photo_size_select_small</span>Reset size</li>
+        <li data-action="hide"><span class="material-symbols-outlined">visibility_off</span>Hide</li>
+        <li data-action="duplicate"><span class="material-symbols-outlined">tab_inactive</span>Clone</li>
         <li data-action="delete"><span class="material-symbols-outlined">delete_forever</span>Delete</li>
     </ul>
 
@@ -273,61 +274,7 @@
     //Start with the classes contained in:
     //moveableobject.js
     //objects.js
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-        ------------------------------------
-            OBJECT FUNCTIONS
-        ------------------------------------
-    */
-
-
-    //object animation
-    let lastdelta = document.timeline.currentTime;
-    requestAnimationFrame(AnimationStep);
-
-    function AnimationStep(timestamp) {
-        let delta = timestamp - lastdelta;
-        if ( delta > 0 ) {
-            lastdelta = timestamp;
-            for ( let Obj of AllObjects ) {
-                Obj.AnimateFrame(delta);
-            }
-            for ( let Backg of AllBackgrounds ) {
-                Backg.AnimateFrame(delta);
-            }
-        }
-        requestAnimationFrame(AnimationStep);
-    }
-
-
-
-
-
-
-
-
-
+    //backgrounds.js
 
 
 
@@ -428,6 +375,63 @@
     
     //set default background video
     AllBackgrounds.push(new VideoLayer("assets/colorful.mp4"));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+        ------------------------------------
+            OBJECT FUNCTIONS
+        ------------------------------------
+    */
+
+
+    //object animation
+    let lastdelta = document.timeline.currentTime;
+    requestAnimationFrame(AnimationStep);
+
+    function AnimationStep(timestamp) {
+        let delta = timestamp - lastdelta;
+        if ( delta > 0 ) {
+            lastdelta = timestamp;
+            for ( let Obj of AllObjects ) {
+                Obj.AnimateFrame(delta);
+            }
+            for ( let Backg of AllBackgrounds ) {
+                Backg.AnimateFrame(delta);
+            }
+        }
+        requestAnimationFrame(AnimationStep);
+    }
+
+
+
+
+
 
 
 
@@ -561,6 +565,11 @@
                 $(".context").hide(100);
                 ClearBackground();
                 AllBackgrounds.push(new ImageLayer("assets/wall_scratch.jpg"));
+                break;
+            case "gradient":
+                $(".context").hide(100);
+                ClearBackground();
+                AllBackgrounds.push(new GradientLayer());
                 break;
             case "resetb":
                 $(".context").hide(100);
@@ -779,6 +788,9 @@
 
 
 
+
+
+
     /*
         ------------------------------------
             EMOJIS
@@ -795,6 +807,14 @@
     myPicker.on('emojiClick', (emoji) => {
         AllObjects.push(new EmojiObj(emoji.char));
     });
+
+
+
+
+
+
+
+
 
 
 
@@ -916,6 +936,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     /*
         ------------------------------------
             PASTING
@@ -994,58 +1026,6 @@
             AllObjects.push(new StickyNoteObj(string));
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1249,6 +1229,13 @@
 
 
 
+
+
+
+
+
+
+
     /*
         ------------------------------------
             UTILITY
@@ -1256,7 +1243,58 @@
     */
 
 
-    
+    //adapted from https://stackoverflow.com/a/58426404
+    // Posted by Crashalot, modified by community.
+    //originally from https://css-tricks.com/converting-color-spaces-in-javascript/
+    function RGBToHSL(color) {
+        // Make r, g, and b fractions of 1
+        let r = color.r / 255;
+        let g = color.g / 255;
+        let b = color.b / 255;
+
+        // Find greatest and smallest channel values
+        let cmin = Math.min(r, g, b),
+            cmax = Math.max(r, g, b),
+            delta = cmax - cmin,
+            h = 0,
+            s = 0,
+            l = 0;
+
+        // Calculate hue
+        // No difference
+        if ( delta === 0 )
+            h = 0;
+        // Red is max
+        else if ( cmax === r )
+            h = ( ( g - b ) / delta ) % 6;
+        // Green is max
+        else if ( cmax === g )
+            h = ( b - r ) / delta + 2;
+        // Blue is max
+        else
+            h = ( r - g ) / delta + 4;
+
+        h = Math.round(h * 60);
+            
+        // Make negative hues positive behind 360°
+        if ( h < 0 )
+            h += 360;
+
+        // Calculate lightness
+        l = ( cmax + cmin ) / 2;
+
+        // Calculate saturation
+        s = delta === 0 ? 0 : delta / ( 1 - Math.abs( 2 * l - 1 ) );
+            
+        // Multiply l and s by 100
+        s = +( s * 100 ).toFixed(1);
+        l = +( l * 100 ).toFixed(1);
+
+        color.h = h;
+        color.s = s;
+        color.l = l;
+    }
+
 
 
 
