@@ -38,6 +38,11 @@ Right-click on objects to see options for interacting.  You can also use the scr
 Be aware that cloned objects may be buggy or not have the same interaction options.  They should be used for visuals only.
 
 
+## Backgrounds
+
+QD supports the use of pictures, videos, and scripts for your wallpaper.  Choose from built-in options or `Load file` to set.  Script backgrounds may have further settings available in a settings panel.
+
+
 ## Pasting
 
 QD supports directly pasting text and image data onto your smartboard with Control + V.  Single-line text will be pasted as a sticky note, multi-line text will become a note, and images will paste as a draggable scalable object.  You can copy/paste transparent layer image data from an editor such as Paint or Photoshop, and its transparency will be preserved.
@@ -87,7 +92,6 @@ If you download the whole source package, there are some helpful tools in the `r
 - `clock - digital.js` - a digital clock with some color/font formatting options.
 - `clock - teaching tool.js` - an analog clock with hidden number values that can be revealed to help teach students.
 - `todo list.js` - a customizable to-do list.  Right-click or click underneath to add a new item.  Click on any time to check it off.  Drag items by the handles to reorder.
-- `wallpaper - colors.mjs` - build your own color gradients for your background.  Allows blending with images/videos underneath.
 
 As I update the webapp, more of these resources will become available through the right-click menu.
 
