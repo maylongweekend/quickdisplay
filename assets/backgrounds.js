@@ -241,5 +241,39 @@ class GradientLayer extends BackgroundLayer {
         if ( this.isrotanim ) {
             this.angle = ( this.angle + 0.2 ) % 360;
         }
+
+        //math for the angle of gradient
+        let rads = this.angle / 180 * Math.PI;//convert degrees to radians
+        let hyp = Math.min(this.canvas.height, this.canvas.width) / 1.4;//diameter of effect
+        let x1 = Math.cos(rads) * hyp;
+        let y1 = Math.sin(rads) * hyp;
+        let x2 = x1 * -1;
+        let y2 = y1 * -1;
+        //adjust points as if origin was in middle of screen
+        x1 += this.canvas.width / 2;
+        y1 += this.canvas.height / 2;
+        x2 += this.canvas.width / 2;
+        y2 += this.canvas.height / 2;
+
+        //create the gradient
+        let gradient = this.ctx.createLinearGradient(x1, y1, x2, y2);
+
+        //calculate stops
+        let c;
+        if ( this.colors.length == 1 ) {
+            c = this.colors[0];
+            gradient.addColorStop(0, `hsl(${c.h}, ${c.s}%, ${c.l}%)`);
+        } else {
+            let i = 1 / ( this.colors.length - 1 );
+            let stop = 0;
+            for ( c of this.colors ) {
+                gradient.addColorStop(stop, `hsl(${c.h}, ${c.s}%, ${c.l}%)`);
+                stop += i;
+            }
+        }
+
+        //fill the canvas
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
