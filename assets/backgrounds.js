@@ -132,6 +132,12 @@ class GradientLayer extends BackgroundLayer {
 
     constructor() {
         super(true, true, true);
+
+        this.isanimating = true;//always call the frame draw
+        this.ishueanim = false;
+        this.isrotanim = false;
+        this.angle = 90;
+        this.ctx = this.canvas.getContext("2d");
     }
 
     initUI() {
@@ -177,17 +183,31 @@ class GradientLayer extends BackgroundLayer {
         });
         this.pickers.push(p);
         jscolor.install();
-        p.fromString(`rgba(${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},1.0)`);
-        this.colors.push(p.toRGBAString());
+        let color = {};
+        color.r = Math.floor(Math.random() * 256);
+        color.g = Math.floor(Math.random() * 256);
+        color.b = Math.floor(Math.random() * 256);
+        color.a = 1.0;
+        color.rgba = `rgba(${color.r},${color.g},${color.b},${color.a})`;//friendly string
+        RGBToHSL(color);//get HSL values
+        p.fromString(color.rgba);
+        this.colors.push(color);
         p.owner = this.self;
         p.index = this.pickers.length;
         p.option('onInput', function() {
-            this.owner.SetColor(this.index, this.toRGBAString());
+            this.owner.SetColor(this);
         });
     }
 
-    SetColor(picker, string) {
-        this.colors[picker - 1] = string;
+    SetColor(picker) {
+        let color = this.colors[picker.index - 1];
+        color.r = picker.channel("R");
+        color.g = picker.channel("G");
+        color.b = picker.channel("B");
+        color.a = picker.channel("A");
+        color.rgba = picker.toRGBAString();
+        RGBToHSL(color);//get HSL values
+        this.colors[picker.index - 1] = color;
     }
 
     //use switch ( e.type ) to detect eg "click" and call function on this
@@ -203,10 +223,23 @@ class GradientLayer extends BackgroundLayer {
             this.buttons.length = 0;
             this.pickers.length = 0;
             this.AddColorButton();
+        } else if ( e.target == this.hue ) {
+            this.ishueanim = !this.ishueanim;
+        } else if ( e.target == this.rotate ) {
+            this.isrotanim = !this.isrotanim;
         }
     }
 
     Frame(delta) {
-
+        //cycle background hue
+        if ( this.ishueanim  ) {
+            for ( let color of this.colors ) {
+                color.h = ( color.h + 0.1 )  % 360;
+            }
+        }
+        //cycle angle
+        if ( this.isrotanim ) {
+            this.angle = ( this.angle + 0.2 ) % 360;
+        }
     }
 }
