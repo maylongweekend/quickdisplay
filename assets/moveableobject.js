@@ -27,6 +27,8 @@ class MoveableObject {
         this.blink = blink;
         this.link = "";
         this.isflipped = false;
+        this.colors = [];
+        this.pickers = [];
 
         //create the div and handle basic drag/scale settings
         this.outerdiv = document.createElement("div");
@@ -73,25 +75,13 @@ class MoveableObject {
 
         //set up the color picker
         if ( bcolor ) {
-            let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
-            let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
             let ccli = AddContextItem(this.menu, "color", `<span class="material-symbols-outlined">colors</span>Change color`, true);
-            this.colorinput = new JSColor(ccli, {
-                previewElement: '',
-                format: 'rgba',
-                preset:'large',
-                backgroundColor: bgc,
-                borderColor: bdc,
-                borderRadius: 5,
-                padding: 15
-            });
-            jscolor.install();
             this.HandleInitialColor();
-            this.colorinput.fromString(this.color);
+            this.colorinput = this.AddColorPicker(ccli, '', this.color);
             //give the picker a reference to this class and set the callback function to this class setcolor
             this.colorinput.owner = this.self;
             this.colorinput.option('onInput', function() {
-                this.owner.SetColor(this.toRGBAString());
+                this.owner.PickerInput(this);
             });
         }
 
@@ -220,6 +210,47 @@ class MoveableObject {
 
     resetTransition() {
         $(this.outerdiv).css('transition', 'left 0s');
+    }
+
+    AddColorPicker(elem, preview = '', defaultcolor = '') {
+        let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
+        let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
+        let p = new JSColor(elem, {
+            format: 'rgba',
+            previewElement: preview,
+            preset:'large',
+            backgroundColor: bgc,
+            borderColor: bdc,
+            borderRadius: 5,
+            padding: 15
+        });
+        this.pickers.push(p);
+        jscolor.install();
+        let color = {};
+        if ( defaultcolor != '' ) {
+            p.fromString(defaultcolor);
+            color.rgba = p.toRGBAString();
+        } else {
+            color.r = Math.floor(Math.random() * 256);
+            color.g = Math.floor(Math.random() * 256);
+            color.b = Math.floor(Math.random() * 256);
+            color.a = 1.0;
+            color.rgba = `rgba(${color.r},${color.g},${color.b},${color.a})`;
+            p.fromString(color.rgba);
+        }
+        this.colors.push(color);
+        p.owner = this.self;
+        p.index = this.pickers.length;
+        p.option('onInput', function() {
+            this.owner.PickerInput(this);
+        });
+        return p;
+    }
+
+    //called when jscolor picker receives input
+    //standard behaviour is to send color string to setcolor
+    PickerInput(picker) {
+        this.SetColor(picker.toRGBAString());
     }
 
     SetColor(s) {

@@ -63,25 +63,8 @@ class GraphPaperObj extends UIObj {
         this.zdown.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_down</span>`;
         this.zdown.classList.add("margin-10");
 
-        //duplicated from moveableobject because we want it focused on the ui button not right click menu
-        let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
-        let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
-        this.colorinput = new JSColor(this.cbut, {
-            format: 'rgba',
-            preset:'large',
-            backgroundColor: bgc,
-            borderColor: bdc,
-            borderRadius: 5,
-            padding: 15
-        });
-        jscolor.install();
-        this.color = "rgba(196,196,196,0.4)";
-        this.colorinput.fromString(this.color);
-        this.colorinput.owner = this.self;
-        this.colorinput.option('onInput', function() {
-            this.owner.SetColor(this.toRGBAString());
-        });
-
+        let pick = this.AddColorPicker(this.cbut, this.cbut, "#ffffff44");
+        this.color = pick.toRGBAString();
         this.SetBackground();
     }
 
@@ -109,7 +92,7 @@ class GraphPaperObj extends UIObj {
         //reduce for the between lines
         //and put back into a color
         let temps = this.color.split(',');
-        temps[3] = temps[3].slice(0, 3);
+        temps[3] = temps[3].replace(")", "");
         temps[3] = "" + ( Number(temps[3]) / 2.5 );
         temps[3] += ")";
         let tempc = temps.toString();

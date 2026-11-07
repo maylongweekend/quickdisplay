@@ -171,35 +171,24 @@ class GradientLayer extends BackgroundLayer {
         b.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
         b.classList.add("margin-10");
         b.index = this.colors.length;
-        let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
-        let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
-        let p = new JSColor(b, {
-            format: 'rgba',
-            preset:'large',
-            backgroundColor: bgc,
-            borderColor: bdc,
-            borderRadius: 5,
-            padding: 15
-        });
+        let p = this.ui.AddColorPicker(b, b, '');
         this.pickers.push(p);
-        jscolor.install();
         let color = {};
-        color.r = Math.floor(Math.random() * 256);
-        color.g = Math.floor(Math.random() * 256);
-        color.b = Math.floor(Math.random() * 256);
-        color.a = 1.0;
-        color.rgba = `rgba(${color.r},${color.g},${color.b},${color.a})`;//friendly string
-        RGBToHSL(color);//get HSL values
-        p.fromString(color.rgba);
+            color.r = p.channel("R");
+            color.g = p.channel("G");
+            color.b = p.channel("B");
+            color.a = p.channel("A");
+            color.rgba = p.toRGBAString();
+            RGBToHSL(color);//get HSL values
         this.colors.push(color);
         p.owner = this.self;
         p.index = this.pickers.length;
         p.option('onInput', function() {
-            this.owner.SetColor(this);
+            this.owner.PickerInput(this);
         });
     }
 
-    SetColor(picker) {
+    PickerInput(picker) {
         let color = this.colors[picker.index - 1];
         color.r = picker.channel("R");
         color.g = picker.channel("G");
