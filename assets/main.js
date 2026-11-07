@@ -84,21 +84,27 @@ function log(s) {
 //keypress detect
 document.addEventListener('keyup', function(event) {
 	switch ( event.key ) {
+		//SETTINGS: blur toggle
 		case "b":
 			ToggleBlur();
 			break;
+		//SETTINGS: grid toggle
 		case ";":
 			$(".grid-overlay").toggle();
 			break;
+		//SETTINGS: show hidden
 		case "s":
 			ShowHidden();
 			break;
+		//PAGES
 		case "ArrowLeft":
 			MovePage(-1);
 			break;
+		//PAGES
 		case "ArrowRight":
 			MovePage(1);
 			break;
+		//OBJECT: delete
 		case "Delete":
 			for ( let Obj of AllObjects ) {
 				if ( Obj.menu && $(Obj.menu).css('display') != 'none' ) {
@@ -108,6 +114,7 @@ document.addEventListener('keyup', function(event) {
 				}
 			}
 			break;
+		//OBJECT: hide
 		case "h":
 			for ( let Obj of AllObjects ) {
 				if ( Obj.menu && $(Obj.menu).css('display') != 'none' ) {
