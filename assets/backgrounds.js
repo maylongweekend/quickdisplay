@@ -158,10 +158,10 @@ class GradientLayer extends BackgroundLayer {
         this.reset.innerHTML = `<span class="material-symbols-outlined ui-span">reset_colors</span>`;
         this.reset.classList.add("margin-10");
         this.rotate = this.ui.AddElement("button", undefined, "click", this.self);
-        this.rotate.innerHTML = `<span class="material-symbols-outlined ui-span">rotate_right</span>`;
+        this.rotate.innerHTML = `<span class="material-symbols-outlined ui-span">check_box_outline_blank</span><span class="material-symbols-outlined ui-span">rotate_right</span>`;
         this.rotate.classList.add("margin-10");
         this.hue = this.ui.AddElement("button", undefined, "click", this.self);
-        this.hue.innerHTML = `<span class="material-symbols-outlined ui-span">palette</span>`;
+        this.hue.innerHTML = `<span class="material-symbols-outlined ui-span">check_box_outline_blank</span><span class="material-symbols-outlined ui-span">palette</span>`;
         this.hue.classList.add("margin-10");
     }
 
@@ -171,35 +171,24 @@ class GradientLayer extends BackgroundLayer {
         b.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
         b.classList.add("margin-10");
         b.index = this.colors.length;
-        let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
-        let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
-        let p = new JSColor(b, {
-            format: 'rgba',
-            preset:'large',
-            backgroundColor: bgc,
-            borderColor: bdc,
-            borderRadius: 5,
-            padding: 15
-        });
+        let p = this.ui.AddColorPicker(b, b, '');
         this.pickers.push(p);
-        jscolor.install();
         let color = {};
-        color.r = Math.floor(Math.random() * 256);
-        color.g = Math.floor(Math.random() * 256);
-        color.b = Math.floor(Math.random() * 256);
-        color.a = 1.0;
-        color.rgba = `rgba(${color.r},${color.g},${color.b},${color.a})`;//friendly string
-        RGBToHSL(color);//get HSL values
-        p.fromString(color.rgba);
+            color.r = p.channel("R");
+            color.g = p.channel("G");
+            color.b = p.channel("B");
+            color.a = p.channel("A");
+            color.rgba = p.toRGBAString();
+            RGBToHSL(color);//get HSL values
         this.colors.push(color);
         p.owner = this.self;
         p.index = this.pickers.length;
         p.option('onInput', function() {
-            this.owner.SetColor(this);
+            this.owner.PickerInput(this);
         });
     }
 
-    SetColor(picker) {
+    PickerInput(picker) {
         let color = this.colors[picker.index - 1];
         color.r = picker.channel("R");
         color.g = picker.channel("G");
@@ -213,6 +202,7 @@ class GradientLayer extends BackgroundLayer {
     //use switch ( e.type ) to detect eg "click" and call function on this
     //you can pass the background to the ui to make ui clicks come back here
     handleEvent(e) {
+        let s;
         if ( e.target == this.adder ) {
             this.AddColorButton();
         } else if ( e.target == this.reset ){
@@ -225,8 +215,18 @@ class GradientLayer extends BackgroundLayer {
             this.AddColorButton();
         } else if ( e.target == this.hue ) {
             this.ishueanim = !this.ishueanim;
+            if ( !this.ishueanim ) {
+                this.hue.innerHTML = `<span class="material-symbols-outlined ui-span">check_box_outline_blank</span><span class="material-symbols-outlined ui-span">palette</span>`;
+            } else {
+                this.hue.innerHTML = `<span class="material-symbols-outlined ui-span">check_box</span><span class="material-symbols-outlined ui-span">palette</span>`;
+            }
         } else if ( e.target == this.rotate ) {
             this.isrotanim = !this.isrotanim;
+            if ( !this.isrotanim ) {
+                this.rotate.innerHTML = `<span class="material-symbols-outlined ui-span">check_box_outline_blank</span><span class="material-symbols-outlined ui-span">rotate_right</span>`;
+            } else {
+                this.rotate.innerHTML = `<span class="material-symbols-outlined ui-span">check_box</span><span class="material-symbols-outlined ui-span">rotate_right</span>`;
+            }
         }
     }
 
