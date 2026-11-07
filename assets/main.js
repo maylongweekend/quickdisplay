@@ -11,6 +11,9 @@ LICENSE: You can do what you like with this code as long as:
  - you are an individual user ONLY
 
 
+CODE NOTE:
+I know I'm a messy coder. I love using && as one-line if...then and I know it's bad.  I don't care.
+
 
 THE TODO LIST
 
@@ -58,9 +61,9 @@ THE TODO LIST
 
 
 /*
-    ------------------------------------
-        SET UP
-    ------------------------------------
+	------------------------------------
+		SET UP
+	------------------------------------
 */
 
 
@@ -75,44 +78,62 @@ let pageIsChanging = false;
 
 //quick log
 function log(s) {
-    console.log("**QUICK DISPLAY**:    " + s);
+	console.log("**QUICK DISPLAY**:	" + s);
 }
 
 //keypress detect
 document.addEventListener('keyup', function(event) {
-    switch ( event.key ) {
-        case "b":
-            ToggleBlur();
-            break;
-        case ";":
-            $(".grid-overlay").toggle();
-            break;
-        case "s":
-            ShowHidden();
-            break;
-        case "ArrowLeft":
-            MovePage(-1);
-            break;
-        case "ArrowRight":
-            MovePage(1);
-            break;
-    }
+	switch ( event.key ) {
+		case "b":
+			ToggleBlur();
+			break;
+		case ";":
+			$(".grid-overlay").toggle();
+			break;
+		case "s":
+			ShowHidden();
+			break;
+		case "ArrowLeft":
+			MovePage(-1);
+			break;
+		case "ArrowRight":
+			MovePage(1);
+			break;
+		case "Delete":
+			for ( let Obj of AllObjects ) {
+				if ( Obj.menu && $(Obj.menu).css('display') != 'none' ) {
+					for ( let Child of Obj.menu.children ) {
+						$(Child).attr("data-action") == "delete" && Child.click();
+					}
+				}
+			}
+			break;
+		case "h":
+			for ( let Obj of AllObjects ) {
+				if ( Obj.menu && $(Obj.menu).css('display') != 'none' ) {
+					for ( let Child of Obj.menu.children ) {
+						$(Child).attr("data-action") == "hide" && Child.click();
+					}
+				}
+			}
+			break;
+	}
 });
 
 //mouse right click saved location
 const rcloc = {
-    x: "0px",
-    y: "0px"
+	x: "0px",
+	y: "0px"
 }
 
 //current mouse location at all times
 const mloc = {
-    x: "0px",
-    y: "0px"
+	x: "0px",
+	y: "0px"
 }
 
 const vidconstraints = {
-    video: true
+	video: true
 };
 
 //update this list if you add/remove pokemon from assets/poke_gifs director
@@ -122,21 +143,21 @@ let canvas = document.getElementById("back-canvas");
 
 //detects mouse movements
 $("body").mousemove(function(e) {
-    mloc.x = e.pageX;
-    mloc.y = e.pageY;
+	mloc.x = e.pageX;
+	mloc.y = e.pageY;
 });
 
 //if the document is clicked somewhere, close all context menus
 $(document).bind("mousedown", function(e) {
-    //if the clicked element is not the menu
-    if ( !$(e.target).parents(".context").length > 0 ) {
-        // Hide it
-        $(".context").hide(100, function() {
-            let thismenu = $('#background-context');
-            thismenu.children("div").hide();
-            thismenu.children(".menu-main").show();
-        });
-    }
+	//if the clicked element is not the menu
+	if ( !$(e.target).parents(".context").length > 0 ) {
+		// Hide it
+		$(".context").hide(100, function() {
+			let thismenu = $('#background-context');
+			thismenu.children("div").hide();
+			thismenu.children(".menu-main").show();
+		});
+	}
 });
 
 //set default background video
@@ -170,9 +191,9 @@ AllBackgrounds.push(new VideoLayer("assets/colorful.mp4"));
 
 
 /*
-    ------------------------------------
-        OBJECT FUNCTIONS
-    ------------------------------------
+	------------------------------------
+		OBJECT FUNCTIONS
+	------------------------------------
 */
 
 
@@ -181,17 +202,17 @@ let lastdelta = document.timeline.currentTime;
 requestAnimationFrame(AnimationStep);
 
 function AnimationStep(timestamp) {
-    let delta = timestamp - lastdelta;
-    if ( delta > 0 ) {
-        lastdelta = timestamp;
-        for ( let Obj of AllObjects ) {
-            Obj.AnimateFrame(delta);
-        }
-        for ( let Backg of AllBackgrounds ) {
-            Backg.AnimateFrame(delta);
-        }
-    }
-    requestAnimationFrame(AnimationStep);
+	let delta = timestamp - lastdelta;
+	if ( delta > 0 ) {
+		lastdelta = timestamp;
+		for ( let Obj of AllObjects ) {
+			Obj.AnimateFrame(delta);
+		}
+		for ( let Backg of AllBackgrounds ) {
+			Backg.AnimateFrame(delta);
+		}
+	}
+	requestAnimationFrame(AnimationStep);
 }
 
 
@@ -222,9 +243,9 @@ function AnimationStep(timestamp) {
 
 
 /*
-    ------------------------------------
-        CONTEXT MENUS
-    ------------------------------------
+	------------------------------------
+		CONTEXT MENUS
+	------------------------------------
 */
 
 //adds the background context menu to the canvas right click
@@ -236,210 +257,210 @@ AddContextMenu(canvas, $("#background-context"));
 
 //actions for background context menu
 $("#background-context").on("click", "li", function() {
-    let divs;
-    let k;
-    let l;
-    let r;
-    let s;
-    let t;
-    let thismenu = $('#background-context');
-    //this is the triggered action name
-    switch($(this).attr("data-action")) {
+	let divs;
+	let k;
+	let l;
+	let r;
+	let s;
+	let t;
+	let thismenu = $('#background-context');
+	//this is the triggered action name
+	switch($(this).attr("data-action")) {
 
-        //BACK TO MAIN MENU
-        case "back":
-            thismenu.children("div").hide(100);
-            thismenu.children(".menu-main").show(100);
-            break;
+		//BACK TO MAIN MENU
+		case "back":
+			thismenu.children("div").hide(100);
+			thismenu.children(".menu-main").show(100);
+			break;
 
-        //NEW ITEMS
-        case "add":
-            $(".context").hide(100);
-            document.getElementById('file-input').click();
-            break;
-        case "sticky":
-            $(".context").hide(100);
-            AllObjects.push(new StickyNoteObj());
-            //CreateSticky(prompt("Enter your text", "Sticky note contents"));
-            break;
-        case "emoji":
-            $(".context").hide(100);
-            //already handled by emoji picker event
-            break;
-        case "title":
-            $(".context").hide(100);
-            AllObjects.push(new TextObj());
-            break;
-        case "more":
-            thismenu.children(".menu-main").toggle(100);
-            thismenu.children(".menu-more").toggle(100);
-            break;
+		//NEW ITEMS
+		case "add":
+			$(".context").hide(100);
+			document.getElementById('file-input').click();
+			break;
+		case "sticky":
+			$(".context").hide(100);
+			AllObjects.push(new StickyNoteObj());
+			//CreateSticky(prompt("Enter your text", "Sticky note contents"));
+			break;
+		case "emoji":
+			$(".context").hide(100);
+			//already handled by emoji picker event
+			break;
+		case "title":
+			$(".context").hide(100);
+			AllObjects.push(new TextObj());
+			break;
+		case "more":
+			thismenu.children(".menu-main").toggle(100);
+			thismenu.children(".menu-more").toggle(100);
+			break;
 
-        //MORE ITEMS
-        case "graphp":
-            $(".context").hide(100);
-            AllObjects.push(new GraphPaperObj());
-            break;
-        case "wshare":
-            $(".context").hide(100);
-            AllObjects.push(new WindowObj());
-            break;
-        case "camera":
-            $(".context").hide(100);
-            AllObjects.push(new CameraObj());
-            break;
-        case "pokem":
-            $(".context").hide(100);
-            r = prompt("Type part or all of a Pokémon's name", "Squirtle").toLowerCase();
-            k = PokeList.indexOf(r);
-            if ( k == -1 ) {
-                alert(`No Pokémon gif matching "${r}" found ...`);
-            } else {
-                l = PokeList.indexOf(".gif", k);
-                s = PokeList.slice(0, l + 4);
-                k = s.lastIndexOf(",");
-                s = s.slice(k + 1);
-                AllObjects.push(new PokemonObj("assets/poke_gifs/" + s));
-            }
-            break;
+		//MORE ITEMS
+		case "graphp":
+			$(".context").hide(100);
+			AllObjects.push(new GraphPaperObj());
+			break;
+		case "wshare":
+			$(".context").hide(100);
+			AllObjects.push(new WindowObj());
+			break;
+		case "camera":
+			$(".context").hide(100);
+			AllObjects.push(new CameraObj());
+			break;
+		case "pokem":
+			$(".context").hide(100);
+			r = prompt("Type part or all of a Pokémon's name", "Squirtle").toLowerCase();
+			k = PokeList.indexOf(r);
+			if ( k == -1 ) {
+				alert(`No Pokémon gif matching "${r}" found ...`);
+			} else {
+				l = PokeList.indexOf(".gif", k);
+				s = PokeList.slice(0, l + 4);
+				k = s.lastIndexOf(",");
+				s = s.slice(k + 1);
+				AllObjects.push(new PokemonObj("assets/poke_gifs/" + s));
+			}
+			break;
 
-        //BACKGROUND
-        case "backmenu":
-            thismenu.children(".menu-main").toggle(100);
-            thismenu.children(".menu-backg").toggle(100);
-            break;
-        case "backg":
-            $(".context").hide(100);
-            document.getElementById('background-input').click();
-            break;
-        case "tealb":
-            $(".context").hide(100);
-            ClearBackground();
-            AllBackgrounds.push(new VideoLayer("assets/wall_teal.webm"));
-            break;
-        case "greenb":
-            $(".context").hide(100);
-            ClearBackground();
-            AllBackgrounds.push(new VideoLayer("assets/wall_green.webm"));
-            break;
-        case "purps":
-            $(".context").hide(100);
-            ClearBackground();
-            AllBackgrounds.push(new ImageLayer("assets/wall_purp.jpg"));
-            break;
-        case "blues":
-            $(".context").hide(100);
-            ClearBackground();
-            AllBackgrounds.push(new ImageLayer("assets/wall_scratch.jpg"));
-            break;
-        case "gradient":
-            $(".context").hide(100);
-            ClearBackground();
-            AllBackgrounds.push(new GradientLayer());
-            break;
-        case "resetb":
-            $(".context").hide(100);
-            ClearBackground();
-            AllBackgrounds.push(new VideoLayer("assets/colorful.mp4"));
-            break;
+		//BACKGROUND
+		case "backmenu":
+			thismenu.children(".menu-main").toggle(100);
+			thismenu.children(".menu-backg").toggle(100);
+			break;
+		case "backg":
+			$(".context").hide(100);
+			document.getElementById('background-input').click();
+			break;
+		case "tealb":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/wall_teal.webm"));
+			break;
+		case "greenb":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/wall_green.webm"));
+			break;
+		case "purps":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new ImageLayer("assets/wall_purp.jpg"));
+			break;
+		case "blues":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new ImageLayer("assets/wall_scratch.jpg"));
+			break;
+		case "gradient":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new GradientLayer());
+			break;
+		case "resetb":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/colorful.mp4"));
+			break;
 
-        //SEARCH
-        case "searchmenu":
-            thismenu.children(".menu-main").toggle(100);
-            thismenu.children(".menu-search").toggle(100);
-            break;
-        case "ddg":
-            $(".context").hide(100);
-            s = prompt("Search DuckDuckGo for","");
-            window.open(`https://duckduckgo.com/?q=${s}`,'Search','width=900,height=600');
-            break;
-        case "google":
-            $(".context").hide(100);
-            s = prompt("Search Google for","");
-            window.open(`https://www.google.ca/search?q=${s}&udm=web`,'Search','width=900,height=600');
-            break;
-        case "yout":
-            $(".context").hide(100);
-            s = prompt("Search Youtube for","");
-            window.open(`https://www.youtube.com/results?search_query=${s}`,'Search','width=900,height=600');
-            break;
-        case "maps":
-            $(".context").hide(100);
-            s = prompt("Search Google Maps for","");
-            window.open(`https://www.google.com/maps/search/${s}`,'Search','width=900,height=600');
-            break;
-        case "giphy":
-            $(".context").hide(100);
-            s = prompt("Search Giphy for","");
-            window.open(`https://giphy.com/search/${s}`,'Search','width=900,height=600');
-            break;
+		//SEARCH
+		case "searchmenu":
+			thismenu.children(".menu-main").toggle(100);
+			thismenu.children(".menu-search").toggle(100);
+			break;
+		case "ddg":
+			$(".context").hide(100);
+			s = prompt("Search DuckDuckGo for","");
+			window.open(`https://duckduckgo.com/?q=${s}`,'Search','width=900,height=600');
+			break;
+		case "google":
+			$(".context").hide(100);
+			s = prompt("Search Google for","");
+			window.open(`https://www.google.ca/search?q=${s}&udm=web`,'Search','width=900,height=600');
+			break;
+		case "yout":
+			$(".context").hide(100);
+			s = prompt("Search Youtube for","");
+			window.open(`https://www.youtube.com/results?search_query=${s}`,'Search','width=900,height=600');
+			break;
+		case "maps":
+			$(".context").hide(100);
+			s = prompt("Search Google Maps for","");
+			window.open(`https://www.google.com/maps/search/${s}`,'Search','width=900,height=600');
+			break;
+		case "giphy":
+			$(".context").hide(100);
+			s = prompt("Search Giphy for","");
+			window.open(`https://giphy.com/search/${s}`,'Search','width=900,height=600');
+			break;
 
-        //SETTINGS
-        case "settings":
-            thismenu.children(".menu-main").toggle(100);
-            thismenu.children(".menu-settings").toggle(100);
-            break;
-        case "show":
-            $(".context").hide(100);
-            ShowHidden();
-            thismenu.children("div").hide();
-            thismenu.children(".menu-main").show();
-            break;
-        case "page":
-            $(".context").hide(100);
-            $('#page-buttons').toggle();
-            thismenu.children("div").hide();
-            thismenu.children(".menu-main").show();
-            break;
-        case "grid":
-            $(".context").hide(100);
-            $(".grid-overlay").toggle();
-            thismenu.children("div").hide();
-            thismenu.children(".menu-main").show();
-            break;
-        case "blur":
-            $(".context").hide(100);
-            ToggleBlur();
-            thismenu.children("div").hide();
-            thismenu.children(".menu-main").show();
-            break;
-        case "reset":
-            $(".context").hide(100);
-            location.reload();
-            break;
-    }
+		//SETTINGS
+		case "settings":
+			thismenu.children(".menu-main").toggle(100);
+			thismenu.children(".menu-settings").toggle(100);
+			break;
+		case "show":
+			$(".context").hide(100);
+			ShowHidden();
+			thismenu.children("div").hide();
+			thismenu.children(".menu-main").show();
+			break;
+		case "page":
+			$(".context").hide(100);
+			$('#page-buttons').toggle();
+			thismenu.children("div").hide();
+			thismenu.children(".menu-main").show();
+			break;
+		case "grid":
+			$(".context").hide(100);
+			$(".grid-overlay").toggle();
+			thismenu.children("div").hide();
+			thismenu.children(".menu-main").show();
+			break;
+		case "blur":
+			$(".context").hide(100);
+			ToggleBlur();
+			thismenu.children("div").hide();
+			thismenu.children(".menu-main").show();
+			break;
+		case "reset":
+			$(".context").hide(100);
+			location.reload();
+			break;
+	}
 });
 
 //links an object to a specific context menu
 //adapted from https://stackoverflow.com/a/20471268 by Francisco Presencia
 function AddContextMenu(obj, menu) {
-    obj.addEventListener('contextmenu',function(event) {
-        event.preventDefault();
-        // Show context menu
-        $(menu).finish().toggle(100, function() {
-            //don't allow menu to go partially off screen
-            let Objs = $(".context");
-            let box;
-            let maxX, maxY;
-            for ( let i = 0; i < Objs.length; i++ ) {
-                //check that the box isn't outside the view window
-                box = Objs[i].getBoundingClientRect();
-                maxX = Math.round(window.innerWidth - box.width);
-                maxY = Math.round(window.innerHeight - box.height);
-                //adjust if needed
-                if ( box.left > maxX ) {Objs[i].style.left = `${maxX}px`;}
-                if ( box.top > maxY ) {Objs[i].style.top = `${maxY}px`;}
-            }
-        }).
-        //location
-        css({
-            top: event.pageY + "px",
-            left: event.pageX + "px",
-        });
-        //save mouse click location for item creation
-        rcloc.x = event.pageX + "px";
-        rcloc.y = event.pageY + "px";
-    });
+	obj.addEventListener('contextmenu',function(event) {
+		event.preventDefault();
+		// Show context menu
+		$(menu).finish().toggle(100, function() {
+			//don't allow menu to go partially off screen
+			let Objs = $(".context");
+			let box;
+			let maxX, maxY;
+			for ( let i = 0; i < Objs.length; i++ ) {
+				//check that the box isn't outside the view window
+				box = Objs[i].getBoundingClientRect();
+				maxX = Math.round(window.innerWidth - box.width);
+				maxY = Math.round(window.innerHeight - box.height);
+				//adjust if needed
+				if ( box.left > maxX ) {Objs[i].style.left = `${maxX}px`;}
+				if ( box.top > maxY ) {Objs[i].style.top = `${maxY}px`;}
+			}
+		}).
+		//location
+		css({
+			top: event.pageY + "px",
+			left: event.pageX + "px",
+		});
+		//save mouse click location for item creation
+		rcloc.x = event.pageX + "px";
+		rcloc.y = event.pageY + "px";
+	});
 }
 
 //creates a default object context menu
@@ -450,92 +471,92 @@ function AddContextMenu(obj, menu) {
 //some legacy code hasn't been moved over yet
 //avoid using this function in the future
 function CreateDefaultContextMenu(elem) {
-    let mymenu = document.getElementById("default-context").cloneNode(true);
-    document.body.appendChild(mymenu);
-    AddContextMenu(elem,mymenu);
-    $(mymenu).on("click", "li", function() {
-        let zi;
-        let s;
-        let b;
-        //this is the triggered action name
-        switch ( $(this).attr("data-action") ) {
-            case "up":
-                zi = $(elem).css('z-index');
-                zi++;
-                $(elem).css('z-index',zi);
-                break;
-            case "down":
-                zi = $(elem).css('z-index');
-                zi--;
-                $(elem).css('z-index',zi);
-                break;
-            case "lock":
-                if ( $(elem).draggable("option", "disabled") ) {
-                    this.innerHTML = `<span class="material-symbols-outlined">lock</span>Lock position`;
-                    $(elem).draggable("enable");
-                } else {
-                    this.innerHTML = `<span class="material-symbols-outlined">lock_open_right</span>Allow moving`;
-                    $(elem).draggable("disable");
-                }
-                break;
-            case "duplicate":
-                let newitem = elem.cloneNode(true);
-                document.body.appendChild(newitem);
-                $(newitem).css({
-                    top: rcloc.y,
-                    left: rcloc.x,
-                });
-                $(newitem).draggable();
-                CreateDefaultContextMenu(newitem);
-                MakeObjScale(newitem);
-                //set clone scale to old object scale
-                s = elem.getBoundingClientRect().width / elem.offsetWidth;
-                $(newitem).css('transform', `scale(${s})`);
-                break;
-            case "hide":
-                $(elem).css('visibility','hidden');
-                break;
-            case "reset":
-                $(elem).css('transform','scale(1)');
-                break;
-            case "delete":
-                b = false;
-                for ( let Obj of AllObjects ) {
-                    if ( Obj.div == elem ) {
-                        Obj.remove();
-                        b = true;
-                    }
-                }
-                if ( !b ) {
-                    elem.remove();
-                }
-                break;
-        }
-        $(".context").hide(100);
-    });
-    return mymenu;
+	let mymenu = document.getElementById("default-context").cloneNode(true);
+	document.body.appendChild(mymenu);
+	AddContextMenu(elem,mymenu);
+	$(mymenu).on("click", "li", function() {
+		let zi;
+		let s;
+		let b;
+		//this is the triggered action name
+		switch ( $(this).attr("data-action") ) {
+			case "up":
+				zi = $(elem).css('z-index');
+				zi++;
+				$(elem).css('z-index',zi);
+				break;
+			case "down":
+				zi = $(elem).css('z-index');
+				zi--;
+				$(elem).css('z-index',zi);
+				break;
+			case "lock":
+				if ( $(elem).draggable("option", "disabled") ) {
+					this.innerHTML = `<span class="material-symbols-outlined">lock</span>Lock position`;
+					$(elem).draggable("enable");
+				} else {
+					this.innerHTML = `<span class="material-symbols-outlined">lock_open_right</span>Allow moving`;
+					$(elem).draggable("disable");
+				}
+				break;
+			case "duplicate":
+				let newitem = elem.cloneNode(true);
+				document.body.appendChild(newitem);
+				$(newitem).css({
+					top: rcloc.y,
+					left: rcloc.x,
+				});
+				$(newitem).draggable();
+				CreateDefaultContextMenu(newitem);
+				MakeObjScale(newitem);
+				//set clone scale to old object scale
+				s = elem.getBoundingClientRect().width / elem.offsetWidth;
+				$(newitem).css('transform', `scale(${s})`);
+				break;
+			case "hide":
+				$(elem).css('visibility','hidden');
+				break;
+			case "reset":
+				$(elem).css('transform','scale(1)');
+				break;
+			case "delete":
+				b = false;
+				for ( let Obj of AllObjects ) {
+					if ( Obj.div == elem ) {
+						Obj.remove();
+						b = true;
+					}
+				}
+				if ( !b ) {
+					elem.remove();
+				}
+				break;
+		}
+		$(".context").hide(100);
+	});
+	return mymenu;
 }
 
 //creates an empty context menu to be customized later
 //attaches it to specified element
 function CreateContextMenu(elem) {
-    let mymenu = document.createElement("ul");
-    mymenu.classList.add("context");
-    document.body.appendChild(mymenu);
-    AddContextMenu(elem,mymenu);
-    //addons should now add li elements with AddContextItem()
-    //and then use $(mymenu).on("click", "li", function() {}); and check $(this).attr("data-action")
-    //for click actions
-    return mymenu;
+	let mymenu = document.createElement("ul");
+	mymenu.classList.add("context");
+	document.body.appendChild(mymenu);
+	AddContextMenu(elem,mymenu);
+	//addons should now add li elements with AddContextItem()
+	//and then use $(mymenu).on("click", "li", function() {}); and check $(this).attr("data-action")
+	//for click actions
+	return mymenu;
 }
 
 //adds a clickable item to a specific context menu
 function AddContextItem(menu, action, text, bBefore) {
-    let li = document.createElement("li");
-    li.setAttribute('data-action', action+"");
-    li.innerHTML = text;
-    bBefore ? menu.insertBefore(li,menu.children[0]) : menu.appendChild(li);
-    return li;
+	let li = document.createElement("li");
+	li.setAttribute('data-action', action+"");
+	li.innerHTML = text;
+	bBefore ? menu.insertBefore(li,menu.children[0]) : menu.appendChild(li);
+	return li;
 }
 
 
@@ -562,9 +583,9 @@ function AddContextItem(menu, action, text, bBefore) {
 
 
 /*
-    ------------------------------------
-        EMOJIS
-    ------------------------------------
+	------------------------------------
+		EMOJIS
+	------------------------------------
 */
 
 //creates emojipicker
@@ -575,7 +596,7 @@ let myPicker = new EmojiPicker({ container: '#emoj-menu' });
 
 //handles emoji selector clicks
 myPicker.on('emojiClick', (emoji) => {
-    AllObjects.push(new EmojiObj(emoji.char));
+	AllObjects.push(new EmojiObj(emoji.char));
 });
 
 
@@ -606,9 +627,9 @@ myPicker.on('emojiClick', (emoji) => {
 
 
 /*
-    ------------------------------------
-        PAGINATION
-    ------------------------------------
+	------------------------------------
+		PAGINATION
+	------------------------------------
 */
 
 //sets up click listen for page buttons
@@ -626,65 +647,65 @@ $(pager).draggable();
 AddContextMenu(pager,$("#page-context"));
 //actions for pager context menu
 $("#page-context").on("click", "li", function() {
-    let p = $('#page-buttons');
-    let zi = p.css('z-index');
-    //this is the triggered action name
-    switch ( $(this).attr("data-action") ) {
-        case "up":
-            zi++;
-            p.css('z-index', zi);
-            break;
-        case "down":
-            zi--;
-            p.css('z-index', zi);
-            break;
-        case "lock":
-            if ( p.draggable("option", "disabled") ) {
-                this.innerHTML = `<span class="material-symbols-outlined">lock</span>Lock position`;
-                p.draggable("enable");
-            } else {
-                this.innerHTML = `<span class="material-symbols-outlined">lock_open_right</span>Allow moving`;
-                p.draggable("disable");
-            }
-            break;
-        case "reset":
-            p.css('transform', 'scale(1)');
-            break;
-        case "toggle":
-            p.toggle();
-            break;
-    }
-    $(".context").hide(100);
+	let p = $('#page-buttons');
+	let zi = p.css('z-index');
+	//this is the triggered action name
+	switch ( $(this).attr("data-action") ) {
+		case "up":
+			zi++;
+			p.css('z-index', zi);
+			break;
+		case "down":
+			zi--;
+			p.css('z-index', zi);
+			break;
+		case "lock":
+			if ( p.draggable("option", "disabled") ) {
+				this.innerHTML = `<span class="material-symbols-outlined">lock</span>Lock position`;
+				p.draggable("enable");
+			} else {
+				this.innerHTML = `<span class="material-symbols-outlined">lock_open_right</span>Allow moving`;
+				p.draggable("disable");
+			}
+			break;
+		case "reset":
+			p.css('transform', 'scale(1)');
+			break;
+		case "toggle":
+			p.toggle();
+			break;
+	}
+	$(".context").hide(100);
 });
 
 //handles moving elements according to pagination
 function MovePage(dir) {
-    let w = window.innerWidth * dir;
-    let x;
-    if ( !pageIsChanging ) {
-        pageIsChanging = true;
-        for ( let Obj of AllObjects ) {
-            Obj.HandleMove(w);
-        }
-        setTimeout(resetTransition, 510);
-    }
+	let w = window.innerWidth * dir;
+	let x;
+	if ( !pageIsChanging ) {
+		pageIsChanging = true;
+		for ( let Obj of AllObjects ) {
+			Obj.HandleMove(w);
+		}
+		setTimeout(resetTransition, 510);
+	}
 }
 
 //reset the transition for setting left
 function resetTransition() {
-    pageIsChanging = false;
-    for ( let Obj of AllObjects ) {
-        Obj.resetTransition();
-    }
+	pageIsChanging = false;
+	for ( let Obj of AllObjects ) {
+		Obj.resetTransition();
+	}
 }
 
 //watches page button clicks
 function watchButNext() {
-    MovePage(1);
+	MovePage(1);
 }
 
 function watchButPrev() {
-    MovePage(-1);
+	MovePage(-1);
 }
 
 
@@ -719,9 +740,9 @@ function watchButPrev() {
 
 
 /*
-    ------------------------------------
-        PASTING
-    ------------------------------------
+	------------------------------------
+		PASTING
+	------------------------------------
 */
 
 //sets up paste listen for ctrl+v
@@ -733,68 +754,68 @@ window.addEventListener("paste", (event) => { PasteV(event); });
 //pastes data with Ctrl+V
 //adapted from https://stackoverflow.com/a/15369753 by robintibor
 function PasteV(event) {
-    let items = ( event.clipboardData  || event.originalEvent.clipboardData ).items;
-    let blob = null;
-    //set creation location to mouse location
-    rcloc.x = mloc.x;
-    rcloc.y = mloc.y;
-    for ( let i = 0; i < items.length; i++) {
-        if ( items[i].type.indexOf("image") == 0 ) {
-            blob = items[i].getAsFile();
-            if ( blob != null ) {
-                HandlePaste(blob);
-            }
-        } else if ( items[i].type.indexOf("text/plain") == 0 ) {
-            items[i].getAsString(function(s) {
-                HandleTextPaste(s);
-            });
-        }
-    }
+	let items = ( event.clipboardData  || event.originalEvent.clipboardData ).items;
+	let blob = null;
+	//set creation location to mouse location
+	rcloc.x = mloc.x;
+	rcloc.y = mloc.y;
+	for ( let i = 0; i < items.length; i++) {
+		if ( items[i].type.indexOf("image") == 0 ) {
+			blob = items[i].getAsFile();
+			if ( blob != null ) {
+				HandlePaste(blob);
+			}
+		} else if ( items[i].type.indexOf("text/plain") == 0 ) {
+			items[i].getAsString(function(s) {
+				HandleTextPaste(s);
+			});
+		}
+	}
 }
 
 //pastes data from clipboard
 //permission issue on firefox! TODO
 async function PasteM() {
-    try {
-        const clipboardContents = await navigator.clipboard.read();
-        for ( const item of clipboardContents ) {
-            for ( const type of item.types ) {
-                const blob = await item.getType(type);
-                if ( blob != null ) {
-                    HandlePaste(blob);
-                }
-            }
-        }
-    } catch(error) {
-        log(error.message);
-    }
+	try {
+		const clipboardContents = await navigator.clipboard.read();
+		for ( const item of clipboardContents ) {
+			for ( const type of item.types ) {
+				const blob = await item.getType(type);
+				if ( blob != null ) {
+					HandlePaste(blob);
+				}
+			}
+		}
+	} catch(error) {
+		log(error.message);
+	}
 }
 
 //pastes a blob
 //usually image but can load text blob as well
 function HandlePaste(blob) {
-    var reader = new FileReader();
-    if ( blob.type.indexOf("image") == 0 ) {
-        reader.onload = function(event) {
-            AllObjects.push(new ImageObj(event.target.result));
-        };
-        reader.readAsDataURL(blob);
-    }
-    else if ( blob.type.indexOf("text/plain") == 0 ) {
-        reader.onload = function () {
-                HandleTextPaste(reader.result);
-            }
-        reader.readAsText(blob);
-    }
+	var reader = new FileReader();
+	if ( blob.type.indexOf("image") == 0 ) {
+		reader.onload = function(event) {
+			AllObjects.push(new ImageObj(event.target.result));
+		};
+		reader.readAsDataURL(blob);
+	}
+	else if ( blob.type.indexOf("text/plain") == 0 ) {
+		reader.onload = function () {
+				HandleTextPaste(reader.result);
+			}
+		reader.readAsText(blob);
+	}
 }
 
 //handles text extracted from a copy/paste operation
 function HandleTextPaste(string) {
-    if ( /\r?\n/g.test(string) ) {
-        AllObjects.push(new NoteObj("Note", string));
-    } else {
-        AllObjects.push(new StickyNoteObj(string));
-    }
+	if ( /\r?\n/g.test(string) ) {
+		AllObjects.push(new NoteObj("Note", string));
+	} else {
+		AllObjects.push(new StickyNoteObj(string));
+	}
 }
 
 
@@ -832,151 +853,151 @@ function HandleTextPaste(string) {
 
 //loads an array of files, and handles them according to type
 function LoadObj(files) {
-    for ( let m = 0; m < files.length; m++ ) {
-        let file = files[m];
-        let filesrc = URL.createObjectURL(file);
-        if ( file.type.includes("javascript") ) {
-            //scripts get loaded into the page with no need for visual
-            LoadNewScript(filesrc);
-        }
-        else if ( file.type.includes("plain") ) {
-            let reader = new FileReader();
-            reader.onload = function () {
-                AllObjects.push(new NoteObj(file.name.slice(0,-4), reader.result));
-            }
-            reader.readAsText(file);
-        } else if ( file.type.includes("image") ) {
-            AllObjects.push(new ImageObj(filesrc));
-        } else if ( file.type.includes("video") ) {
-            AllObjects.push(new VideoObj(filesrc));
-        } else {
-            //create the draggable div outer
-            let mydiv = CreateNewObj();
-            //attach the default context menu
-            let mymenu = CreateDefaultContextMenu(mydiv);
-            if ( file.type.includes("html") ) {
-                //load html code draggable
-                CreateNewHMTLObj(file,mydiv);
-            }
-        }
-    }
+	for ( let m = 0; m < files.length; m++ ) {
+		let file = files[m];
+		let filesrc = URL.createObjectURL(file);
+		if ( file.type.includes("javascript") ) {
+			//scripts get loaded into the page with no need for visual
+			LoadNewScript(filesrc);
+		}
+		else if ( file.type.includes("plain") ) {
+			let reader = new FileReader();
+			reader.onload = function () {
+				AllObjects.push(new NoteObj(file.name.slice(0,-4), reader.result));
+			}
+			reader.readAsText(file);
+		} else if ( file.type.includes("image") ) {
+			AllObjects.push(new ImageObj(filesrc));
+		} else if ( file.type.includes("video") ) {
+			AllObjects.push(new VideoObj(filesrc));
+		} else {
+			//create the draggable div outer
+			let mydiv = CreateNewObj();
+			//attach the default context menu
+			let mymenu = CreateDefaultContextMenu(mydiv);
+			if ( file.type.includes("html") ) {
+				//load html code draggable
+				CreateNewHMTLObj(file,mydiv);
+			}
+		}
+	}
 }
 
 //attempt to load javascript from file
 function LoadNewScript(src) {
-    (async () => {
-        await import(src).catch((error) => log('Loading ' + src + ' failed: ' + error));
-    })();
+	(async () => {
+		await import(src).catch((error) => log('Loading ' + src + ' failed: ' + error));
+	})();
 }
 
 //loads a new background video or image from file picker
 function SetBackground(src, bVid) {
-    ClearBackground();
-    if ( bVid ) {
-        AllBackgrounds.push(new VideoLayer(src));
-    } else {
-        AllBackgrounds.push(new ImageLayer(src));
-    }
+	ClearBackground();
+	if ( bVid ) {
+		AllBackgrounds.push(new VideoLayer(src));
+	} else {
+		AllBackgrounds.push(new ImageLayer(src));
+	}
 }
 
 //creates an html div containing all the contents of the file
 function CreateNewHMTLObj (file,div) {
-    let container = document.createElement("div");
-    div.appendChild(container);
-    let reader = new FileReader();
-    reader.onload = function () {
-        container.innerHTML = reader.result;
-    }
-    reader.readAsText(file);
-    return container;
+	let container = document.createElement("div");
+	div.appendChild(container);
+	let reader = new FileReader();
+	reader.onload = function () {
+		container.innerHTML = reader.result;
+	}
+	reader.readAsText(file);
+	return container;
 }
 
 //changes blur setting
 function ToggleBlur() {
-    let r = $(":root").css("--sb-blur");
-    let s = r ==  "blur(12px)" ? "blur(0)" : "blur(12px)";
-    $(":root").css("--sb-blur", s);
+	let r = $(":root").css("--sb-blur");
+	let s = r ==  "blur(12px)" ? "blur(0)" : "blur(12px)";
+	$(":root").css("--sb-blur", s);
 }
 
 //show hidden objects on current page
 function ShowHidden() {
-    let divs = document.getElementsByClassName("object-div");
-    for ( let i = 0; i < divs.length; i++ ) {
-        //reveal hidden items only on current page
-        let l = divs[i].getBoundingClientRect().left;
-        if ( ( l >= 0 ) && ( l < window.innerWidth )) {
-            $(divs[i]).css('visibility', 'visible');
-        }
-    }
+	let divs = document.getElementsByClassName("object-div");
+	for ( let i = 0; i < divs.length; i++ ) {
+		//reveal hidden items only on current page
+		let l = divs[i].getBoundingClientRect().left;
+		if ( ( l >= 0 ) && ( l < window.innerWidth )) {
+			$(divs[i]).css('visibility', 'visible');
+		}
+	}
 }
 
 //loads a script image or video and sets it as the background
 //wallpaper scripts won't show up here unless they have mjs extension
 function LoadBackground (file) {
-    let filesrc = URL.createObjectURL(file);
-    file.type.includes("javascript") ? LoadNewScript(filesrc) : SetBackground(filesrc, file.type.includes("video"));
+	let filesrc = URL.createObjectURL(file);
+	file.type.includes("javascript") ? LoadNewScript(filesrc) : SetBackground(filesrc, file.type.includes("video"));
 }
 
 function MakeObjScale (obj) {
-    $(obj).css('transform','scale(1)');
-    obj.addEventListener('wheel',function(event) {
-        event.preventDefault();
-        let dir = event.deltaY < 0 ? 1 : -1;
-        let scale = this.getBoundingClientRect().width / this.offsetWidth;
-        scale += dir * 0.1;
-        scale = Math.max(0.1, Math.min(5, scale));
-        $(this).css('transform', `scale(${scale})`);
-    });
+	$(obj).css('transform','scale(1)');
+	obj.addEventListener('wheel',function(event) {
+		event.preventDefault();
+		let dir = event.deltaY < 0 ? 1 : -1;
+		let scale = this.getBoundingClientRect().width / this.offsetWidth;
+		scale += dir * 0.1;
+		scale = Math.max(0.1, Math.min(5, scale));
+		$(this).css('transform', `scale(${scale})`);
+	});
 }
 
 //creates a draggable scalable div object
 //good for wrapping anything visible that can be manipulated
 //TODO: make this a class object
 function CreateNewObj() {
-    let div = document.createElement("div");
-    div.classList.add("object-div");
-    MakeObjScale(div);
-    document.body.appendChild(div);
-    //set location to where the mouse was last right clicked
-    $(div).css({
-        top: rcloc.y,
-        left: rcloc.x,
-    });
-    $(div).draggable();
-    return div;
+	let div = document.createElement("div");
+	div.classList.add("object-div");
+	MakeObjScale(div);
+	document.body.appendChild(div);
+	//set location to where the mouse was last right clicked
+	$(div).css({
+		top: rcloc.y,
+		left: rcloc.x,
+	});
+	$(div).draggable();
+	return div;
 }
 
 //creates a draggable ui object
 //good for controls
 function CreateNewUI() {
-    let div = CreateNewObj();
-    div.classList.add("ui-div");
-    return div;
+	let div = CreateNewObj();
+	div.classList.add("ui-div");
+	return div;
 }
 
 //empty out the video/img
 //doesn't affect any other div or canvas
 function ClearBackground() {
-    while ( AllBackgrounds.length > 0 ) {
-        AllBackgrounds[0].remove();
-    }
+	while ( AllBackgrounds.length > 0 ) {
+		AllBackgrounds[0].remove();
+	}
 }
 
 //adds a background div, above the video and below canvas layer
 function CreateBackgroundLayer () {
-    let div = document.createElement("div");
-    div.classList.add("background-overlay")
-    document.body.appendChild(div);
-    return div;
+	let div = document.createElement("div");
+	div.classList.add("background-overlay")
+	document.body.appendChild(div);
+	return div;
 }
 
 //adds a foreground div, above everything and not clickable
 //foreground layers will move with pagination
 function CreateForegroundLayer () {
-    let div = document.createElement("div");
-    div.classList.add("foreground-overlay")
-    document.body.appendChild(div);
-    return div;
+	let div = document.createElement("div");
+	div.classList.add("foreground-overlay")
+	document.body.appendChild(div);
+	return div;
 }
 
 
@@ -1031,7 +1052,7 @@ function RGBToHSL(color) {
 		l = 0;
 
 	// Calculate hue
-    // No difference
+	// No difference
 	if ( delta === 0 )
 		h = 0;
 	// Red is max
