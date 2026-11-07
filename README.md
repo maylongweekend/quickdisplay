@@ -109,6 +109,7 @@ This project makes use of the following libraries; each is the property of their
 - [Google Fonts](https://fonts.google.com/)
 - [jscolor.js](https://jscolor.com/)
 - [EmojiPicker.js](https://pfurpass.github.io/EmojiPicker/)
+- [Sparticles](https://github.com/simeydotme/sparticles)
 - [Vanta.js](https://www.vantajs.com/)
 - [anime.js](https://animejs.com/)
 - [three.js](https://threejs.org/)
