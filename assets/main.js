@@ -1007,7 +1007,8 @@ function CreateForegroundLayer () {
 	return div;
 }
 
-
+//detect mobile and warn
+/Mobi|Android/i.test(navigator.userAgent) && alert("WARNING: Quick Display is not intended for mobile devices.");
 
 
 
