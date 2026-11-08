@@ -84,6 +84,11 @@ function log(s) {
 //keypress detect
 document.addEventListener('keyup', function(event) {
 	switch ( event.key ) {
+		//TEST
+		//TODO: delete this
+		case "t":
+			AllBackgrounds.push(new SnowLayer());
+			break;
 		//SETTINGS: blur toggle
 		case "b":
 			ToggleBlur();
@@ -169,6 +174,12 @@ $(document).bind("mousedown", function(e) {
 
 //set default background video
 AllBackgrounds.push(new VideoLayer("assets/colorful.mp4"));
+
+//detect mobile and warn
+window.onload = function() {
+	/Mobi|Android/i.test(navigator.userAgent) && alert("WARNING: Quick Display is not intended for mobile devices.");
+}
+
 
 
 
@@ -1007,8 +1018,6 @@ function CreateForegroundLayer () {
 	return div;
 }
 
-//detect mobile and warn
-/Mobi|Android/i.test(navigator.userAgent) && alert("WARNING: Quick Display is not intended for mobile devices.");
 
 
 
