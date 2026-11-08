@@ -78,7 +78,7 @@ let pageIsChanging = false;
 
 //quick log
 function log(s) {
-	console.log("**QUICK DISPLAY**:	" + s);
+	console.log("**QUICK DISPLAY**: " + s);
 }
 
 //keypress detect
@@ -144,6 +144,7 @@ const mloc = {
 	y: "0px"
 }
 
+//for grabbing video input streams
 const vidconstraints = {
 	video: true
 };
@@ -151,7 +152,8 @@ const vidconstraints = {
 //update this list if you add/remove pokemon from assets/poke_gifs director
 const PokeList = `abra.gif,aerodactyl.gif,alakazam.gif,articuno.gif,beautifly.gif,beedrill.gif,bellossom.gif,bellsprout.gif,blastoise.gif,bulbasaur.gif,butterfree.gif,caterpie.gif,celebi.gif,chansey.gif,charizard.gif,charmander.gif,charmeleon.gif,chespin.gif,chikorita.gif,clefable.gif,clefairy.gif,cleffa.gif,cloyster.gif,corsola.gif,cubone.gif,cyndaquil.gif,dedenne.gif,dewgong.gif,diglett.gif,ditto.gif,dragonite.gif,dratini.gif,dugtrio.gif,eevee1.gif,eevee2-starter.gif,electabuzz.gif,espeon.gif,farfetchd.gif,fennekin.gif,flareon.gif,flygon.gif,froakie.gif,furret.gif,gastly.gif,gengar.gif,girafarig.gif,glaceon.gif,groudon.gif,growlithe.gif,gyarados.gif,heracross.gif,hooh.gif,horsea.gif,houndoom.gif,igglybuff.gif,jigglypuff.gif,jolteon.gif,kyogre.gif,lapras.gif,latias.gif,latios.gif,leafeon.gif,litten.gif,lugia.gif,marill.gif,meowth.gif,mew.gif,mewtwo.gif,milotic.gif,mimikyu.gif,minun.gif,moltres.gif,mudkip.gif,ninetales.gif,onix.gif,pachirisu.gif,pichu.gif,pidgeot.gif,pidgey.gif,pikachu1.gif,pikachu2-f.gif,pikachu3-starter.gif,piplup.gif,plusle.gif,ponyta.gif,psyduck.gif,raichu.gif,raikou.gif,rattata.gif,rayquaza.gif,scorbunny.gif,scyther.gif,skitty.gif,slowpoke.gif,snorlax.gif,squirtle.gif,starmie.gif,sylveon.gif,teddiursa.gif,tepig.gif,togepi.gif,torchic.gif,torterra.gif,totodile.gif,turtwig.gif,typhlosion.gif,tyranitar.gif,umbreon.gif,vaporeon.gif,venomoth.gif,venonat.gif,venusaur.gif,vulpix.gif,weedle.gif,wigglytuff.gif,wobbuffet.gif,yamper.gif,zapdos.gif`;
 
-let canvas = document.getElementById("back-canvas");
+//catch right clicks on the background
+let clickdiv = document.getElementById("back-click");
 
 //detects mouse movements
 $("body").mousemove(function(e) {
@@ -266,12 +268,12 @@ function AnimationStep(timestamp) {
 	------------------------------------
 */
 
-//adds the background context menu to the canvas right click
+//adds the background context menu to the div right click
 //then assigns actions for each context menu item
 
 
-//attach the background context menu to canvas
-AddContextMenu(canvas, $("#background-context"));
+//attach the background context menu to click div
+AddContextMenu(clickdiv, $("#background-context"));
 
 //actions for background context menu
 $("#background-context").on("click", "li", function() {
@@ -545,9 +547,7 @@ function CreateDefaultContextMenu(elem) {
 						b = true;
 					}
 				}
-				if ( !b ) {
-					elem.remove();
-				}
+				!b && elem.remove();
 				break;
 		}
 		$(".context").hide(100);
@@ -993,11 +993,13 @@ function CreateNewUI() {
 	return div;
 }
 
-//empty out the video/img
-//doesn't affect any other div or canvas
+//empty out the list of backgrounds
 function ClearBackground() {
+	let o;
 	while ( AllBackgrounds.length > 0 ) {
+		o = AllBackgrounds[0];
 		AllBackgrounds[0].remove();
+		o == AllBackgrounds[0] && log("background didn't get removed?") && AllBackgrounds.splice(0, 1);//check for issues? got an infinite loop here
 	}
 }
 

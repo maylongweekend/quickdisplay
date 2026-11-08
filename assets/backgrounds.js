@@ -76,7 +76,7 @@ class BackgroundLayer {
 class ParticlesLayer extends BackgroundLayer {
 
 	constructor() {
-		super(false, true, false);
+		super(false, false, false);
 		this.options = {};
 		this.SetParticleOptions();
 	}
