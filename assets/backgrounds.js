@@ -56,6 +56,10 @@ class BackgroundLayer {
 		}
 	}
 
+	HandleMove(w) {}
+
+	resetTransition() {}
+
 	//call on a child to handle animation
 	Frame(delta) {}
 
@@ -76,11 +80,13 @@ class BackgroundLayer {
 class ParticlesLayer extends BackgroundLayer {
 
 	constructor() {
-		super(false, false, false);
+		super(false, false, true);
 		this.options = {};
 		this.SetParticleOptions();
 		this.spart = new Sparticles(this.div, this.options);
 	}
+
+	handleEvent(e) {}
 
 	SetParticleOptions() {}
 }
@@ -111,7 +117,26 @@ class SnowLayer extends ParticlesLayer {
 			"shape": "image",
 			"imageUrl": ["./assets/snowflake1.png","./assets/snowflake2.png","./assets/snowflake3.png"]
 		}
+		this.sliddiv.value = this.options.count;
 	}
+
+	initUI() {
+		this.uititle = "Snowflakes";
+		BackgroundLayer.prototype.initUI.call(this);
+		this.sliddiv = this.ui.AddElement("input", undefined, "change", this.self);
+		this.sliddiv.type = "range";
+		this.sliddiv.min = "10";
+		this.sliddiv.max = "900";
+		let p = this.ui.AddElement("label");
+		p.textContent = "Particle count";
+	}
+
+	handleEvent(e) {
+		if ( e.target == this.sliddiv ) {
+			log("CHANGED SLIDER");
+		}
+	}
+
 }
 
 

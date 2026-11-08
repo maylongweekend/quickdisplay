@@ -87,7 +87,7 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-			//AllBackgrounds.push(new SnowLayer());
+			AllBackgrounds.push(new SnowLayer());
 			break;
 		//SETTINGS: blur toggle
 		case "b":
@@ -699,11 +699,13 @@ $("#page-context").on("click", "li", function() {
 //handles moving elements according to pagination
 function MovePage(dir) {
 	let w = window.innerWidth * dir;
-	let x;
 	if ( !pageIsChanging ) {
 		pageIsChanging = true;
 		for ( let Obj of AllObjects ) {
 			Obj.HandleMove(w);
+		}
+		for ( let Back of AllBackgrounds ) {
+			Back.HandleMove(w);//most backgrounds have a blank function here
 		}
 		setTimeout(resetTransition, 510);
 	}
@@ -714,6 +716,9 @@ function resetTransition() {
 	pageIsChanging = false;
 	for ( let Obj of AllObjects ) {
 		Obj.resetTransition();
+	}
+	for ( let Back of AllBackgrounds ) {
+		Back.resetTransition();
 	}
 }
 
