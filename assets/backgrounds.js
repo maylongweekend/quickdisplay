@@ -56,6 +56,7 @@ class BackgroundLayer {
 		}
 	}
 
+	//most backgrounds don't move when the page is changed
 	HandleMove(w) {}
 
 	resetTransition() {}
@@ -99,17 +100,17 @@ class SnowLayer extends ParticlesLayer {
 
 	SetParticleOptions() {
 		this.options = {
-			"count": 350,
-			"speed": 12.4,
+			"count": this.count,
+			"speed": this.speed / 10,
 			"parallax": 50,
 			"direction": 160,
-			"xVariance": 6.2,
+			"xVariance": 3.2,
 			"yVariance": 0,
 			"rotation": 0.8,
-			"alphaSpeed": 1.8,
+			"alphaSpeed": 0.5,
 			"minAlpha": -0.7,
-			"minSize": 3,
-			"maxSize": 40,
+			"minSize": Math.round(this.size / 4),
+			"maxSize": this.size,
 			"drift": 5.6,
 			"twinkle": true,
 			"spawnArea": 1,
@@ -117,24 +118,69 @@ class SnowLayer extends ParticlesLayer {
 			"shape": "image",
 			"imageUrl": ["./assets/snowflake1.png","./assets/snowflake2.png","./assets/snowflake3.png"]
 		}
-		this.sliddiv.value = this.options.count;
 	}
 
 	initUI() {
+		this.size = 35;
+		this.count = 350;
+		this.speed = 200;
+
 		this.uititle = "Snowflakes";
 		BackgroundLayer.prototype.initUI.call(this);
-		this.sliddiv = this.ui.AddElement("input", undefined, "change", this.self);
-		this.sliddiv.type = "range";
-		this.sliddiv.min = "10";
-		this.sliddiv.max = "900";
-		let p = this.ui.AddElement("label");
-		p.textContent = "Particle count";
+		this.slidcount = this.ui.AddElement("input", undefined, "change", this.self);
+		this.slidcount.type = "range";
+		this.slidcount.min = "10";
+		this.slidcount.max = "1000";
+		this.slidcount.value = this.count;
+		this.ui.AddElement("label").textContent = "Particle count";
+
+		this.ui.AddElement("br");
+
+		this.slidsize = this.ui.AddElement("input", undefined, "change", this.self);
+		this.slidsize.type = "range";
+		this.slidsize.min = "4";
+		this.slidsize.max = "130";
+		this.slidsize.value = this.size;
+		this.ui.AddElement("label").textContent = "Size";
+
+		this.ui.AddElement("br");
+
+		this.slidspeed = this.ui.AddElement("input", undefined, "change", this.self);
+		this.slidspeed.type = "range";
+		this.slidspeed.min = "100";
+		this.slidspeed.max = "1000";
+		this.slidspeed.value = this.speed;
+		this.ui.AddElement("label").textContent = "Speed";
+
+		this.ui.AddElement("br");
+
+		this.posselect = this.ui.AddElement("select", undefined, "change", this.self);
+		this.posselect.innerHTML = `<option value="fore">Foreground</option><option value="back">Background</option>`;
+		this.posselect.selectedIndex = 0;
+
+		this.div.style.zIndex = 40;
 	}
 
 	handleEvent(e) {
-		if ( e.target == this.sliddiv ) {
-			log("CHANGED SLIDER");
+		this.spart.destroy();
+		if ( e.target == this.slidcount ) {
+			this.count = e.target.value;
+			this.options.count = this.count;
+		} else if ( e.target == this.slidsize ) {
+			this.size = e.target.value;
+			this.options.minSize = Math.round(this.size / 4);
+			this.options.maxSize = this.size;
+		} else if ( e.target == this.slidspeed ) {
+			this.speed = e.target.value;
+			this.options.speed = this.speed / 10;
+		} else if ( e.target == this.posselect ) {
+			if ( e.target.value == "fore" ) {
+				this.div.style.zIndex = 40;
+			} else {
+				this.div.style.zIndex = 5;
+			}
 		}
+		this.spart = new Sparticles(this.div, this.options);
 	}
 
 }
