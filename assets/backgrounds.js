@@ -79,6 +79,7 @@ class ParticlesLayer extends BackgroundLayer {
 		super(false, false, false);
 		this.options = {};
 		this.SetParticleOptions();
+		this.spart = new Sparticles(this.div, this.options);
 	}
 
 	SetParticleOptions() {}
@@ -92,7 +93,23 @@ class SnowLayer extends ParticlesLayer {
 
 	SetParticleOptions() {
 		this.options = {
-			count: 500
+			"count": 350,
+			"speed": 12.4,
+			"parallax": 50,
+			"direction": 160,
+			"xVariance": 6.2,
+			"yVariance": 0,
+			"rotation": 0.8,
+			"alphaSpeed": 1.8,
+			"minAlpha": -0.7,
+			"minSize": 3,
+			"maxSize": 40,
+			"drift": 5.6,
+			"twinkle": true,
+			"spawnArea": 1,
+			"color": ["white","#d5f4f8"],
+			"shape": "image",
+			"imageUrl": ["./assets/snowflake1.png","./assets/snowflake2.png","./assets/snowflake3.png"]
 		}
 	}
 }

@@ -87,7 +87,7 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-			AllBackgrounds.push(new SnowLayer());
+			//AllBackgrounds.push(new SnowLayer());
 			break;
 		//SETTINGS: blur toggle
 		case "b":
@@ -995,11 +995,8 @@ function CreateNewUI() {
 
 //empty out the list of backgrounds
 function ClearBackground() {
-	let o;
 	while ( AllBackgrounds.length > 0 ) {
-		o = AllBackgrounds[0];
-		AllBackgrounds[0].remove();
-		o == AllBackgrounds[0] && log("background didn't get removed?") && AllBackgrounds.splice(0, 1);//check for issues? got an infinite loop here
+		AllBackgrounds[AllBackgrounds.length - 1].remove();
 	}
 }
 
