@@ -212,11 +212,11 @@ class MoveableObject {
 		$(this.outerdiv).css('transition', 'left 0s');
 	}
 
-	AddColorPicker(elem, preview = '', defaultcolor = '') {
+	AddColorPicker(elem, preview = '', defaultcolor = '', format = 'rgba') {
 		let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
 		let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
 		let p = new JSColor(elem, {
-			format: 'rgba',
+			format: format,
 			previewElement: preview,
 			preset:'large',
 			backgroundColor: bgc,
