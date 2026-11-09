@@ -82,14 +82,54 @@ class ParticlesLayer extends BackgroundLayer {
 
 	constructor() {
 		super(false, false, true);
+
 		this.options = {};
+		this.count = 350;
 		this.index = AllEffects.length;//switch otherwise clearing wont work!
+
 		this.SetParticleOptions();
 		this.spart = new Sparticles(this.div, this.options);
 	}
 
-	handleEvent(e) {}
+	initUI() {
+		BackgroundLayer.prototype.initUI.call(this);
 
+		this.posselect = this.ui.AddElement("select", undefined, "change", this.self);
+		this.posselect.innerHTML = `<option value="fore">Foreground</option><option value="back">Background</option>`;
+		this.posselect.selectedIndex = 0;
+		this.div.style.zIndex = 40;
+
+		this.ui.AddElement("br");
+
+		this.slidcount = this.ui.AddElement("input", undefined, "change", this.self);
+		this.slidcount.type = "range";
+		this.slidcount.min = "10";
+		this.slidcount.max = "1000";
+		this.slidcount.value = this.count;
+		this.ui.AddElement("label").textContent = "Particle count";
+
+		this.ui.AddElement("br");
+	}
+
+	//child handles setting changes here
+	handleEvent(e) {
+		if ( e.target == this.posselect ) {
+			if ( e.target.value == "fore" ) {
+				this.div.style.zIndex = 40;
+			} else {
+				this.div.style.zIndex = 5;
+			}
+		} else if ( e.target == this.slidcount ) {
+			this.count = e.target.value;
+			this.options.count = this.count;
+		}
+		//apply setting changes by destroying old particles
+		//and creating new ones with new settings
+		this.spart.destroy();
+		this.spart = new Sparticles(this.div, this.options);
+	}
+
+	//child sets this.options here with sparticles settings
 	SetParticleOptions() {}
 
 	remove() {
@@ -99,8 +139,129 @@ class ParticlesLayer extends BackgroundLayer {
 		if ( this.ui !== undefined ) {
 			this.ui.remove();
 		}
-		log("EFFECT SAYS INDEX IS " + this.index);
 		AllEffects.splice(this.index, 1);
+	}
+}
+
+
+//STARLAYER
+//a layer of stars that floats right and up
+//AllEffects.push(new StarLayer());
+
+class StarLayer extends ParticlesLayer {
+
+	SetParticleOptions() {
+		let c = this.color;
+		this.options = {
+			"count": this.count,
+			"speed": Math.round(this.speed / 10),
+			"parallax": 50,
+			"direction": 60,
+			"alphaSpeed": 13.9,
+			"minSize": this.size / 2,
+			"maxSize": this.size,
+			"drift": 14.5,
+			"glow": this.glow,
+			"spawnArea": 1,
+			"color": [
+				"random"
+			],
+			"shape": "star",
+			"randomColor": function(index, total) {
+				let h = c.h;
+				h += ( Math.floor(Math.random() * 100) - 50 );
+				if ( h < 0 ) {
+					h += 360;
+				}
+				return `hsl(${h}, ${c.s}%, ${c.l}%)`;
+			}
+		}
+	}
+
+	initUI() {
+		//set variables before super
+		this.count = 480;
+		this.uititle = "Stars";
+		this.speed = 195;
+		this.size = 40;
+		this.glow = 50;
+		this.color = {
+			h: 0,
+			s: 0,
+			l: 0,
+			r: 0,
+			g: 0,
+			b: 0
+		};
+
+		ParticlesLayer.prototype.initUI.call(this);
+
+		this.slidsize = this.ui.AddElement("input", undefined, "change", this.self);
+		this.slidsize.type = "range";
+		this.slidsize.min = "10";
+		this.slidsize.max = "100";
+		this.slidsize.value = this.size;
+		this.ui.AddElement("label").textContent = "Size";
+
+		this.ui.AddElement("br");
+
+		this.slidspeed = this.ui.AddElement("input", undefined, "change", this.self);
+		this.slidspeed.type = "range";
+		this.slidspeed.min = "100";
+		this.slidspeed.max = "2000";
+		this.slidspeed.value = this.speed;
+		this.ui.AddElement("label").textContent = "Speed";
+
+		this.ui.AddElement("br");
+
+		this.slidglow = this.ui.AddElement("input", undefined, "change", this.self);
+		this.slidglow.type = "range";
+		this.slidglow.min = "0";
+		this.slidglow.max = "50";
+		this.slidglow.value = this.glow;
+		this.ui.AddElement("label").textContent = "Glow";
+
+		this.ui.AddElement("br");
+
+		//color button and picker
+		this.cbut = this.ui.AddElement("button");
+		this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
+		this.cbut.classList.add("margin-10");
+		this.picker = this.ui.AddColorPicker(this.cbut, this.cbut, undefined, undefined, false);
+
+		this.color.r = this.picker.channel("R");
+		this.color.g = this.picker.channel("G");
+		this.color.b = this.picker.channel("B");
+		RGBToHSL(this.color);//get HSL values
+		this.picker.owner = this.self;
+		this.picker.option('onInput', function() {
+			this.owner.ChangeColor(this);
+		});
+	}
+
+	ChangeColor(p) {
+		this.color.r = p.channel("R");
+		this.color.g = p.channel("G");
+		this.color.b = p.channel("B");
+		RGBToHSL(this.color);//get HSL values
+		this.spart.destroy();
+		this.SetParticleOptions();
+		this.spart = new Sparticles(this.div, this.options);
+	}
+
+	handleEvent(e) {
+		if ( e.target == this.slidsize ) {
+			this.size = e.target.value;
+			this.options.minSize = Math.round(this.size / 2);
+			this.options.maxSize = this.size;
+		} else if ( e.target == this.slidspeed ) {
+			this.speed = e.target.value;
+			this.options.speed = this.speed / 10;
+		} else if ( e.target == this.slidglow ) {
+			this.glow = e.target.value;
+			this.options.glow = this.glow;
+		}
+		ParticlesLayer.prototype.handleEvent.call(this, e);
 	}
 }
 
@@ -133,20 +294,13 @@ class SnowLayer extends ParticlesLayer {
 	}
 
 	initUI() {
+		//set variables before super
 		this.size = 35;
 		this.count = 350;
 		this.speed = 200;
-
 		this.uititle = "Snowflakes";
-		BackgroundLayer.prototype.initUI.call(this);
-		this.slidcount = this.ui.AddElement("input", undefined, "change", this.self);
-		this.slidcount.type = "range";
-		this.slidcount.min = "10";
-		this.slidcount.max = "1000";
-		this.slidcount.value = this.count;
-		this.ui.AddElement("label").textContent = "Particle count";
 
-		this.ui.AddElement("br");
+		ParticlesLayer.prototype.initUI.call(this);
 
 		this.slidsize = this.ui.AddElement("input", undefined, "change", this.self);
 		this.slidsize.type = "range";
@@ -163,36 +317,18 @@ class SnowLayer extends ParticlesLayer {
 		this.slidspeed.max = "1000";
 		this.slidspeed.value = this.speed;
 		this.ui.AddElement("label").textContent = "Speed";
-
-		this.ui.AddElement("br");
-
-		this.posselect = this.ui.AddElement("select", undefined, "change", this.self);
-		this.posselect.innerHTML = `<option value="fore">Foreground</option><option value="back">Background</option>`;
-		this.posselect.selectedIndex = 0;
-
-		this.div.style.zIndex = 40;
 	}
 
 	handleEvent(e) {
-		this.spart.destroy();
-		if ( e.target == this.slidcount ) {
-			this.count = e.target.value;
-			this.options.count = this.count;
-		} else if ( e.target == this.slidsize ) {
+		 if ( e.target == this.slidsize ) {
 			this.size = e.target.value;
 			this.options.minSize = Math.round(this.size / 4);
 			this.options.maxSize = this.size;
 		} else if ( e.target == this.slidspeed ) {
 			this.speed = e.target.value;
 			this.options.speed = this.speed / 10;
-		} else if ( e.target == this.posselect ) {
-			if ( e.target.value == "fore" ) {
-				this.div.style.zIndex = 40;
-			} else {
-				this.div.style.zIndex = 5;
-			}
 		}
-		this.spart = new Sparticles(this.div, this.options);
+		ParticlesLayer.prototype.handleEvent.call(this, e);
 	}
 
 }
@@ -295,7 +431,7 @@ class GradientLayer extends BackgroundLayer {
 		b.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
 		b.classList.add("margin-10");
 		b.index = this.colors.length;
-		let p = this.ui.AddColorPicker(b, b, '');
+		let p = this.ui.AddColorPicker(b, b, undefined, undefined, false);
 		this.pickers.push(p);
 		let color = {};
 			color.r = p.channel("R");
