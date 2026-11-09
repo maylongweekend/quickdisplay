@@ -161,7 +161,6 @@ class StarLayer extends ParticlesLayer {
 			"minSize": this.size / 2,
 			"maxSize": this.size,
 			"drift": 14.5,
-			"glow": this.glow,
 			"spawnArea": 1,
 			"color": [
 				"random"
@@ -184,7 +183,6 @@ class StarLayer extends ParticlesLayer {
 		this.uititle = "Stars";
 		this.speed = 195;
 		this.size = 40;
-		this.glow = 50;
 		this.color = {
 			h: 0,
 			s: 0,
@@ -211,15 +209,6 @@ class StarLayer extends ParticlesLayer {
 		this.slidspeed.max = "2000";
 		this.slidspeed.value = this.speed;
 		this.ui.AddElement("label").textContent = "Speed";
-
-		this.ui.AddElement("br");
-
-		this.slidglow = this.ui.AddElement("input", undefined, "change", this.self);
-		this.slidglow.type = "range";
-		this.slidglow.min = "0";
-		this.slidglow.max = "50";
-		this.slidglow.value = this.glow;
-		this.ui.AddElement("label").textContent = "Glow";
 
 		this.ui.AddElement("br");
 
@@ -257,9 +246,6 @@ class StarLayer extends ParticlesLayer {
 		} else if ( e.target == this.slidspeed ) {
 			this.speed = e.target.value;
 			this.options.speed = this.speed / 10;
-		} else if ( e.target == this.slidglow ) {
-			this.glow = e.target.value;
-			this.options.glow = this.glow;
 		}
 		ParticlesLayer.prototype.handleEvent.call(this, e);
 	}
