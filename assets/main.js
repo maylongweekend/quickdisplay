@@ -90,7 +90,7 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-			alert(AllEffects.length);
+			//AllObjects.push(new DigiClockObj());
 			break;
 		//SETTINGS: blur toggle
 		case "b":
@@ -320,6 +320,10 @@ $("#background-context").on("click", "li", function() {
 			break;
 
 		//MORE ITEMS
+		case "clockd":
+			$(".context").hide(100);
+			AllObjects.push(new DigiClockObj());
+			break;
 		case "effects":
 			thismenu.children(".menu-more").toggle(100);
 			thismenu.children(".menu-effects").toggle(100);

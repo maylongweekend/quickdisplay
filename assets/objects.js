@@ -1,18 +1,82 @@
+//digital clock
+//AllObjects.push(new DigiClockObj());
+
+class DigiClockObj extends MoveableObject {
+
+	constructor() {
+		super(true, true, false, true, true);//give font and color selection
+
+		this.div.classList.add("digiclock-outer");
+		this.div.innerHTML = `
+			<span>00</span>:<span>00</span>
+		`;
+		this.div.style.color = this.color;
+		let s = $(this.div).children("span");
+		this.hours = s[0];
+		this.minutes = s[1];
+
+		//set the font selector to the default font for text
+		for ( let i = 0; i < this.fontselector.options.length; i++ ) {
+			if ( this.fontselector.options[i].value.includes("Verdana") ) {
+				this.fontselector.selectedIndex = i;
+				this.font = this.fontselector.options[i].value;
+			}
+		}
+
+		this.Timer();
+	}
+
+	SetFont(s) {
+		MoveableObject.prototype.SetFont.call(this, s);
+		this.div.style.fontFamily = this.font;
+	}
+
+	HandleInitialColor() {
+		this.color = "#" + (Math.floor(Math.random() * 80) + 175).toString(16) + (Math.floor(Math.random() * 80) + 175).toString(16) + (Math.floor(Math.random() * 80) + 175).toString(16);
+	}
+
+	SetColor(s) {
+		MoveableObject.prototype.SetColor.call(this, s);
+		this.div.style.color = this.color;
+	}
+
+	Timer() {
+		let t = new Date();
+		let h = t.getHours();
+		let m = t.getMinutes();
+		let p = "PM";
+		let s = this.self;
+		if ( h > 12 ) {
+			h -= 12;
+		} else if ( h < 12 ) {
+			p = "AM";
+		}
+		if ( h == 0 ) {
+			h = 12;
+		}
+		m = ( m < 10 ) ? "0" + m : m;
+		this.hours.innerHTML = h;
+		this.minutes.innerHTML = m + " " + p;
+		setTimeout(function() {s.Timer();}, 1000);
+	}
+}
+
+
 //UI
 //a ui object
 //AllObjects.push(new UIObj());
 
 class UIObj extends MoveableObject {
 
-    constructor(title = "Settings panel") {
-        super();
+	constructor(title = "Settings panel") {
+		super();
 
-        this.div.classList.add("ui-div");
-        let h = this.AddElement("h3");
-        h.textContent = title;
-    }
+		this.div.classList.add("ui-div");
+		let h = this.AddElement("h3");
+		h.textContent = title;
+	}
 
-    handleEvent(e) {}
+	handleEvent(e) {}
 }
 
 
@@ -23,109 +87,109 @@ class UIObj extends MoveableObject {
 
 class GraphPaperObj extends UIObj {
 
-    constructor() {
-        super("Graph settings");
+	constructor() {
+		super("Graph settings");
 
-        this.gsize = 15;
-        this.gdivide = 5;
+		this.gsize = 15;
+		this.gdivide = 5;
 
-        this.grid = this.AddElement("div", document.body);
-        this.grid.classList.add("foreground-overlay");
-        this.grid.style.zIndex = 19;//draggables are 20 so just behind but changeable
+		this.grid = this.AddElement("div", document.body);
+		this.grid.classList.add("foreground-overlay");
+		this.grid.style.zIndex = 19;//draggables are 20 so just behind but changeable
 
-        this.slidsize = this.AddElement("input", this.div, "input");
-        this.slidsize.type = "range";
-        this.slidsize.value = this.gsize;
-        this.slidsize.min = "6";
-        this.slidsize.max = "60";
-        let p = this.AddElement("label");
-        p.textContent = "Size";
+		this.slidsize = this.AddElement("input", this.div, "input");
+		this.slidsize.type = "range";
+		this.slidsize.value = this.gsize;
+		this.slidsize.min = "6";
+		this.slidsize.max = "60";
+		let p = this.AddElement("label");
+		p.textContent = "Size";
 
-        this.AddElement("br");
+		this.AddElement("br");
 
-        this.sliddiv = this.AddElement("input", this.div, "input");
-        this.sliddiv.type = "range";
-        this.sliddiv.value = this.gdivide;
-        this.sliddiv.min = "3";
-        this.sliddiv.max = "10";
-        p = this.AddElement("label");
-        p.textContent = "Divisions";
+		this.sliddiv = this.AddElement("input", this.div, "input");
+		this.sliddiv.type = "range";
+		this.sliddiv.value = this.gdivide;
+		this.sliddiv.min = "3";
+		this.sliddiv.max = "10";
+		p = this.AddElement("label");
+		p.textContent = "Divisions";
 
-        this.AddElement("br");
+		this.AddElement("br");
 
-        this.cbut = this.AddElement("button");
-        this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
-        this.cbut.classList.add("margin-10");
-        this.zup = this.AddElement("button", this.div, "click");
-        this.zup.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_up</span>`;
-        this.zup.classList.add("margin-10");
-        this.zdown = this.AddElement("button", this.div, "click");
-        this.zdown.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_down</span>`;
-        this.zdown.classList.add("margin-10");
+		this.cbut = this.AddElement("button");
+		this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
+		this.cbut.classList.add("margin-10");
+		this.zup = this.AddElement("button", this.div, "click");
+		this.zup.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_up</span>`;
+		this.zup.classList.add("margin-10");
+		this.zdown = this.AddElement("button", this.div, "click");
+		this.zdown.innerHTML = `<span class="material-symbols-outlined ui-span">keyboard_double_arrow_down</span>`;
+		this.zdown.classList.add("margin-10");
 
-        let pick = this.AddColorPicker(this.cbut, this.cbut, "#ffffff44");
-        this.color = pick.toRGBAString();
-        this.SetBackground();
-    }
+		let pick = this.AddColorPicker(this.cbut, this.cbut, "#ffffff44");
+		this.color = pick.toRGBAString();
+		this.SetBackground();
+	}
 
-    handleEvent(e) {
-        if ( e.target == this.zup ) {
-            this.grid.style.zIndex++;
-        } else if ( e.target == this.zdown ) {
-            this.grid.style.zIndex--;
-        } else if ( e.target == this.slidsize ) {
-            this.gsize = e.target.value;
-            this.SetBackground();
-        } else if ( e.target == this.sliddiv ) {
-            this.gdivide = e.target.value;
-            this.SetBackground();
-        }
-    }
+	handleEvent(e) {
+		if ( e.target == this.zup ) {
+			this.grid.style.zIndex++;
+		} else if ( e.target == this.zdown ) {
+			this.grid.style.zIndex--;
+		} else if ( e.target == this.slidsize ) {
+			this.gsize = e.target.value;
+			this.SetBackground();
+		} else if ( e.target == this.sliddiv ) {
+			this.gdivide = e.target.value;
+			this.SetBackground();
+		}
+	}
 
-    SetColor(s) {
-        MoveableObject.prototype.SetColor.call(this, s);
-        this.SetBackground();
-    }
+	SetColor(s) {
+		MoveableObject.prototype.SetColor.call(this, s);
+		this.SetBackground();
+	}
 
-    SetBackground() {
-        //split the color, extract the alpha
-        //reduce for the between lines
-        //and put back into a color
-        let temps = this.color.split(',');
-        temps[3] = temps[3].replace(")", "");
-        temps[3] = "" + ( Number(temps[3]) / 2.5 );
-        temps[3] += ")";
-        let tempc = temps.toString();
-        let p = `
-            repeating-linear-gradient(90deg, ${tempc} 0px, ${tempc} 1px, transparent 1px, transparent ${this.gsize * 10 / this.gdivide}px),
-            repeating-linear-gradient(0deg, ${tempc} 0px, ${tempc} 1px, transparent 1px, transparent ${this.gsize * 10 / this.gdivide}px),
-            repeating-linear-gradient(90deg, ${this.color} 0px, ${this.color} 1px, transparent 1px, transparent ${this.gsize * 10}px),
-            repeating-linear-gradient(0deg, ${this.color} 0px, ${this.color} 1px, transparent 1px, transparent ${this.gsize * 10}px)
-        `;
-        $(this.grid).css('background-image', p);
-    }
+	SetBackground() {
+		//split the color, extract the alpha
+		//reduce for the between lines
+		//and put back into a color
+		let temps = this.color.split(',');
+		temps[3] = temps[3].replace(")", "");
+		temps[3] = "" + ( Number(temps[3]) / 2.5 );
+		temps[3] += ")";
+		let tempc = temps.toString();
+		let p = `
+			repeating-linear-gradient(90deg, ${tempc} 0px, ${tempc} 1px, transparent 1px, transparent ${this.gsize * 10 / this.gdivide}px),
+			repeating-linear-gradient(0deg, ${tempc} 0px, ${tempc} 1px, transparent 1px, transparent ${this.gsize * 10 / this.gdivide}px),
+			repeating-linear-gradient(90deg, ${this.color} 0px, ${this.color} 1px, transparent 1px, transparent ${this.gsize * 10}px),
+			repeating-linear-gradient(0deg, ${this.color} 0px, ${this.color} 1px, transparent 1px, transparent ${this.gsize * 10}px)
+		`;
+		$(this.grid).css('background-image', p);
+	}
 
-    HandleMove(w) {
-        MoveableObject.prototype.HandleMove.call(this, w);
-        let x = this.grid.getBoundingClientRect().left;
-        //set new location
-        x -= w;
-        //transition for smooth page move
-        $(this.grid).css({
-            'left': x,
-            'transition': "left 0.5s",
-        });
-    }
+	HandleMove(w) {
+		MoveableObject.prototype.HandleMove.call(this, w);
+		let x = this.grid.getBoundingClientRect().left;
+		//set new location
+		x -= w;
+		//transition for smooth page move
+		$(this.grid).css({
+			'left': x,
+			'transition': "left 0.5s",
+		});
+	}
 
-    resetTransition() {
-        MoveableObject.prototype.resetTransition.call(this);
-        $(this.grid).css('transition', 'left 0s');
-    }
+	resetTransition() {
+		MoveableObject.prototype.resetTransition.call(this);
+		$(this.grid).css('transition', 'left 0s');
+	}
 
-    remove() {
-        this.grid.remove();
-        MoveableObject.prototype.remove.call(this);
-    }
+	remove() {
+		this.grid.remove();
+		MoveableObject.prototype.remove.call(this);
+	}
 }
 
 
@@ -135,78 +199,78 @@ class GraphPaperObj extends UIObj {
 
 class StickyNoteObj extends MoveableObject {
 
-    constructor(text = "") {
-        super(true, true, true, true, true, true);
+	constructor(text = "") {
+		super(true, true, true, true, true, true);
 
-        //build sticky note structure
-        this.text = text.length > 0 ? text : prompt("Enter your text", "Sticky note contents");
-        this.div.classList.add('sticky-div');
-        this.stp = document.createElement("p");
-        this.stint = document.createElement("div");
-        let stdiv = document.createElement("div");
-        let randnum = Math.floor(Math.random() * 10) + 2;
-        randnum *= Math.random() < 0.5? -1 : 1;
-        $(stdiv).css('transform', `rotate(${randnum}deg)`);
-        this.div.appendChild(stdiv);
-        stdiv.classList.add("sticky-note");
-        this.stint.classList.add("sticky-interior");
-        this.stint.style.backgroundColor = this.color;
-        stdiv.appendChild(this.stint);
-        this.stp.textContent = this.text;
-        this.stint.appendChild(this.stp);
-        let sttop = document.createElement("div");
-        sttop.classList.add("sticky-top");
-        stdiv.appendChild(sttop);
+		//build sticky note structure
+		this.text = text.length > 0 ? text : prompt("Enter your text", "Sticky note contents");
+		this.div.classList.add('sticky-div');
+		this.stp = document.createElement("p");
+		this.stint = document.createElement("div");
+		let stdiv = document.createElement("div");
+		let randnum = Math.floor(Math.random() * 10) + 2;
+		randnum *= Math.random() < 0.5? -1 : 1;
+		$(stdiv).css('transform', `rotate(${randnum}deg)`);
+		this.div.appendChild(stdiv);
+		stdiv.classList.add("sticky-note");
+		this.stint.classList.add("sticky-interior");
+		this.stint.style.backgroundColor = this.color;
+		stdiv.appendChild(this.stint);
+		this.stp.textContent = this.text;
+		this.stint.appendChild(this.stp);
+		let sttop = document.createElement("div");
+		sttop.classList.add("sticky-top");
+		stdiv.appendChild(sttop);
 
-        //set the font selector to the default font for notes
-        for ( let i = 0; i < this.fontselector.options.length; i++ ) {
-            if ( window.getComputedStyle(document.body).getPropertyValue('--note-font').includes(this.fontselector.options[i].value) ) {
-                this.fontselector.selectedIndex = i;
-                this.font = this.fontselector.options[i].value;
-            }
-        }
-    }
+		//set the font selector to the default font for notes
+		for ( let i = 0; i < this.fontselector.options.length; i++ ) {
+			if ( window.getComputedStyle(document.body).getPropertyValue('--note-font').includes(this.fontselector.options[i].value) ) {
+				this.fontselector.selectedIndex = i;
+				this.font = this.fontselector.options[i].value;
+			}
+		}
+	}
 
-    //animate for rainbow effect
-    Frame(delta) {
-        this.anicolor.h = ( this.anicolor.h + 1.5 )  % 360;
-        this.stint.style.backgroundColor = `hsla(${this.anicolor.h}, ${this.anicolor.s}%, ${this.anicolor.l}%, ${this.anicolor.a})`;
-    }
+	//animate for rainbow effect
+	Frame(delta) {
+		this.anicolor.h = ( this.anicolor.h + 1.5 )  % 360;
+		this.stint.style.backgroundColor = `hsla(${this.anicolor.h}, ${this.anicolor.s}%, ${this.anicolor.l}%, ${this.anicolor.a})`;
+	}
 
-    ToggleAnimate() {
-        MoveableObject.prototype.ToggleAnimate.call(this);
-        if ( !this.isanimating ) {
-            this.stint.style.backgroundColor = this.color;
-        }
-    }
+	ToggleAnimate() {
+		MoveableObject.prototype.ToggleAnimate.call(this);
+		if ( !this.isanimating ) {
+			this.stint.style.backgroundColor = this.color;
+		}
+	}
 
-    HandleInitialColor() {
-        //get random sticky color
-        this.color = window.getComputedStyle(document.body).getPropertyValue(`--sticky-c${Math.floor(Math.random() * 4) + 1}`);
-        //animate color
-        this.anicolor = {
-            h: 283,
-            s: 100,
-            l: 70,
-            a: 0.78
-        };
-    }
+	HandleInitialColor() {
+		//get random sticky color
+		this.color = window.getComputedStyle(document.body).getPropertyValue(`--sticky-c${Math.floor(Math.random() * 4) + 1}`);
+		//animate color
+		this.anicolor = {
+			h: 283,
+			s: 100,
+			l: 70,
+			a: 0.78
+		};
+	}
 
-    HandleTextEdit() {
-        MoveableObject.prototype.HandleTextEdit.call(this);
-        this.stp.textContent = this.text;
-    }
+	HandleTextEdit() {
+		MoveableObject.prototype.HandleTextEdit.call(this);
+		this.stp.textContent = this.text;
+	}
 
-    SetColor(s) {
-        MoveableObject.prototype.SetColor.call(this, s);
-        this.stint.style.backgroundColor = this.color;
-        this.stp.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
-    }
+	SetColor(s) {
+		MoveableObject.prototype.SetColor.call(this, s);
+		this.stint.style.backgroundColor = this.color;
+		this.stp.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
+	}
 
-    SetFont(s) {
-        MoveableObject.prototype.SetFont.call(this, s);
-        this.stp.style.fontFamily = this.font;
-    }
+	SetFont(s) {
+		MoveableObject.prototype.SetFont.call(this, s);
+		this.stp.style.fontFamily = this.font;
+	}
 }
 
 
@@ -216,60 +280,60 @@ class StickyNoteObj extends MoveableObject {
 
 class NoteObj extends MoveableObject {
 
-    constructor(text = "Note", body = "Note body text") {
-        super(true, true, true, true, true);
+	constructor(text = "Note", body = "Note body text") {
+		super(true, true, true, true, true);
 
-        //build note structure
-        this.div.classList.add('notes');
-        this.text = text;
-        this.div.style.backgroundColor = this.color;
-        this.h = document.createElement("h3");
-        this.h.textContent = this.text;
-        this.div.appendChild(this.h);
-        this.pre = document.createElement("pre");
-        this.div.appendChild(this.pre);
-        this.body = body;
-        this.pre.textContent = this.body;
-        $(this.div).css('min-width', this.div.offsetWidth);//force min width
+		//build note structure
+		this.div.classList.add('notes');
+		this.text = text;
+		this.div.style.backgroundColor = this.color;
+		this.h = document.createElement("h3");
+		this.h.textContent = this.text;
+		this.div.appendChild(this.h);
+		this.pre = document.createElement("pre");
+		this.div.appendChild(this.pre);
+		this.body = body;
+		this.pre.textContent = this.body;
+		$(this.div).css('min-width', this.div.offsetWidth);//force min width
 
-        //set the font selector to the default font for notes
-        for ( let i = 0; i < this.fontselector.options.length; i++ ) {
-            if ( window.getComputedStyle(document.body).getPropertyValue('--note-font').includes(this.fontselector.options[i].value) ) {
-                this.fontselector.selectedIndex = i;
-                this.font = this.fontselector.options[i].value;
-            }
-        }
-    }
+		//set the font selector to the default font for notes
+		for ( let i = 0; i < this.fontselector.options.length; i++ ) {
+			if ( window.getComputedStyle(document.body).getPropertyValue('--note-font').includes(this.fontselector.options[i].value) ) {
+				this.fontselector.selectedIndex = i;
+				this.font = this.fontselector.options[i].value;
+			}
+		}
+	}
 
-    HandleInitialColor() {
-        this.color = window.getComputedStyle(document.body).getPropertyValue('--note-bg');
-    }
+	HandleInitialColor() {
+		this.color = window.getComputedStyle(document.body).getPropertyValue('--note-bg');
+	}
 
-    AssignMenuAction(li, elem, owner) {
-        MoveableObject.prototype.AssignMenuAction.call(this, li, elem, owner);
-        //after calling super, change edit text option to edit title
-        if ( ( $(li).attr("data-action") ) == "edit" ) {
-            li.innerHTML = `<span class="material-symbols-outlined">border_color</span>Edit title`;
-        }
-    }
+	AssignMenuAction(li, elem, owner) {
+		MoveableObject.prototype.AssignMenuAction.call(this, li, elem, owner);
+		//after calling super, change edit text option to edit title
+		if ( ( $(li).attr("data-action") ) == "edit" ) {
+			li.innerHTML = `<span class="material-symbols-outlined">border_color</span>Edit title`;
+		}
+	}
 
-    HandleTextEdit() {
-        this.text = prompt("Enter a title for this note", this.text);
-        this.h.textContent = this.text;
-    }
+	HandleTextEdit() {
+		this.text = prompt("Enter a title for this note", this.text);
+		this.h.textContent = this.text;
+	}
 
-    SetColor(s) {
-        MoveableObject.prototype.SetColor.call(this, s);
-        this.div.style.backgroundColor = this.color;
-        this.pre.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
-        this.h.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
-    }
+	SetColor(s) {
+		MoveableObject.prototype.SetColor.call(this, s);
+		this.div.style.backgroundColor = this.color;
+		this.pre.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
+		this.h.style.color = this.colorinput.isLight() ? 'var(--note-text)' : 'var(--note-text-light)';
+	}
 
-    SetFont(s) {
-        MoveableObject.prototype.SetFont.call(this, s);
-        this.h.style.fontFamily = this.font;
-        this.pre.style.fontFamily = this.font;
-    }
+	SetFont(s) {
+		MoveableObject.prototype.SetFont.call(this, s);
+		this.h.style.fontFamily = this.font;
+		this.pre.style.fontFamily = this.font;
+	}
 }
 
 //EMOJIS
@@ -279,41 +343,41 @@ class NoteObj extends MoveableObject {
 
 class EmojiObj extends MoveableObject {
 
-    constructor(emoji = `🐱`) {
-        super(true, true, false, false, false, false, true);
-        this.emoji = emoji;
-        this.div.classList.add('emoji-div');
-        this.h = document.createElement("h");
-        this.h.textContent = emoji;
-        this.div.appendChild(this.h);
-        this.NewSetScalable(true);
-    }
+	constructor(emoji = `🐱`) {
+		super(true, true, false, false, false, false, true);
+		this.emoji = emoji;
+		this.div.classList.add('emoji-div');
+		this.h = document.createElement("h");
+		this.h.textContent = emoji;
+		this.div.appendChild(this.h);
+		this.NewSetScalable(true);
+	}
 
-    SetScalable(b) {}
+	SetScalable(b) {}
 
-    //fix emoji scaling in firefox
-    //scale font size instead of div css scale
-    NewSetScalable(b) {
-        let h = this.h;
-        if ( b ) {
-            this.div.addEventListener('wheel',function ObjScale(event) {
-                event.preventDefault();
-                let dir = event.deltaY < 0 ? 1 : -1;
-                let scale = Number($(h).css('font-size').replace("px", ""));
-                scale += dir * 12;
-                scale = Math.max(12, Math.min(255, scale));
-                $(h).css('font-size', scale + "px");
-            });
-        } else {
-            this.div.removeEventListener('wheel', ObjScale);
-        }
-        this.bscale = b;
-    }
+	//fix emoji scaling in firefox
+	//scale font size instead of div css scale
+	NewSetScalable(b) {
+		let h = this.h;
+		if ( b ) {
+			this.div.addEventListener('wheel',function ObjScale(event) {
+				event.preventDefault();
+				let dir = event.deltaY < 0 ? 1 : -1;
+				let scale = Number($(h).css('font-size').replace("px", ""));
+				scale += dir * 12;
+				scale = Math.max(12, Math.min(255, scale));
+				$(h).css('font-size', scale + "px");
+			});
+		} else {
+			this.div.removeEventListener('wheel', ObjScale);
+		}
+		this.bscale = b;
+	}
 
-    resetTransform() {
-        MoveableObject.prototype.resetTransform.call(this);
-        $(this.h).css('font-size', "12vh");
-    }
+	resetTransform() {
+		MoveableObject.prototype.resetTransform.call(this);
+		$(this.h).css('font-size', "12vh");
+	}
 }
 
 
@@ -323,106 +387,108 @@ class EmojiObj extends MoveableObject {
 
 class TextObj extends MoveableObject {
 
-    constructor(text = "") {
-        super(true, true, true, true, true, true);
-        this.text = text.length > 0 ? text : prompt("Enter your text", "Welcome");
-        this.div.classList.add('text-div');
-        this.h = document.createElement("h");
-        this.h.innerHTML = this.UpdateTextForAnimation(this.text);
-        this.div.appendChild(this.h);
-        this.NewSetScalable(true);
+	constructor(text = "") {
+		super(true, true, true, true, true, true);
+		this.text = text.length > 0 ? text : prompt("Enter your text", "Welcome");
+		this.div.classList.add('text-div');
+		this.h = document.createElement("h");
+		this.h.innerHTML = this.UpdateTextForAnimation(this.text);
+		this.div.appendChild(this.h);
+		this.NewSetScalable(true);
 
-        this.aniIter = 0;
-        this.aniLen = this.text.length;
-        this.aniPhase = 360 / this.aniLen;
-        this.aniSpans = this.h.children;
+		this.aniIter = 0;
+		this.aniLen = this.text.length;
+		this.aniPhase = 360 / this.aniLen;
+		this.aniSpans = this.h.children;
 
-        //set the font selector to the default font for text
-        for ( let i = 0; i < this.fontselector.options.length; i++ ) {
-            if ( this.fontselector.options[i].value.includes("Archivo Black") ) {
-                this.fontselector.selectedIndex = i;
-                this.font = this.fontselector.options[i].value;
-            }
-        }
-    }
+		//set the font selector to the default font for text
+		for ( let i = 0; i < this.fontselector.options.length; i++ ) {
+			if ( this.fontselector.options[i].value.includes("Archivo Black") ) {
+				this.fontselector.selectedIndex = i;
+				this.font = this.fontselector.options[i].value;
+			}
+		}
 
-    //animate for rainbow effect
-    Frame(delta) {
-        for ( let i = 0; i < this.aniLen; i++ ) {
-            //contains code adapted from Rainbow Text by Riley Shaw
-            //https://codepen.io/rileyjshaw/pen/vExWpe
-            this.aniSpans[i].style.color = 'hsl(' + (this.aniIter + Math.floor(-i * this.aniPhase)) + ', 70%, 70%)';
-        }
-        this.aniIter++;
-    }
+		this.h.style.color = this.color;
+	}
 
-    UpdateTextForAnimation(string) {
-        let s = string.split('').map(function(char) {
-            return `<span>${char}</span>`;
-        }).join('');
-        return s;
-    }
+	//animate for rainbow effect
+	Frame(delta) {
+		for ( let i = 0; i < this.aniLen; i++ ) {
+			//contains code adapted from Rainbow Text by Riley Shaw
+			//https://codepen.io/rileyjshaw/pen/vExWpe
+			this.aniSpans[i].style.color = 'hsl(' + (this.aniIter + Math.floor(-i * this.aniPhase)) + ', 70%, 70%)';
+		}
+		this.aniIter++;
+	}
 
-    ToggleAnimate() {
-        MoveableObject.prototype.ToggleAnimate.call(this);
-        if ( !this.isanimating ) {
-            for ( let i = 0; i < this.aniLen; i++ ) {
-                this.aniSpans[i].style.color = this.color;
-            }
-        }
-    }
+	UpdateTextForAnimation(string) {
+		let s = string.split('').map(function(char) {
+			return `<span>${char}</span>`;
+		}).join('');
+		return s;
+	}
 
-    SetScalable(b) {}
+	ToggleAnimate() {
+		MoveableObject.prototype.ToggleAnimate.call(this);
+		if ( !this.isanimating ) {
+			for ( let i = 0; i < this.aniLen; i++ ) {
+				this.aniSpans[i].style.color = this.color;
+			}
+		}
+	}
 
-    //fix emoji scaling in firefox
-    //scale font size instead of div css scale
-    NewSetScalable(b) {
-        let h = this.h;
-        if ( b ) {
-            this.div.addEventListener('wheel',function ObjScale(event) {
-                event.preventDefault();
-                let dir = event.deltaY < 0 ? 1 : -1;
-                let scale = Number($(h).css('font-size').replace("px", ""));
-                scale += dir * 12;
-                scale = Math.max(12, Math.min(255, scale));
-                $(h).css('font-size', scale + "px");
-            });
-        } else {
-            this.div.removeEventListener('wheel', ObjScale);
-        }
-        this.bscale = b;
-    }
+	SetScalable(b) {}
 
-    resetTransform() {
-        MoveableObject.prototype.resetTransform.call(this);
-        $(this.h).css('font-size', "7vh");
-    }
+	//fix emoji scaling in firefox
+	//scale font size instead of div css scale
+	NewSetScalable(b) {
+		let h = this.h;
+		if ( b ) {
+			this.div.addEventListener('wheel',function ObjScale(event) {
+				event.preventDefault();
+				let dir = event.deltaY < 0 ? 1 : -1;
+				let scale = Number($(h).css('font-size').replace("px", ""));
+				scale += dir * 12;
+				scale = Math.max(12, Math.min(255, scale));
+				$(h).css('font-size', scale + "px");
+			});
+		} else {
+			this.div.removeEventListener('wheel', ObjScale);
+		}
+		this.bscale = b;
+	}
 
-    HandleInitialColor() {
-        this.color = window.getComputedStyle(document.body).getPropertyValue('--note-text-light');
-    }
+	resetTransform() {
+		MoveableObject.prototype.resetTransform.call(this);
+		$(this.h).css('font-size', "7vh");
+	}
 
-        HandleTextEdit() {
-        MoveableObject.prototype.HandleTextEdit.call(this);
-        this.h.innerHTML = this.UpdateTextForAnimation(this.text);
-        this.aniIter = 0;
-        this.aniLen = this.text.length;
-        this.aniPhase = 360 / this.aniLen;
-        this.aniSpans = this.h.children;
-    }
+	HandleInitialColor() {
+		this.color = "#" + (Math.floor(Math.random() * 80) + 175).toString(16) + (Math.floor(Math.random() * 80) + 175).toString(16) + (Math.floor(Math.random() * 80) + 175).toString(16);
+	}
 
-    SetColor(s) {
-        MoveableObject.prototype.SetColor.call(this, s);
-        this.h.style.color = this.color;
-        for ( let i = 0; i < this.aniLen; i++ ) {
-            this.aniSpans[i].style.color = this.color;
-        }
-    }
+	HandleTextEdit() {
+		MoveableObject.prototype.HandleTextEdit.call(this);
+		this.h.innerHTML = this.UpdateTextForAnimation(this.text);
+		this.aniIter = 0;
+		this.aniLen = this.text.length;
+		this.aniPhase = 360 / this.aniLen;
+		this.aniSpans = this.h.children;
+	}
 
-    SetFont(s) {
-        MoveableObject.prototype.SetFont.call(this, s);
-        this.h.style.fontFamily = this.font;
-    }
+	SetColor(s) {
+		MoveableObject.prototype.SetColor.call(this, s);
+		this.h.style.color = this.color;
+		for ( let i = 0; i < this.aniLen; i++ ) {
+			this.aniSpans[i].style.color = this.color;
+		}
+	}
+
+	SetFont(s) {
+		MoveableObject.prototype.SetFont.call(this, s);
+		this.h.style.fontFamily = this.font;
+	}
 }
 
 
@@ -432,39 +498,39 @@ class TextObj extends MoveableObject {
 
 class WindowObj extends MoveableObject {
 
-    constructor() {
-        super();
-        this.video = document.createElement("video");
-        this.video.style.objectFit = "cover";
-        this.video.style.zIndex = 1;
-        this.video.autoplay = true;
-        this.video.muted = true;
-        this.div.appendChild(this.video);
-        this.SetMenuItem();
-        this.SetWindow();
-    }
+	constructor() {
+		super();
+		this.video = document.createElement("video");
+		this.video.style.objectFit = "cover";
+		this.video.style.zIndex = 1;
+		this.video.autoplay = true;
+		this.video.muted = true;
+		this.div.appendChild(this.video);
+		this.SetMenuItem();
+		this.SetWindow();
+	}
 
-    SetMenuItem() {
-        this.li = AddContextItem(this.menu, "neww", `<span class="material-symbols-outlined">video_frame_copy</span>Select window to share`, true);
-        this.li.owner = this.self;
-        this.li.addEventListener('click', function() {
-            $(".context").hide(100);
-            this.owner.SetWindow();
-        });
-    }
+	SetMenuItem() {
+		this.li = AddContextItem(this.menu, "neww", `<span class="material-symbols-outlined">video_frame_copy</span>Select window to share`, true);
+		this.li.owner = this.self;
+		this.li.addEventListener('click', function() {
+			$(".context").hide(100);
+			this.owner.SetWindow();
+		});
+	}
 
-    SetWindow() {
-        navigator.mediaDevices.getDisplayMedia(vidconstraints).then((value) => {this.handleSuccess(value);}).catch((value) => {this.handleError(value);});
-    }
+	SetWindow() {
+		navigator.mediaDevices.getDisplayMedia(vidconstraints).then((value) => {this.handleSuccess(value);}).catch((value) => {this.handleError(value);});
+	}
 
-    handleSuccess(stream) {
-        window.stream = stream;
-        this.video.srcObject = stream;
-    }
+	handleSuccess(stream) {
+		window.stream = stream;
+		this.video.srcObject = stream;
+	}
 
-    handleError(error) {
-        alert('Video stream error: \n'+ error);
-    }
+	handleError(error) {
+		alert('Video stream error: \n'+ error);
+	}
 }
 
 
@@ -474,11 +540,11 @@ class WindowObj extends MoveableObject {
 
 class CameraObj extends WindowObj {
 
-    SetMenuItem() {}
+	SetMenuItem() {}
 
-    SetWindow() {
-        navigator.mediaDevices.getUserMedia(vidconstraints).then((value) => {this.handleSuccess(value);}).catch((value) => {this.handleError(value);});
-    }
+	SetWindow() {
+		navigator.mediaDevices.getUserMedia(vidconstraints).then((value) => {this.handleSuccess(value);}).catch((value) => {this.handleError(value);});
+	}
 }
 
 
@@ -488,19 +554,19 @@ class CameraObj extends WindowObj {
 
 class ImageObj extends MoveableObject {
 
-    constructor(src) {
-        super(true, true, false, false, false, false, true);
-        this.src = src;
-        this.CreateVisual(src);
-    }
+	constructor(src) {
+		super(true, true, false, false, false, false, true);
+		this.src = src;
+		this.CreateVisual(src);
+	}
 
-    CreateVisual(src) {
-        this.img = document.createElement("img");
-        this.img.src = src;
-        this.img.style.objectFit = "cover";
-        this.img.style.zIndex = 1;
-        this.div.appendChild(this.img);
-    }
+	CreateVisual(src) {
+		this.img = document.createElement("img");
+		this.img.src = src;
+		this.img.style.objectFit = "cover";
+		this.img.style.zIndex = 1;
+		this.div.appendChild(this.img);
+	}
 }
 
 
@@ -510,11 +576,11 @@ class ImageObj extends MoveableObject {
 
 class PokemonObj extends ImageObj {
 
-    CreateVisual(src) {
-        ImageObj.prototype.CreateVisual.call(this, src);
-        this.img.style.imageRendering = "pixelated";
-        this.img.style.scale = "2.0";
-    }
+	CreateVisual(src) {
+		ImageObj.prototype.CreateVisual.call(this, src);
+		this.img.style.imageRendering = "pixelated";
+		this.img.style.scale = "2.0";
+	}
 }
 
 
@@ -524,14 +590,14 @@ class PokemonObj extends ImageObj {
 
 class VideoObj extends ImageObj {
 
-    CreateVisual(src) {
-        this.video = document.createElement("video");
-        this.video.src = src;
-        this.video.style.objectFit = "cover";
-        this.video.style.zIndex = 1;
-        this.video.autoplay = true;
-        this.video.loop = true;
-        this.video.muted = true;
-        this.div.appendChild(this.video);
-    }
+	CreateVisual(src) {
+		this.video = document.createElement("video");
+		this.video.src = src;
+		this.video.style.objectFit = "cover";
+		this.video.style.zIndex = 1;
+		this.video.autoplay = true;
+		this.video.loop = true;
+		this.video.muted = true;
+		this.div.appendChild(this.video);
+	}
 }
