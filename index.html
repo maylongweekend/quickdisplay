@@ -2,150 +2,159 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Display</title>
-    <link rel="stylesheet" href="assets/main.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee+Hairline&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@schwitzerskills/emojipicker/emoji-picker.js"></script>
-    <script src="assets/jscolor.js"></script>
-    <script src="assets/sparticles.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quick Display</title>
+	<link rel="stylesheet" href="assets/main.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee+Hairline&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+	<script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@schwitzerskills/emojipicker/emoji-picker.js"></script>
+	<script src="assets/jscolor.js"></script>
+	<script src="assets/sparticles.min.js"></script>
 </head>
 <body>
 
-    <!-- HTML PAGE STRUCTURE -->
+	<!-- HTML PAGE STRUCTURE -->
 
-    
-    <!-- FILE INPUTS -->
-    <input id="file-input" type="file" multiple accept=".txt,.html,.js,.gif,.png,.jpg,.jpeg,.bmp,.mp4,.mkv,.avi,.webp,.webm" style="display: none;" onchange="LoadObj(this.files)" />
-    <input id="background-input" type="file" accept=".png,.jpg,.jpeg,.bmp,.mp4,.mkv,.avi,.webp,.webm,.mjs" style="display: none;" onchange="LoadBackground(this.files[0])" />
 
-    <!-- CANVAS - to enable DOUBLE-CLICK TO LOAD: ondblclick="document.getElementById('file-input').click();" -->
-    <canvas id="back-canvas"></canvas>
+	<!-- FILE INPUTS -->
+	<input id="file-input" type="file" multiple accept=".txt,.html,.js,.gif,.png,.jpg,.jpeg,.bmp,.mp4,.mkv,.avi,.webp,.webm" style="display: none;" onchange="LoadObj(this.files)" />
+	<input id="background-input" type="file" accept=".png,.jpg,.jpeg,.bmp,.mp4,.mkv,.avi,.webp,.webm,.mjs" style="display: none;" onchange="LoadBackground(this.files[0])" />
 
-    <!-- grid helper -->
-    <div class='grid-overlay'></div>
+	<!-- RIGHT CLICK CATCH - to enable DOUBLE-CLICK TO LOAD: ondblclick="document.getElementById('file-input').click();" -->
+	<div id="back-click"></div>
 
-    <!-- context menu background -->
-    <ul class='context' id="background-context">
+	<!-- grid helper -->
+	<div class='grid-overlay'></div>
 
-        <!-- main menu -->
-        <div class='menu-main'>
-            <li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load file</li>
-            <li data-action="sticky" name="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
-            <li data-action="emoji" name="emoji" id="emoj-menu"><span class="material-symbols-outlined">add_reaction</span>Emoji</li>
-            <li data-action="title" name="title"><span class="material-symbols-outlined">new_label</span>Title text</li>
-            <li data-action="paste" name="paste" style="display: none;"><span class="material-symbols-outlined">content_paste_go</span>Paste clipboard</li>
-            <li data-action="more" name="more"><span class="material-symbols-outlined">list_alt_add</span>More items ...</li>
-            <hr />
-            <li data-action="backmenu" name="backmenu"><span class="material-symbols-outlined">wallpaper</span>Backgrounds ...</li>
-            <hr />
-            <li data-action="searchmenu" name="searchmenu"><span class="material-symbols-outlined">search</span>Search ...</li>
-            <hr />
-            <li data-action="settings" name="settings"><span class="material-symbols-outlined">tv_options_input_settings</span>Settings ...</li>
-        </div>
+	<!-- context menu background -->
+	<ul class='context' id="background-context">
 
-        <!-- more items submenu -->
-        <div class="menu-more" style="display: none;">
-            <li data-action="back"><span class="material-symbols-outlined">undo</span>Go back</li>
-            <hr />
-            <li data-action="graphp"><span class="material-symbols-outlined">grid_4x4</span>Graph paper</li>
-            <li data-action="wshare"><span class="material-symbols-outlined">select_window</span>Window share</li>
-            <li data-action="camera"><span class="material-symbols-outlined">videocam</span>Camera</li>
-            <li data-action="pokem"><span class="material-symbols-outlined">egg</span>Pokémon</li>
-        </div>
+		<!-- main menu -->
+		<div class='menu-main'>
+			<li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load file</li>
+			<li data-action="sticky" name="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
+			<li data-action="emoji" name="emoji" id="emoj-menu"><span class="material-symbols-outlined">add_reaction</span>Emoji</li>
+			<li data-action="title" name="title"><span class="material-symbols-outlined">new_label</span>Title text</li>
+			<li data-action="paste" name="paste" style="display: none;"><span class="material-symbols-outlined">content_paste_go</span>Paste clipboard</li>
+			<li data-action="more" name="more"><span class="material-symbols-outlined">list_alt_add</span>More items ...</li>
+			<hr />
+			<li data-action="backmenu" name="backmenu"><span class="material-symbols-outlined">wallpaper</span>Backgrounds ...</li>
+			<hr />
+			<li data-action="searchmenu" name="searchmenu"><span class="material-symbols-outlined">search</span>Search ...</li>
+			<hr />
+			<li data-action="settings" name="settings"><span class="material-symbols-outlined">tv_options_input_settings</span>Settings ...</li>
+		</div>
 
-        <!-- background options submenu -->
-        <div class='menu-backg' style="display: none;">
-            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
-            <hr />
-            <li data-action="backg"><span class="material-symbols-outlined">add_photo_alternate</span>Load file</li>
-            <li data-action="tealb"><span class="material-symbols-outlined">movie</span>Bright teal</li>
-            <li data-action="greenb"><span class="material-symbols-outlined">movie</span>Green Bokeh</li>
-            <li data-action="purps"><span class="material-symbols-outlined">imagesmode</span>Purple splatter</li>
-            <li data-action="blues"><span class="material-symbols-outlined">imagesmode</span>Blue scratches</li>
-            <li data-action="gradient"><span class="material-symbols-outlined">gradient</span>Gradient creator</li>
-            <li data-action="resetb"><span class="material-symbols-outlined">movie</span>Default</li>
-        </div>
-        
-        <!-- search submenu -->
-        <div class="menu-search" style="display: none;">
-            <li data-action="back"><span class="material-symbols-outlined">undo</span>Go back</li>
-            <hr />
-            <li data-action="ddg"><span class="material-symbols-outlined">policy</span>DuckDuckGo</li>
-            <li data-action="google"><span class="material-symbols-outlined">g_mobiledata_badge</span>Google</li>
-            <li data-action="yout"><span class="material-symbols-outlined">video_search</span>YouTube</li>
-            <li data-action="maps"><span class="material-symbols-outlined">travel_explore</span>Maps</li>
-            <li data-action="giphy"><span class="material-symbols-outlined">animated_images</span>Giphy</li>
-        </div>
+		<!-- more items submenu -->
+		<div class="menu-more" style="display: none;">
+			<li data-action="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+			<hr />
+			<li data-action="effects"><span class="material-symbols-outlined">flare</span>Effects ...</li>
+			<li data-action="graphp"><span class="material-symbols-outlined">grid_4x4</span>Graph paper</li>
+			<li data-action="wshare"><span class="material-symbols-outlined">select_window</span>Window share</li>
+			<li data-action="camera"><span class="material-symbols-outlined">videocam</span>Camera</li>
+			<li data-action="pokem"><span class="material-symbols-outlined">egg</span>Pokémon</li>
+		</div>
 
-        <!-- settings submenu -->
-        <div class='menu-settings' style="display: none;">
-            <li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
-            <hr />
-            <li data-action="show" name="show"><span class="material-symbols-outlined">visibility</span>Show hidden objects (s)</li>
-            <li data-action="page" name="page"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls (arrows)</li>
-            <li data-action="grid" name="grid"><span class="material-symbols-outlined">border_inner</span>Toggle helper grid (;)</li>
-            <li data-action="blur" name="blur"><span class="material-symbols-outlined">lens_blur</span>Toggle blur effects (b)</li>
-            <hr />
-            <li data-action="reset" name="reset"><span class="material-symbols-outlined">restart_alt</span>Reset all</li>
-        </div>
+		<!-- effects submenu -->
+		<div class="menu-effects" style="display: none;">
+			<li data-action="backm"><span class="material-symbols-outlined">undo</span>Go back</li>
+			<hr />
+			<li data-action="snow"><span class="material-symbols-outlined">snowflake</span>Snowflakes</li>
+			<li data-action="resete"><span class="material-symbols-outlined">blur_off</span>Reset effects</li>
+		</div>
 
-    </ul>
+		<!-- background options submenu -->
+		<div class='menu-backg' style="display: none;">
+			<li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+			<hr />
+			<li data-action="backg"><span class="material-symbols-outlined">add_photo_alternate</span>Load file</li>
+			<li data-action="tealb"><span class="material-symbols-outlined">movie</span>Bright teal</li>
+			<li data-action="greenb"><span class="material-symbols-outlined">movie</span>Green Bokeh</li>
+			<li data-action="purps"><span class="material-symbols-outlined">imagesmode</span>Purple splatter</li>
+			<li data-action="blues"><span class="material-symbols-outlined">imagesmode</span>Blue scratches</li>
+			<li data-action="gradient"><span class="material-symbols-outlined">gradient</span>Gradient creator</li>
+			<li data-action="resetb"><span class="material-symbols-outlined">movie</span>Default</li>
+		</div>
 
-    <!-- context menu default object -->
-     <ul class='context' id="default-context">
-        <li data-action="up"><span class="material-symbols-outlined">keyboard_double_arrow_up</span>Bring forward</li>
-        <li data-action="down"><span class="material-symbols-outlined">keyboard_double_arrow_down</span>Move backward</li>
-        <li data-action="mirror"><span class="material-symbols-outlined">flip</span>Mirror</li>
-        <li data-action="lock"><span class="material-symbols-outlined">lock</span>Lock position</li>
-        <li data-action="reset"><span class="material-symbols-outlined">photo_size_select_small</span>Reset size</li>
-        <li data-action="duplicate"><span class="material-symbols-outlined">tab_inactive</span>Clone</li>
-        <li data-action="hide"><span class="material-symbols-outlined">visibility_off</span>Hide (h)</li>
-        <li data-action="delete"><span class="material-symbols-outlined">delete_forever</span>Delete (Del)</li>
-    </ul>
+		<!-- search submenu -->
+		<div class="menu-search" style="display: none;">
+			<li data-action="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+			<hr />
+			<li data-action="ddg"><span class="material-symbols-outlined">policy</span>DuckDuckGo</li>
+			<li data-action="google"><span class="material-symbols-outlined">g_mobiledata_badge</span>Google</li>
+			<li data-action="yout"><span class="material-symbols-outlined">video_search</span>YouTube</li>
+			<li data-action="maps"><span class="material-symbols-outlined">travel_explore</span>Maps</li>
+			<li data-action="giphy"><span class="material-symbols-outlined">animated_images</span>Giphy</li>
+		</div>
 
-    <!-- context menu page controls -->
-     <ul class='context' id="page-context">
-        <li data-action="up" name="up"><span class="material-symbols-outlined">keyboard_double_arrow_up</span>Bring forward</li>
-        <li data-action="down" name="down"><span class="material-symbols-outlined">keyboard_double_arrow_down</span>Move backward</li>
-        <li data-action="lock" name="lock"><span class="material-symbols-outlined">lock</span>Lock position</li>
-        <li data-action="reset" name="reset"><span class="material-symbols-outlined">photo_size_select_small</span>Reset size</li>
-        <li data-action="toggle" name="toggle"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls</li>
-    </ul>
+		<!-- settings submenu -->
+		<div class='menu-settings' style="display: none;">
+			<li data-action="back" name="back"><span class="material-symbols-outlined">undo</span>Go back</li>
+			<hr />
+			<li data-action="show" name="show"><span class="material-symbols-outlined">visibility</span>Show hidden objects (S)</li>
+			<li data-action="page" name="page"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls (← →)</li>
+			<li data-action="grid" name="grid"><span class="material-symbols-outlined">border_inner</span>Toggle helper grid (;)</li>
+			<li data-action="blur" name="blur"><span class="material-symbols-outlined">lens_blur</span>Toggle blur effects (B)</li>
+			<hr />
+			<li data-action="reset" name="reset"><span class="material-symbols-outlined">restart_alt</span>Reset all</li>
+		</div>
 
-    <!-- page controls - hidden by default -->
-    <div class="object-div page-div" id="page-buttons">
-        <button type="button" id="pbPrev"><span class="material-symbols-outlined">chevron_backward</span></button>
-        <button type="button" id="pbNext"><span class="material-symbols-outlined">chevron_forward</span></button>
-    </div>
+	</ul>
 
-    <!-- font selector template - hidden by default -->
-    <select id="default-font-selector">
-        <option value="Verdana, Geneva, Tahoma, sans-serif">Default font</option>
-        <option value="Archivo Black">Archivo Black</option>
-        <option value="Permanent Marker">Permanent Marker</option>
-        <option value="Google Sans">Google Sans</option>
-        <option value="Dancing Script">Dancing Script</option>
-        <option value="Noto Serif">Noto Serif</option>
-        <option value="Pacifico">Pacifico</option>
-        <option value="Bitcount Grid Single">Bitcount Grid</option>
-        <option value="Indie Flower">Indie Flower</option>
-        <option value="Bungee Hairline">Bungee Hairline</option>
+	<!-- context menu default object -->
+	 <ul class='context' id="default-context">
+		<li data-action="up"><span class="material-symbols-outlined">keyboard_double_arrow_up</span>Bring forward</li>
+		<li data-action="down"><span class="material-symbols-outlined">keyboard_double_arrow_down</span>Move backward</li>
+		<li data-action="mirror"><span class="material-symbols-outlined">flip</span>Mirror</li>
+		<li data-action="lock"><span class="material-symbols-outlined">lock</span>Lock position</li>
+		<li data-action="reset"><span class="material-symbols-outlined">photo_size_select_small</span>Reset size</li>
+		<li data-action="duplicate"><span class="material-symbols-outlined">tab_inactive</span>Clone</li>
+		<li data-action="hide"><span class="material-symbols-outlined">visibility_off</span>Hide (H)</li>
+		<li data-action="delete"><span class="material-symbols-outlined">delete_forever</span>Delete (Del)</li>
+	</ul>
+
+	<!-- context menu page controls -->
+	 <ul class='context' id="page-context">
+		<li data-action="up" name="up"><span class="material-symbols-outlined">keyboard_double_arrow_up</span>Bring forward</li>
+		<li data-action="down" name="down"><span class="material-symbols-outlined">keyboard_double_arrow_down</span>Move backward</li>
+		<li data-action="lock" name="lock"><span class="material-symbols-outlined">lock</span>Lock position</li>
+		<li data-action="reset" name="reset"><span class="material-symbols-outlined">photo_size_select_small</span>Reset size</li>
+		<li data-action="toggle" name="toggle"><span class="material-symbols-outlined">fit_page_width</span>Toggle page controls</li>
+	</ul>
+
+	<!-- page controls - hidden by default -->
+	<div class="object-div page-div" id="page-buttons">
+		<button type="button" id="pbPrev"><span class="material-symbols-outlined">chevron_backward</span></button>
+		<button type="button" id="pbNext"><span class="material-symbols-outlined">chevron_forward</span></button>
+	</div>
+
+	<!-- font selector template - hidden by default -->
+	<select id="default-font-selector">
+		<option value="Verdana, Geneva, Tahoma, sans-serif">Default font</option>
+		<option value="Archivo Black">Archivo Black</option>
+		<option value="Permanent Marker">Permanent Marker</option>
+		<option value="Google Sans">Google Sans</option>
+		<option value="Dancing Script">Dancing Script</option>
+		<option value="Noto Serif">Noto Serif</option>
+		<option value="Pacifico">Pacifico</option>
+		<option value="Bitcount Grid Single">Bitcount Grid</option>
+		<option value="Indie Flower">Indie Flower</option>
+		<option value="Bungee Hairline">Bungee Hairline</option>
 	</select>
 
 </body>

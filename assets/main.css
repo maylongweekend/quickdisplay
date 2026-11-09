@@ -312,13 +312,27 @@
 }
 /* END buttons */
 
+/* PARTICLES */
+.sparticles {
+  z-index: 5;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* BEGIN BACKGROUND */
-#back-canvas {
+#back-click {
   position: absolute;
   display: block;
   width: 100vw;
   height: 100vh;
   z-index: 7;
+  top: 0px;
+  left: 0px;
 }
 
 .background-overlay {
@@ -343,10 +357,6 @@
   position: absolute;
   object-fit: cover;
   z-index: 0;
-}
-
-canvas {
-  display: none;
 }
 /* END background */
 
