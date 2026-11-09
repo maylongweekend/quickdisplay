@@ -360,6 +360,10 @@ $("#background-context").on("click", "li", function() {
 			$(".context").hide(100);
 			AllEffects.push(new SnowLayer());
 			break;
+		case "stars":
+			$(".context").hide(100);
+			AllEffects.push(new StarLayer());
+			break;
 		case "resete":
 			$(".context").hide(100);
 			ClearEffects();
