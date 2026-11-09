@@ -83,6 +83,7 @@ class ParticlesLayer extends BackgroundLayer {
 	constructor() {
 		super(false, false, true);
 		this.options = {};
+		this.index = AllEffects.length;//switch otherwise clearing wont work!
 		this.SetParticleOptions();
 		this.spart = new Sparticles(this.div, this.options);
 	}
@@ -90,11 +91,22 @@ class ParticlesLayer extends BackgroundLayer {
 	handleEvent(e) {}
 
 	SetParticleOptions() {}
+
+	remove() {
+		if ( this.div !== undefined ) {
+			this.div.remove();
+		}
+		if ( this.ui !== undefined ) {
+			this.ui.remove();
+		}
+		log("EFFECT SAYS INDEX IS " + this.index);
+		AllEffects.splice(this.index, 1);
+	}
 }
 
 //SNOWLAYER
 //a layer of snow particles that drifts from the top
-//AllBackgrounds.push(new SnowLayer());
+//AllEffects.push(new SnowLayer());
 
 class SnowLayer extends ParticlesLayer {
 

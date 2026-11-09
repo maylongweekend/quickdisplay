@@ -73,6 +73,9 @@ let AllObjects = [];
 //background layer array
 let AllBackgrounds = [];
 
+//effect layer array
+let AllEffects = [];
+
 //currently animating a page change
 let pageIsChanging = false;
 
@@ -87,7 +90,7 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-			AllBackgrounds.push(new SnowLayer());
+			alert(AllEffects.length);
 			break;
 		//SETTINGS: blur toggle
 		case "b":
@@ -317,6 +320,10 @@ $("#background-context").on("click", "li", function() {
 			break;
 
 		//MORE ITEMS
+		case "effects":
+			thismenu.children(".menu-more").toggle(100);
+			thismenu.children(".menu-effects").toggle(100);
+			break;
 		case "graphp":
 			$(".context").hide(100);
 			AllObjects.push(new GraphPaperObj());
@@ -342,6 +349,20 @@ $("#background-context").on("click", "li", function() {
 				s = s.slice(k + 1);
 				AllObjects.push(new PokemonObj("assets/poke_gifs/" + s));
 			}
+			break;
+
+		//EFFECTS
+		case "backm":
+			thismenu.children(".menu-more").toggle(100);
+			thismenu.children(".menu-effects").toggle(100);
+			break;
+		case "snow":
+			$(".context").hide(100);
+			AllEffects.push(new SnowLayer());
+			break;
+		case "resete":
+			$(".context").hide(100);
+			ClearEffects();
 			break;
 
 		//BACKGROUND
@@ -1002,6 +1023,13 @@ function CreateNewUI() {
 function ClearBackground() {
 	while ( AllBackgrounds.length > 0 ) {
 		AllBackgrounds[AllBackgrounds.length - 1].remove();
+	}
+}
+
+//empty out the effects
+function ClearEffects() {
+	while ( AllEffects.length > 0 ) {
+		AllEffects[AllEffects.length - 1].remove();
 	}
 }
 
