@@ -431,6 +431,41 @@ class SnowLayer extends ParticlesLayer {
 
 }
 
+//HEARTSLAYER
+//valentine theme
+//AllBackgrounds.push(new HeartsLayer());
+
+class HeartsLayer extends SnowLayer {
+
+	SetParticleOptions() {
+		this.size = 200;
+		this.slidsize.min = "30";
+		this.slidsize.max = "500";
+		this.slidsize.value = this.size;
+		this.count = 100;
+		this.slidcount.value = this.count;
+		this.options = {
+			"count": this.count,
+			"speed": this.speed / 10,
+			"parallax": 50,
+			"direction": 0,
+			"xVariance": 1,
+			"yVariance": 1,
+			"rotation": 0.8,
+			"alphaSpeed": 0.5,
+			"minAlpha": -0.7,
+			"minSize": Math.round(this.size / 2),
+			"maxSize": this.size,
+			"drift": 3.0,
+			"twinkle": false,
+			"spawnArea": 1,
+			"color": ["#ff33cc", "#ff3399", "#ff3385", "#ff00ff", "#ffb3d9"],
+			"shape": "image",
+			"imageUrl": ["./assets/heart1.svg","./assets/heart2.svg"]
+		}
+	}
+}
+
 
 /* VIDEOLAYER */
 //a background that holds a video
