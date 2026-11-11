@@ -34,7 +34,7 @@ class BackgroundLayer {
 	}
 
 	//called by child class to build the ui elements
-	//use AddElement, eg AddElement("button", , "click", this.self) to build
+	//use AddElement, eg AddElement("button", undefined, "click", this.self) to build
 	initUI() {
 		this.ui = new UIObj(this.uititle);
 		AllObjects.push(this.ui);
@@ -83,8 +83,8 @@ class ParticlesLayer extends BackgroundLayer {
 	constructor() {
 		super(false, false, true);
 
-		this.options = {};
-		this.count = 350;
+		this.updateParticles = false;
+
 		this.index = AllEffects.length;//switch otherwise clearing wont work!
 
 		this.SetParticleOptions();
@@ -94,24 +94,40 @@ class ParticlesLayer extends BackgroundLayer {
 	initUI() {
 		BackgroundLayer.prototype.initUI.call(this);
 
+		//set the defaults here before initializing controls
+		this.options = {};
+		this.count = 350;
+		this.blur = 10;
+
 		this.posselect = this.ui.AddElement("select", undefined, "change", this.self);
-		this.posselect.innerHTML = `<option value="fore">Foreground</option><option value="back">Background</option>`;
+		this.posselect.innerHTML = `<option value="back">Background</option><option value="fore">Foreground</option>`;
 		this.posselect.selectedIndex = 0;
-		this.div.style.zIndex = 40;
+		this.div.style.zIndex = 5;
 
 		this.ui.AddElement("br");
 
 		this.slidcount = this.ui.AddElement("input", undefined, "change", this.self);
 		this.slidcount.type = "range";
-		this.slidcount.min = "10";
+		this.slidcount.min = "4";
 		this.slidcount.max = "1000";
 		this.slidcount.value = this.count;
 		this.ui.AddElement("label").textContent = "Particle count";
 
 		this.ui.AddElement("br");
+
+		this.slidblur = this.ui.AddElement("input", undefined, "input", this.self);
+		this.slidblur.type = "range";
+		this.slidblur.min = "10";
+		this.slidblur.max = "400";
+		this.slidblur.value = this.blur;
+		this.ui.AddElement("label").textContent = "Blur";
+
+		this.ui.AddElement("br");
 	}
 
 	//child handles setting changes here
+	//if the particles need to be respawned set this.updateParticles true
+	//then call super
 	handleEvent(e) {
 		if ( e.target == this.posselect ) {
 			if ( e.target.value == "fore" ) {
@@ -122,11 +138,26 @@ class ParticlesLayer extends BackgroundLayer {
 		} else if ( e.target == this.slidcount ) {
 			this.count = e.target.value;
 			this.options.count = this.count;
+			this.updateParticles = true;
+		} else if ( e.target == this.slidblur ) {
+			this.blur = e.target.value;
+			this.SetBlur();
 		}
 		//apply setting changes by destroying old particles
 		//and creating new ones with new settings
-		this.spart.destroy();
-		this.spart = new Sparticles(this.div, this.options);
+		if ( this.updateParticles ) {
+			this.updateParticles = false;
+			this.spart.destroy();
+			this.spart = new Sparticles(this.div, this.options);
+			this.SetBlur();
+		}
+	}
+
+	SetBlur() {
+		let c = this.spart.ctx;
+		if ( c ) {
+			c.filter = `blur(${Math.round( ( this.blur - 10 ) / 10)}px)`;
+		}
 	}
 
 	//child sets this.options here with sparticles settings
@@ -144,11 +175,11 @@ class ParticlesLayer extends BackgroundLayer {
 }
 
 
-//STARLAYER
-//a layer of stars that floats right and up
-//AllEffects.push(new StarLayer());
+//SHAPESLAYER
+//a layer of shapes that can be customized
+//AllEffects.push(new ShapesLayer());
 
-class StarLayer extends ParticlesLayer {
+class ShapesLayer extends ParticlesLayer {
 
 	SetParticleOptions() {
 		let c = this.color;
@@ -156,16 +187,16 @@ class StarLayer extends ParticlesLayer {
 			"count": this.count,
 			"speed": Math.round(this.speed / 10),
 			"parallax": 50,
-			"direction": 60,
+			"direction": this.direction,
 			"alphaSpeed": 13.9,
-			"minSize": this.size / 2,
+			"minSize": this.size / 3,
 			"maxSize": this.size,
-			"drift": 14.5,
+			"drift": this.drift / 10,
 			"spawnArea": 1,
-			"color": [
-				"random"
-			],
-			"shape": "star",
+			"style": this.style,
+			"twinkle": this.twinkle,
+			"color": "random",
+			"shape": this.shape,
 			"randomColor": function(index, total) {
 				let h = c.h;
 				h += ( Math.floor(Math.random() * 100) - 50 );
@@ -180,9 +211,14 @@ class StarLayer extends ParticlesLayer {
 	initUI() {
 		//set variables before super
 		this.count = 480;
-		this.uititle = "Stars";
+		this.uititle = "Flying Shapes";
 		this.speed = 195;
 		this.size = 40;
+		this.drift = 145;
+		this.shape = "star";
+		this.style = "fill";
+		this.twinkle = false;
+		this.direction = 60;
 		this.color = {
 			h: 0,
 			s: 0,
@@ -194,10 +230,34 @@ class StarLayer extends ParticlesLayer {
 
 		ParticlesLayer.prototype.initUI.call(this);
 
+		this.shapeselect = this.ui.AddElement("select", undefined, "change", this.self);
+		this.shapeselect.innerHTML = `
+			<option value="star">Stars</option>
+			<option value="circle">Circles</option>
+			<option value="square">Squares</option>
+			<option value="triangle">Triangles</option>
+			<option value="diamond">Diamonds</option>
+			<option value="line">Lines</option>
+			<option value="random">Random shapes</option>
+		`;
+		this.shapeselect.value = this.shape;
+
+		this.ui.AddElement("br");
+
+		this.styleselect = this.ui.AddElement("select", undefined, "change", this.self);
+		this.styleselect.innerHTML = `
+		<option value="fill">Fill shape</option>
+		<option value="stroke">Outline only</option>
+		<option value="both">Randomize</option>
+		`;
+		this.styleselect.value = this.style;
+
+		this.ui.AddElement("br");
+
 		this.slidsize = this.ui.AddElement("input", undefined, "change", this.self);
 		this.slidsize.type = "range";
 		this.slidsize.min = "10";
-		this.slidsize.max = "100";
+		this.slidsize.max = "400";
 		this.slidsize.value = this.size;
 		this.ui.AddElement("label").textContent = "Size";
 
@@ -206,9 +266,27 @@ class StarLayer extends ParticlesLayer {
 		this.slidspeed = this.ui.AddElement("input", undefined, "change", this.self);
 		this.slidspeed.type = "range";
 		this.slidspeed.min = "100";
-		this.slidspeed.max = "2000";
+		this.slidspeed.max = "2500";
 		this.slidspeed.value = this.speed;
 		this.ui.AddElement("label").textContent = "Speed";
+
+		this.ui.AddElement("br");
+
+		this.sliddir = this.ui.AddElement("input", undefined, "change", this.self);
+		this.sliddir.type = "range";
+		this.sliddir.min = "0";
+		this.sliddir.max = "360";
+		this.sliddir.value = this.direction;
+		this.ui.AddElement("label").textContent = "Direction";
+
+		this.ui.AddElement("br");
+
+		this.sliddrift = this.ui.AddElement("input", undefined, "change", this.self);
+		this.sliddrift.type = "range";
+		this.sliddrift.min = "10";
+		this.sliddrift.max = "200";
+		this.sliddrift.value = this.drift;
+		this.ui.AddElement("label").textContent = "Drift";
 
 		this.ui.AddElement("br");
 
@@ -226,26 +304,58 @@ class StarLayer extends ParticlesLayer {
 		this.picker.option('onInput', function() {
 			this.owner.ChangeColor(this);
 		});
+
+		//twinkle button
+		this.tbut = this.ui.AddElement("button", undefined, "click", this.self);
+		this.tbut.innerHTML = `<span class="material-symbols-outlined ui-span">check_box_outline_blank</span><span class="material-symbols-outlined ui-span">star_shine</span>`;
+		this.tbut.classList.add("margin-10");
 	}
 
 	ChangeColor(p) {
 		this.color.r = p.channel("R");
-		this.color.g = p.channel("G");
+		this.color.g = p.channel("G");this.options.maxSize = this.size;
 		this.color.b = p.channel("B");
 		RGBToHSL(this.color);//get HSL values
 		this.spart.destroy();
-		this.SetParticleOptions();
 		this.spart = new Sparticles(this.div, this.options);
+		this.SetBlur();
 	}
 
 	handleEvent(e) {
 		if ( e.target == this.slidsize ) {
 			this.size = e.target.value;
-			this.options.minSize = Math.round(this.size / 2);
+			this.options.minSize = Math.round(this.size / 3);
 			this.options.maxSize = this.size;
+			this.updateParticles = true;
 		} else if ( e.target == this.slidspeed ) {
 			this.speed = e.target.value;
 			this.options.speed = this.speed / 10;
+			this.updateParticles = true;
+		} else if ( e.target == this.shapeselect )  {
+			this.shape = e.target.value;
+			this.options.shape = this.shape;
+			this.updateParticles = true;
+		} else if ( e.target == this.sliddrift ) {
+			this.drift = e.target.value;
+			this.options.drift = this.drift / 10;
+			this.updateParticles = true;
+		} else if ( e.target == this.sliddir ) {
+			this.direction = e.target.value;
+			this.options.direction = this.direction;
+			this.updateParticles = true;
+		} else if ( e.target == this.styleselect ) {
+			this.style = e.target.value;
+			this.options.style = this.style;
+			this.updateParticles = true;
+		} else if ( e.target == this.tbut ) {
+			this.twinkle = !this.twinkle;
+			if ( this.twinkle ) {
+				this.tbut.innerHTML = `<span class="material-symbols-outlined ui-span">check_box</span><span class="material-symbols-outlined ui-span">star_shine</span>`;
+			} else {
+				this.tbut.innerHTML = `<span class="material-symbols-outlined ui-span">check_box_outline_blank</span><span class="material-symbols-outlined ui-span">star_shine</span>`;
+			}
+			this.options.twinkle = this.twinkle;
+			this.updateParticles = true;
 		}
 		ParticlesLayer.prototype.handleEvent.call(this, e);
 	}
@@ -291,7 +401,7 @@ class SnowLayer extends ParticlesLayer {
 		this.slidsize = this.ui.AddElement("input", undefined, "change", this.self);
 		this.slidsize.type = "range";
 		this.slidsize.min = "4";
-		this.slidsize.max = "130";
+		this.slidsize.max = "230";
 		this.slidsize.value = this.size;
 		this.ui.AddElement("label").textContent = "Size";
 
@@ -310,9 +420,11 @@ class SnowLayer extends ParticlesLayer {
 			this.size = e.target.value;
 			this.options.minSize = Math.round(this.size / 4);
 			this.options.maxSize = this.size;
+			this.updateParticles = true;
 		} else if ( e.target == this.slidspeed ) {
 			this.speed = e.target.value;
 			this.options.speed = this.speed / 10;
+			this.updateParticles = true;
 		}
 		ParticlesLayer.prototype.handleEvent.call(this, e);
 	}

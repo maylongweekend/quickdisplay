@@ -364,9 +364,9 @@ $("#background-context").on("click", "li", function() {
 			$(".context").hide(100);
 			AllEffects.push(new SnowLayer());
 			break;
-		case "stars":
+		case "shapes":
 			$(".context").hide(100);
-			AllEffects.push(new StarLayer());
+			AllEffects.push(new ShapesLayer());
 			break;
 		case "resete":
 			$(".context").hide(100);
