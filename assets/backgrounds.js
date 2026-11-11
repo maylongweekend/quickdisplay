@@ -34,7 +34,7 @@ class BackgroundLayer {
 	}
 
 	//called by child class to build the ui elements
-	//use AddElement, eg AddElement("button", , "click", this.self) to build
+	//use AddElement, eg AddElement("button", undefined, "click", this.self) to build
 	initUI() {
 		this.ui = new UIObj(this.uititle);
 		AllObjects.push(this.ui);
@@ -83,8 +83,8 @@ class ParticlesLayer extends BackgroundLayer {
 	constructor() {
 		super(false, false, true);
 
-		this.options = {};
-		this.count = 350;
+		this.updateParticles = false;
+
 		this.index = AllEffects.length;//switch otherwise clearing wont work!
 
 		this.SetParticleOptions();
@@ -94,10 +94,15 @@ class ParticlesLayer extends BackgroundLayer {
 	initUI() {
 		BackgroundLayer.prototype.initUI.call(this);
 
+		//set the defaults here before initializing controls
+		this.options = {};
+		this.count = 350;
+		this.blur = 10;
+
 		this.posselect = this.ui.AddElement("select", undefined, "change", this.self);
-		this.posselect.innerHTML = `<option value="fore">Foreground</option><option value="back">Background</option>`;
+		this.posselect.innerHTML = `<option value="back">Background</option><option value="fore">Foreground</option>`;
 		this.posselect.selectedIndex = 0;
-		this.div.style.zIndex = 40;
+		this.div.style.zIndex = 5;
 
 		this.ui.AddElement("br");
 
@@ -109,9 +114,19 @@ class ParticlesLayer extends BackgroundLayer {
 		this.ui.AddElement("label").textContent = "Particle count";
 
 		this.ui.AddElement("br");
+
+		this.slidblur = this.ui.AddElement("input", undefined, "input", this.self);
+		this.slidblur.type = "range";
+		this.slidblur.min = "10";
+		this.slidblur.max = "400";
+		this.slidblur.value = this.blur;
+		this.ui.AddElement("label").textContent = "Blur";
+
+		this.ui.AddElement("br");
 	}
 
 	//child handles setting changes here
+	//then call super
 	handleEvent(e) {
 		if ( e.target == this.posselect ) {
 			if ( e.target.value == "fore" ) {
@@ -122,11 +137,26 @@ class ParticlesLayer extends BackgroundLayer {
 		} else if ( e.target == this.slidcount ) {
 			this.count = e.target.value;
 			this.options.count = this.count;
+			this.updateParticles = true;
+		} else if ( e.target == this.slidblur ) {
+			this.blur = e.target.value;
+			this.SetBlur();
 		}
 		//apply setting changes by destroying old particles
 		//and creating new ones with new settings
-		this.spart.destroy();
-		this.spart = new Sparticles(this.div, this.options);
+		if ( this.updateParticles ) {
+			this.updateParticles = false;
+			this.spart.destroy();
+			this.spart = new Sparticles(this.div, this.options);
+			this.SetBlur();
+		}
+	}
+
+	SetBlur() {
+		let c = this.spart.ctx;
+		if ( c ) {
+			c.filter = `blur(${Math.round( ( this.blur - 10 ) / 10)}px)`;
+		}
 	}
 
 	//child sets this.options here with sparticles settings
@@ -197,7 +227,7 @@ class StarLayer extends ParticlesLayer {
 		this.slidsize = this.ui.AddElement("input", undefined, "change", this.self);
 		this.slidsize.type = "range";
 		this.slidsize.min = "10";
-		this.slidsize.max = "100";
+		this.slidsize.max = "200";
 		this.slidsize.value = this.size;
 		this.ui.AddElement("label").textContent = "Size";
 
@@ -236,6 +266,7 @@ class StarLayer extends ParticlesLayer {
 		this.spart.destroy();
 		this.SetParticleOptions();
 		this.spart = new Sparticles(this.div, this.options);
+		this.SetBlur();
 	}
 
 	handleEvent(e) {
@@ -243,9 +274,11 @@ class StarLayer extends ParticlesLayer {
 			this.size = e.target.value;
 			this.options.minSize = Math.round(this.size / 2);
 			this.options.maxSize = this.size;
+			this.updateParticles = true;
 		} else if ( e.target == this.slidspeed ) {
 			this.speed = e.target.value;
 			this.options.speed = this.speed / 10;
+			this.updateParticles = true;
 		}
 		ParticlesLayer.prototype.handleEvent.call(this, e);
 	}
@@ -291,7 +324,7 @@ class SnowLayer extends ParticlesLayer {
 		this.slidsize = this.ui.AddElement("input", undefined, "change", this.self);
 		this.slidsize.type = "range";
 		this.slidsize.min = "4";
-		this.slidsize.max = "130";
+		this.slidsize.max = "230";
 		this.slidsize.value = this.size;
 		this.ui.AddElement("label").textContent = "Size";
 
@@ -310,9 +343,11 @@ class SnowLayer extends ParticlesLayer {
 			this.size = e.target.value;
 			this.options.minSize = Math.round(this.size / 4);
 			this.options.maxSize = this.size;
+			this.updateParticles = true;
 		} else if ( e.target == this.slidspeed ) {
 			this.speed = e.target.value;
 			this.options.speed = this.speed / 10;
+			this.updateParticles = true;
 		}
 		ParticlesLayer.prototype.handleEvent.call(this, e);
 	}
