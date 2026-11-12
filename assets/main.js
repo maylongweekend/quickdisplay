@@ -431,11 +431,6 @@ $("#background-context").on("click", "li", function() {
 			ClearBackground();
 			AllBackgrounds.push(new VideoLayer("assets/videos/wall_smiley.webm"));
 			break;
-		case "vidgrid":
-			$(".context").hide(100);
-			ClearBackground();
-			AllBackgrounds.push(new VideoLayer("assets/videos/wall_grid.webm"));
-			break;
 		case "vidwave":
 			$(".context").hide(100);
 			ClearBackground();
