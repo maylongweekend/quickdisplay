@@ -178,7 +178,7 @@ $(document).bind("mousedown", function(e) {
 });
 
 //set default background video
-AllBackgrounds.push(new VideoLayer("assets/colorful.mp4"));
+AllBackgrounds.push(new VideoLayer("assets/videos/wall_blue.webm"));
 
 //detect mobile and warn
 window.onload = function() {
@@ -386,35 +386,60 @@ $("#background-context").on("click", "li", function() {
 			$(".context").hide(100);
 			document.getElementById('background-input').click();
 			break;
-		case "tealb":
-			$(".context").hide(100);
-			ClearBackground();
-			AllBackgrounds.push(new VideoLayer("assets/wall_teal.webm"));
-			break;
-		case "greenb":
-			$(".context").hide(100);
-			ClearBackground();
-			AllBackgrounds.push(new VideoLayer("assets/wall_green.webm"));
-			break;
-		case "purps":
-			$(".context").hide(100);
-			ClearBackground();
-			AllBackgrounds.push(new ImageLayer("assets/wall_purp.jpg"));
-			break;
-		case "blues":
-			$(".context").hide(100);
-			ClearBackground();
-			AllBackgrounds.push(new ImageLayer("assets/wall_scratch.jpg"));
-			break;
 		case "gradient":
 			$(".context").hide(100);
 			ClearBackground();
 			AllBackgrounds.push(new GradientLayer());
 			break;
+		case "videos":
+			thismenu.children(".menu-videob").toggle(100);
+			thismenu.children(".menu-backg").toggle(100);
+			break;
 		case "resetb":
 			$(".context").hide(100);
 			ClearBackground();
-			AllBackgrounds.push(new VideoLayer("assets/colorful.mp4"));
+			AllBackgrounds.push(new VideoLayer("assets/videos/wall_blue.webm"));
+			break;
+
+		//VIDEO BACKGROUNDS
+		case "backb":
+			thismenu.children(".menu-backg").toggle(100);
+			thismenu.children(".menu-videob").toggle(100);
+			break;
+		case "vidpastel":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/videos/wall_pastels.webm"));
+			break;
+		case "videdu":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/videos/wall_edu.webm"));
+			break;
+		case "vidswirl":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/videos/wall_swirl.webm"));
+			break;
+		case "vidbokeh":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/videos/wall_green.webm"));
+			break;
+		case "vidsmiley":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/videos/wall_smiley.webm"));
+			break;
+		case "vidgrid":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/videos/wall_grid.webm"));
+			break;
+		case "vidwave":
+			$(".context").hide(100);
+			ClearBackground();
+			AllBackgrounds.push(new VideoLayer("assets/videos/wall_greenwave.webm"));
 			break;
 
 		//SEARCH
