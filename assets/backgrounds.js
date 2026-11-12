@@ -438,6 +438,7 @@ class SnowLayer extends ParticlesLayer {
 class HeartsLayer extends SnowLayer {
 
 	SetParticleOptions() {
+		$(this.ui.div).children("h3")[0].textContent = "Hearts";
 		this.size = 200;
 		this.slidsize.min = "30";
 		this.slidsize.max = "500";
