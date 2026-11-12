@@ -1,12 +1,10 @@
 # Quick Display - for interactive whiteboards
 ![Animated gif demonstrating potential layouts](readme_img/qd_intro.webp)
 
-A simple display webapp intended for SMART boards and educational interactive whiteboards - created by Mr L
+**A fast and simple display webapp** intended for SMART boards and educational interactive whiteboards - created by Mr L
 
 
 ## About
-
-**Quick Display is fast at making pretty and functional classroom displays.**
 
 Meant for teachers wanting to display notes, gifs, clocks, to-do lists, and more on a beautiful background, without ugly user interfaces or visual clutter getting in the way.
 
@@ -22,7 +20,7 @@ QD runs locally, is free and open-source, and shouldn't bother your school's IT 
 
 [QD is available as a live demo website hosted here on Github.  Click here to open it.](https://maylongweekend.github.io/quickdisplay/)  Once loaded, everything runs locally and no data leaves your computer.
 
-(Alternately, you can download the entire QD code package using the green `Code` button above and choosing `Download ZIP`.)
+(Alternately, you can download the entire QD code package using the green `Code` button above and choosing `Download ZIP`.  Then double-click on `index.html` to open.)
 
 Once you have QD open in your browser, drag it over to your SMART Board screen and press F11 on your keyboard to go into full screen mode.  Use the right-click menu to add objects, change the background, modify settings, etc.
 
@@ -89,7 +87,6 @@ Many translucent objects in QD can have a visual blur applied behind them.  Beca
 If you download the whole source package, there are some helpful tools in the `resources` folder including:
 
 - `clock - analog.js` - an elegant clock face with adjustable transparency.
-- `clock - digital.js` - a digital clock with some color/font formatting options.
 - `clock - teaching tool.js` - an analog clock with hidden number values that can be revealed to help teach students.
 - `todo list.js` - a customizable to-do list.  Right-click or click underneath to add a new item.  Click on any time to check it off.  Drag items by the handles to reorder.
 
@@ -114,7 +111,7 @@ This project makes use of the following libraries; each is the property of their
 - [anime.js](https://animejs.com/)
 - [three.js](https://threejs.org/)
 
-This project uses the likeness of characters from [Pokémon](https://www.pokemon.com/us), property of Nintendo.
+This project uses the likeness of characters from [Pokémon](https://www.pokemon.com/us), property of Nintendo.  This project uses videos from [Pexels](https://www.pexels.com/search/videos/powerpoint%20background/?resolution_name=1080p&max_duration=60&orientation=landscape) and [Pixabay](https://pixabay.com/videos/search/powerpoint%20background/?orientation=horizontal), under their Free license.
 
 > [!IMPORTANT]
 > This software is in no way affiliated with any school division, school authority, provincial or state educational authority, or any other group.  This is the personal project of "Mr L".
