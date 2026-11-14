@@ -14,8 +14,8 @@ class BaseObject {
 	load(options) {
 		let keys = Object.keys(options);
 		let update = false;
-		for (let k of keys ) {
-			for ( let n in this.self ) {
+		for ( let n in this.self ) {
+			for (let k of keys ) {
 				if ( n == k ) {
 					log("Match found! Old value: " + this.self[n]);
 					this.self[n] = options[k];
