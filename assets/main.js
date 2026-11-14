@@ -45,7 +45,11 @@ THE TODO LIST
 
 
 
-//Start with the classes contained in:
+
+
+
+//all classes extend from BaseObject ...
+//see:
 //moveableobject.js
 //objects.js
 //backgrounds.js
@@ -90,7 +94,7 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-			//AllObjects.push(new DigiClockObj());
+		//	AllObjects[0].load({key1: "hi", scale: 2});
 			break;
 		//SETTINGS: blur toggle
 		case "b":
