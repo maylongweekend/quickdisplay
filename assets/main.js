@@ -35,6 +35,8 @@ THE TODO LIST
 	- stopwatch/timer
 	- flip clock - https://codepen.io/editor/lukeslp/pen/019f62ae-89ac-7dc7-98f7-f4f7cfe8d392
  - bugs:
+ 	- some kind of delete bug - only seems to happen with title text objects?
+		- pagination won't move some title text after deleting other items
 	- main background blue video doesn't loop
 	- right click paste > menu item appears if clipboard has item, fix firefox issues
 	- shadow on analog clock
