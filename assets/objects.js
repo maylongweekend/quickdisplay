@@ -1,3 +1,126 @@
+//digital stopwatch
+//AllObjects.push(new StopWatchObj());
+
+class StopWatchObj extends MoveableObject {
+
+	constructor() {
+		super(true, true, false, true, true);//give font and color selection
+
+		this.div.style.color = this.color;
+
+		this.div.classList.add("digiclock-outer");
+		this.laststart;
+		this.count = 0;
+		this.iscounting = false;
+
+		this.div.innerHTML = `<span>00</span>:<span>00</span>:<span>000</span>`;
+
+		this.isanimating = true;
+		this.outerdiv.addEventListener('click', function(e) {e.preventDefault();this.owner.startstop();});
+
+		//set the font selector to the default font for text
+		for ( let i = 0; i < this.fontselector.options.length; i++ ) {
+			if ( this.fontselector.options[i].value.includes("Verdana") ) {
+				this.fontselector.selectedIndex = i;
+				this.font = this.fontselector.options[i].value;
+			}
+		}
+
+		this.SetMenuItem();
+	}
+
+	SetMenuItem() {
+		let li = AddContextItem(this.menu, "resettime", `<span class="material-symbols-outlined">timer_off</span>Reset timer`, true);
+		li.owner = this.self;
+		li.addEventListener('click', function() {
+			$(".context").hide(100);
+			this.owner.reset();
+		});
+	}
+
+	SetFont(s) {
+		MoveableObject.prototype.SetFont.call(this, s);
+		this.div.style.fontFamily = this.font;
+	}
+
+	HandleInitialColor() {
+		this.color = "#" + (Math.floor(Math.random() * 80) + 175).toString(16) + (Math.floor(Math.random() * 80) + 175).toString(16) + (Math.floor(Math.random() * 80) + 175).toString(16);
+	}
+
+	SetColor(s) {
+		MoveableObject.prototype.SetColor.call(this, s);
+		this.div.style.color = this.color;
+	}
+
+	startstop() {
+		this.iscounting = !this.iscounting;
+		if ( this.iscounting ) {
+			this.laststart = Date.now();
+		}
+	}
+
+	reset() {
+		this.iscounting = false;
+		this.count = 0;
+		this.div.innerHTML = `<span>00</span>:<span>00</span>:<span>000</span>`;
+	}
+
+	Frame(delta) {
+		if ( this.iscounting ) {
+			let now = Date.now();
+			this.count += now - this.laststart;
+			this.laststart = now;
+
+			let ms = this.count % 1000;
+			let s = ( this.count - ms ) / 1000;
+			let sr = s % 60;
+			let m = ( s - sr ) / 60;
+
+			let min = "" + m;
+			let sec = "" + sr;
+			let milli = "" + ms;
+
+			while ( min.length < 2 ) {
+				min = "0" + min;
+			}
+			while ( sec.length < 2 ) {
+				sec = "0" + sec;
+			}
+			while ( milli.length < 3 ) {
+				milli = "0" + milli;
+			}
+
+			this.div.innerHTML = `<span>${min}</span>:<span>${sec}</span>:<span>${milli}</span>`;
+		}
+	}
+}
+
+class TimerObj extends StopWatchObj {
+
+	constructor() {
+		super();
+		this.count = this.GetSeconds(prompt(`Enter your start time in seconds, or enter minutes followed by the letter "m".`, "10"));
+
+		this.div.innerHTML = `<span>00</span>:<span>000</span>`;
+	}
+
+	GetSeconds(s)
+	{
+		let c;
+		if ( s.includes("m") ) {
+			s = s.replace("m", "");
+			c = Number(s);
+			c *= 60;
+		} else {
+			c = Number(s);
+		}
+		if ( c ) {
+			return c;
+		}
+		return 10;
+	}
+}
+
 //digital clock
 //AllObjects.push(new DigiClockObj());
 
@@ -7,13 +130,8 @@ class DigiClockObj extends MoveableObject {
 		super(true, true, false, true, true);//give font and color selection
 
 		this.div.classList.add("digiclock-outer");
-		this.div.innerHTML = `
-			<span>00</span>:<span>00</span>
-		`;
+		this.div.innerHTML = `<span>00</span>:<span>00</span>`;
 		this.div.style.color = this.color;
-		let s = $(this.div).children("span");
-		this.hours = s[0];
-		this.minutes = s[1];
 
 		//set the font selector to the default font for text
 		for ( let i = 0; i < this.fontselector.options.length; i++ ) {
@@ -55,8 +173,8 @@ class DigiClockObj extends MoveableObject {
 			h = 12;
 		}
 		m = ( m < 10 ) ? "0" + m : m;
-		this.hours.innerHTML = h;
-		this.minutes.innerHTML = m + " " + p;
+
+		this.div.innerHTML = `<span>${h}</span>:<span>${m} ${p}</span>`;
 		setTimeout(function() {s.Timer();}, 1000);
 	}
 }

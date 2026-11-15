@@ -1,19 +1,55 @@
-//THE BASE OBJECT CLASS
+/*
+ * -----------------------------------
+ *	THE BASE CLASS
+ * ------------------------------------
+ */
+
+
+class BaseObject {
+
+	constructor() {
+		this.self = this;
+	}
+
+	load(options) {
+		let keys = Object.keys(options);
+		let update = false;
+		for ( let n in this.self ) {
+			for (let k of keys ) {
+				if ( n == k ) {
+					this.self[n] = options[k];
+					update = true;
+				}
+			}
+		}
+		update && this.UpdateAfterLoad();
+	}
+
+	//called by children
+	//to take account of loaded changes
+	UpdateAfterLoad() {}
+}
+
+
+//THE BASE MOVEABLE ITEM CLASS
 //a moveable scalable div with various right click options
 //subclasses handle specific implementation of various features
 
 //structure note:
 //the outermost div is this.outerdiv
 // - handles dragging
+// - handles single click
+//		- IMPORTANT: if you set single click listener to this.div it will fire on drag events!
 //inside this is this.div
 // - handles scaling/flipping and all else
 //use this.div for everything unless you need to mess with the outerdiv
 
-class MoveableObject {
+class MoveableObject extends BaseObject {
 
 	constructor(bdrag = true, bscale = true, btext = false, bcolor = false, bfont = false, banimate = false, blink = false) {
 
-		this.self = this;
+		super();
+
 		this.bdrag = bdrag;
 		this.bscale = bscale;
 		this.text = "Edit text";
@@ -57,7 +93,7 @@ class MoveableObject {
 		if ( blink ) {
 			//add edit entry to top of menu
 			let lili = AddContextItem(this.menu,"link",`<span class="material-symbols-outlined">add_link</span>Edit link`,true);
-			this.div.addEventListener('click', function GoToLink() {
+			this.outerdiv.addEventListener('click', function GoToLink() {
 				let s = this.owner.link;
 				if ( s != "" ) {
 					if ( !s.includes("http") ) {
@@ -319,6 +355,26 @@ class MoveableObject {
 	//handles passing event listeners to child classes
 	//use switch ( e.type ) to detect eg "click" and call function on this
 	handleEvent(e) {}
+
+	//moveable objects need to be able to load extra keys
+	//xy location, scale
+	load(options) {
+		let keys = Object.keys(options);
+		for (let k of keys ) {
+			if ( k == "x") {
+				Number(options[k]) && $(this.outerdiv).css('left', Number(options[k]));
+			} else if ( k == "y") {
+				Number(options[k]) && $(this.outerdiv).css('top', Number(options[k]));
+			} else if ( k == "scale" ) {
+				if ( Number(options[k]) ) {
+					let scale = Number(options[k]);
+					let xscale = this.isflipped ? scale * -1 : scale;
+					$(this.div).css('transform', `scale(${xscale}, ${scale})`);
+				}
+			}
+		}
+		BaseObject.prototype.load.call(this, options);
+	}
 
 	remove() {
 		this.outerdiv.remove();
