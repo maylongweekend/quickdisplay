@@ -16,7 +16,8 @@ class StopWatchObj extends MoveableObject {
 		this.div.innerHTML = `<span>00</span>:<span>00</span>:<span>000</span>`;
 
 		this.isanimating = true;
-		this.outerdiv.addEventListener('click', function(e) {e.preventDefault();this.owner.startstop();});
+		this.outerdiv.addEventListener('click', function(e) {this.owner.startstop();});
+		this.outerdiv.addEventListener('dblclick', function(e) {this.owner.reset();});
 
 		//set the font selector to the default font for text
 		for ( let i = 0; i < this.fontselector.options.length; i++ ) {
