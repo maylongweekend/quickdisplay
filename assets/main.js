@@ -230,7 +230,7 @@ let lastdelta = document.timeline.currentTime;
 requestAnimationFrame(AnimationStep);
 
 function AnimationStep(timestamp) {
-	let delta = timestamp - lastdelta;
+	let delta = Math.floor(timestamp - lastdelta);
 	if ( delta > 0 ) {
 		lastdelta = timestamp;
 		for ( let Obj of AllObjects ) {
@@ -332,6 +332,10 @@ $("#background-context").on("click", "li", function() {
 		case "stopw":
 			$(".context").hide(100);
 			AllObjects.push(new StopWatchObj());
+			break;
+		case "timer":
+			$(".context").hide(100);
+			AllObjects.push(new TimerObj());
 			break;
 		case "effects":
 			thismenu.children(".menu-more").toggle(100);
