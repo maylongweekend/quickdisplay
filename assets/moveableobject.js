@@ -17,9 +17,7 @@ class BaseObject {
 		for ( let n in this.self ) {
 			for (let k of keys ) {
 				if ( n == k ) {
-					log("Match found! Old value: " + this.self[n]);
 					this.self[n] = options[k];
-					log("Set object key " + n + " to value " + this.self[n]);
 					update = true;
 				}
 			}
@@ -40,6 +38,8 @@ class BaseObject {
 //structure note:
 //the outermost div is this.outerdiv
 // - handles dragging
+// - handles single click
+//		- IMPORTANT: if you set single click listener to this.div it will fire on drag events!
 //inside this is this.div
 // - handles scaling/flipping and all else
 //use this.div for everything unless you need to mess with the outerdiv
@@ -93,7 +93,7 @@ class MoveableObject extends BaseObject {
 		if ( blink ) {
 			//add edit entry to top of menu
 			let lili = AddContextItem(this.menu,"link",`<span class="material-symbols-outlined">add_link</span>Edit link`,true);
-			this.div.addEventListener('click', function GoToLink() {
+			this.outerdiv.addEventListener('click', function GoToLink() {
 				let s = this.owner.link;
 				if ( s != "" ) {
 					if ( !s.includes("http") ) {
@@ -369,7 +369,6 @@ class MoveableObject extends BaseObject {
 				if ( Number(options[k]) ) {
 					let scale = Number(options[k]);
 					let xscale = this.isflipped ? scale * -1 : scale;
-					log(xscale + " " + scale)
 					$(this.div).css('transform', `scale(${xscale}, ${scale})`);
 				}
 			}

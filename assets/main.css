@@ -222,26 +222,18 @@
 
 /* DIGITAL CLOCK */
 .digiclock-outer {
-	display: flex;
 	font-size: 15vh;
 	font-weight: 400;
 	font-family: var(--ui-font);
 	text-shadow: var(--text-shadow);
 	user-select: none;
 	cursor: default;
+	text-align: right;
 }
 
 .digiclock-outer span {
-	flex: 1;
-}
-
-.digiclock-outer span:first-of-type {
-	text-align: right;
-	padding-right: 15px;
-}
-
-.digiclock-outer span:last-of-type {
-	padding-left: 15px;
+	padding: 15px;
+	pointer-events: none;
 }
 
 /* END DRAGGABLE */
@@ -280,6 +272,12 @@
 	transition: all .2s ease;
 	user-select: none;
 	z-index: 1001;
+}
+
+.context select {
+	font-family: var(--ui-font);
+	font-size: 1.5vh;
+	text-align: center;
 }
 
 /* Padding for google font icons */

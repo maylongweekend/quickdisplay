@@ -35,6 +35,7 @@ THE TODO LIST
 	- stopwatch/timer
 	- flip clock - https://codepen.io/editor/lukeslp/pen/019f62ae-89ac-7dc7-98f7-f4f7cfe8d392
  - bugs:
+	- main background blue video doesn't loop
 	- right click paste > menu item appears if clipboard has item, fix firefox issues
 	- shadow on analog clock
 	- elements with background shadows extend too wide? - firefox only, not on text
@@ -94,7 +95,7 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-		//	AllObjects[0].load({key1: "hi", scale: 2});
+			//AllObjects.push(new TimerObj());
 			break;
 		//SETTINGS: blur toggle
 		case "b":
@@ -327,6 +328,10 @@ $("#background-context").on("click", "li", function() {
 		case "clockd":
 			$(".context").hide(100);
 			AllObjects.push(new DigiClockObj());
+			break;
+		case "stopw":
+			$(".context").hide(100);
+			AllObjects.push(new StopWatchObj());
 			break;
 		case "effects":
 			thismenu.children(".menu-more").toggle(100);
