@@ -37,6 +37,7 @@ class BackgroundLayer {
 	//use AddElement, eg AddElement("button", undefined, "click", this.self) to build
 	initUI() {
 		this.ui = new UIObj(this.uititle);
+		this.ui.owner = this.self;
 		AllObjects.push(this.ui);
 	}
 
@@ -75,6 +76,75 @@ class BackgroundLayer {
 			this.ui.remove();
 		}
 		AllBackgrounds.splice(this.index, 1);
+	}
+}
+
+//can we load this as an object and add the menu directly to every dice lol
+class DiceLayer extends BackgroundLayer {
+
+	constructor() {
+		super(false, false, true);
+
+		this.dicestart = "1d6 + 1d20";
+
+		this.scale = 11;//bigger is smaller, default 8
+
+		this.div.style.zIndex = 20;
+		this.dice = new DICE.dice_box(this.div);
+		this.dice.owner = this.self;
+		this.dice.setDice(this.dicestart);
+	}
+
+	initUI() {
+		//set variables before super
+		this.uititle = "Dice roller";
+		BackgroundLayer.prototype.initUI.call(this);
+		this.rollbutton = this.ui.AddElement("button", undefined, "click", this.self);
+		this.rollbutton.innerHTML = `<span class="material-symbols-outlined ui-span">shuffle</span>`;
+		this.rollbutton.classList.add("margin-10");
+		this.dicebutton = this.ui.AddElement("button", undefined, "click", this.self);
+		this.dicebutton.innerHTML = `<span class="material-symbols-outlined ui-span">dashboard_customize</span>`;
+		this.dicebutton.classList.add("margin-10");
+	}
+
+	NewDice(dice) {}
+
+	handleEvent(e) {
+		if ( e.target == this.rollbutton ) {
+			this.dice.start_throw();
+		}
+		else if ( e.target == this.dicebutton ) {
+			let s = prompt(`Enter dice in the format [Number][Type] + [Number][Type]`, this.dicestart);
+			while ( s.includes(" ") ) {
+				s = s.replace(" ", "");
+			}
+			this.dicestart = s;
+			this.dice.setDice(this.dicestart);
+		}
+	}
+
+	//dice can move pages
+	HandleMove(w) {
+		let x = this.div.getBoundingClientRect().left;
+		//set new location
+		x -= w;
+		//transition for smooth page move
+		$(this.div).css({
+			'left': x,
+			'transition': "left 0.5s",
+		});
+	}
+
+	resetTransition() {
+		$(this.div).css('transition', 'left 0s');
+	}
+
+	//TO MAKE THIS WORK!
+	//TODO: UI class needs to call its owner when it's removed
+	remove() {
+		log("remove called")
+		this.dice.clear();
+		BackgroundLayer.prototype.remove.call(this);
 	}
 }
 

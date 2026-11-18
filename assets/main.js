@@ -97,7 +97,7 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-			//AllObjects.push(new TimerObj());
+			//AllObjects.push(new DiceLayer());
 			break;
 		//SETTINGS: blur toggle
 		case "b":
@@ -339,6 +339,10 @@ $("#background-context").on("click", "li", function() {
 			$(".context").hide(100);
 			AllObjects.push(new TimerObj());
 			break;
+		case "dice":
+			$(".context").hide(100);
+			AllObjects.push(new DiceLayer());
+			break;
 		case "effects":
 			thismenu.children(".menu-more").toggle(100);
 			thismenu.children(".menu-effects").toggle(100);
@@ -522,7 +526,7 @@ $("#background-context").on("click", "li", function() {
 //links an object to a specific context menu
 //adapted from https://stackoverflow.com/a/20471268 by Francisco Presencia
 function AddContextMenu(obj, menu) {
-	obj.addEventListener('contextmenu',function(event) {
+	obj.addEventListener('contextmenu', function(event) {
 		event.preventDefault();
 		// Show context menu
 		$(menu).finish().toggle(100, function() {
