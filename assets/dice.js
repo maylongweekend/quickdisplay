@@ -24,8 +24,8 @@ const DICE = (function() {
             shininess: 40,
             shading: THREE.FlatShading,
         },
-        label_color: '#aaaaaa', //numbers on dice
-        dice_color: '#081529', // default #202020 - QD
+        label_color: '#bababa', //numbers on dice default #aaaaaa - QD
+        dice_color: '#290081', // default #202020 - QD
         ambient_light_color: 0xf0f0f0,
         spot_light_color: 0xefefef,
         desk_color: '#101010', //canvas background
@@ -180,7 +180,7 @@ const DICE = (function() {
     //call this to roll dice programatically or from click
     that.dice_box.prototype.start_throw = function(before_roll, after_roll) {
         var box = this;
-        if (box.rolling) return;
+        //if (box.rolling) return;//QD - removed for instant reroll
 
         var vector = { x: (rnd() * 2 - 1) * box.w, y: -(rnd() * 2 - 1) * box.h };
         var dist = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
@@ -288,6 +288,46 @@ const DICE = (function() {
         return vectors;
     }
 
+
+
+
+
+    //ADDED FOR QD
+    //gives the dice a nice big random push for a reroll without reloading from the sides
+    that.dice_box.prototype.push_dice = function() {
+        var vector = {
+            x: Math.floor(Math.random() * 9000) - 4500,
+            y: Math.floor(Math.random() * 9000) - 4500,
+            z: Math.floor(Math.random() * 3100)
+        };
+        var angle = {
+            x: Math.floor(Math.random() * 60) - 30,
+            y: Math.floor(Math.random() * 60) - 30,
+            z: Math.floor(Math.random() * 60) - 30
+        }
+        for ( var i = 0; i < this.dices.length; i++ ) {
+            var dice = this.dices[i].body;
+            dice.velocity.set(vector.x, vector.y, vector.z);
+            dice.angularVelocity.set(angle.x, angle.y, angle.z);
+        }
+    }
+
+    //added by QD for color change
+    that.dice_box.prototype.change_dice_color = function(string, white) {
+        vars.dice_color = string;
+        if ( white ) {
+            vars.label_color = '#191919';
+        } else {
+            vars.label_color = '#bababa';
+        }
+        threeD_dice.dice_material = undefined;
+        threeD_dice.d4_material = undefined;
+    }
+
+
+
+
+
     that.dice_box.prototype.create_dice = function(type, pos, velocity, angle, axis) {
         var dice = threeD_dice['create_' + type]();
         dice.castShadow = true;
@@ -367,8 +407,8 @@ const DICE = (function() {
         this.renderer.render(this.scene, this.camera);
         this.last_time = this.last_time ? time : (new Date()).getTime();
         if (this.running == threadid && this.check_if_throw_finished()) {
-            this.running = false;
-            if (this.callback) this.callback.call(this, get_dice_values(this.dices));
+   //         this.running = false;//QD - removed so sim doesn't stop
+     //       if (this.callback) this.callback.call(this, get_dice_values(this.dices));
         }
         if (this.running == threadid) {
             (function(t, tid, uat) {
