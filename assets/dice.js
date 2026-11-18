@@ -382,7 +382,6 @@ const DICE = (function() {
     }
 
     that.dice_box.prototype.clear = function() {
-        log("Clear called")
         this.running = false;
         var dice;
         while (dice = this.dices.pop()) {
