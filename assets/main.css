@@ -222,7 +222,7 @@
 
 /* DIGITAL CLOCK */
 .digiclock-outer {
-	font-size: 15vh;
+	font-size: 12vh;
 	font-weight: 400;
 	font-family: var(--ui-font);
 	text-shadow: var(--text-shadow);

@@ -341,7 +341,7 @@ $("#background-context").on("click", "li", function() {
 			break;
 		case "dice":
 			$(".context").hide(100);
-			AllObjects.push(new DiceLayer());
+			AllObjects.push(new DiceRollerObj());
 			break;
 		case "effects":
 			thismenu.children(".menu-more").toggle(100);
