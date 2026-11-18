@@ -37,6 +37,7 @@ class BackgroundLayer {
 	//use AddElement, eg AddElement("button", undefined, "click", this.self) to build
 	initUI() {
 		this.ui = new UIObj(this.uititle);
+		this.ui.owner = this.self;
 		AllObjects.push(this.ui);
 	}
 
@@ -63,6 +64,9 @@ class BackgroundLayer {
 
 	//call on a child to handle animation
 	Frame(delta) {}
+
+	//called by UI when deleted
+	uiRemoved() {}
 
 	remove() {
 		if ( this.div !== undefined ) {

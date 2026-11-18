@@ -107,8 +107,7 @@ This project makes use of the following libraries; each is the property of their
 - [jscolor.js](https://jscolor.com/)
 - [EmojiPicker.js](https://pfurpass.github.io/EmojiPicker/)
 - [Sparticles](https://github.com/simeydotme/sparticles)
-- [Vanta.js](https://www.vantajs.com/)
-- [anime.js](https://animejs.com/)
+- [3D Dice Roller](https://github.com/sarahRosannaBusch/dice)
 - [three.js](https://threejs.org/)
 
 This project uses the likeness of characters from [Pokémon](https://www.pokemon.com/us), property of Nintendo.  This project uses videos from [Pexels](https://www.pexels.com/search/videos/powerpoint%20background/?resolution_name=1080p&max_duration=60&orientation=landscape) and [Pixabay](https://pixabay.com/videos/search/powerpoint%20background/?orientation=horizontal), under their Free license.

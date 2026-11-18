@@ -35,6 +35,8 @@ THE TODO LIST
 	- stopwatch/timer
 	- flip clock - https://codepen.io/editor/lukeslp/pen/019f62ae-89ac-7dc7-98f7-f4f7cfe8d392
  - bugs:
+ 	- some kind of delete bug - only seems to happen with title text objects?
+		- pagination won't move some title text after deleting other items
 	- main background blue video doesn't loop
 	- right click paste > menu item appears if clipboard has item, fix firefox issues
 	- shadow on analog clock
@@ -95,7 +97,7 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-			//AllObjects.push(new TimerObj());
+			//AllObjects.push(new DiceLayer());
 			break;
 		//SETTINGS: blur toggle
 		case "b":
@@ -337,6 +339,10 @@ $("#background-context").on("click", "li", function() {
 			$(".context").hide(100);
 			AllObjects.push(new TimerObj());
 			break;
+		case "dice":
+			$(".context").hide(100);
+			AllObjects.push(new DiceRollerObj());
+			break;
 		case "effects":
 			thismenu.children(".menu-more").toggle(100);
 			thismenu.children(".menu-effects").toggle(100);
@@ -520,7 +526,7 @@ $("#background-context").on("click", "li", function() {
 //links an object to a specific context menu
 //adapted from https://stackoverflow.com/a/20471268 by Francisco Presencia
 function AddContextMenu(obj, menu) {
-	obj.addEventListener('contextmenu',function(event) {
+	obj.addEventListener('contextmenu', function(event) {
 		event.preventDefault();
 		// Show context menu
 		$(menu).finish().toggle(100, function() {
