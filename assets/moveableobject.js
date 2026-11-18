@@ -28,6 +28,10 @@ class BaseObject {
 	//called by children
 	//to take account of loaded changes
 	UpdateAfterLoad() {}
+
+	//called by main
+	//when spacebar is hit
+	SpaceBar() {}
 }
 
 
@@ -47,7 +51,6 @@ class BaseObject {
 class MoveableObject extends BaseObject {
 
 	constructor(bdrag = true, bscale = true, btext = false, bcolor = false, bfont = false, banimate = false, blink = false) {
-
 		super();
 
 		this.bdrag = bdrag;

@@ -99,6 +99,18 @@ document.addEventListener('keyup', function(event) {
 		case "t":
 			//AllObjects.push(new DiceLayer());
 			break;
+		//OBJECTS: space bar
+		case " ":
+			for ( let Obj of AllObjects ) {
+				Obj && Obj.SpaceBar();
+			}
+			for ( let Back of AllBackgrounds ) {
+				Back && Back.SpaceBar();
+			}
+			for ( let Eff of AllEffects ) {
+				Eff && Eff.SpaceBar();
+			}
+			break;
 		//SETTINGS: blur toggle
 		case "b":
 			ToggleBlur();

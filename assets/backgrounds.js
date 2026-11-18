@@ -2,13 +2,14 @@
 //a full-screen div
 //subclasses handle specific implementation of various features
 
-class BackgroundLayer {
+class BackgroundLayer extends BaseObject {
 
 	constructor(isanimating = false, hascanvas = false, hasui = false) {
+		super();
+
 		this.isanimating = isanimating;
 		this.hascanvas = hascanvas;
 		this.hasui = hasui;
-		this.self = this;
 		this.index = AllBackgrounds.length;
 		this.uititle = "";
 
