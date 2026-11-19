@@ -99,6 +99,19 @@ document.addEventListener('keyup', function(event) {
 		case "t":
 			//AllObjects.push(new DiceLayer());
 			break;
+		//OBJECTS: space bar
+			//TODO: only spacebar current page things?
+		case " ":
+			for ( let Obj of AllObjects ) {
+				Obj && Obj.SpaceBar();
+			}
+			for ( let Back of AllBackgrounds ) {
+				Back && Back.SpaceBar();
+			}
+			for ( let Eff of AllEffects ) {
+				Eff && Eff.SpaceBar();
+			}
+			break;
 		//SETTINGS: blur toggle
 		case "b":
 			ToggleBlur();
@@ -171,8 +184,8 @@ $("body").mousemove(function(e) {
 	mloc.y = e.pageY;
 });
 
-//if the document is clicked somewhere, close all context menus
 $(document).bind("mousedown", function(e) {
+	//if the document is clicked somewhere, close all context menus
 	//if the clicked element is not the menu
 	if ( !$(e.target).parents(".context").length > 0 ) {
 		// Hide it
@@ -192,7 +205,19 @@ window.onload = function() {
 	/Mobi|Android/i.test(navigator.userAgent) && alert("WARNING: Quick Display is not intended for mobile devices.");
 }
 
-
+//send click to all elements
+//TODO: only send to objects on current page
+clickdiv.addEventListener('click', function(event) {
+	for ( let Obj of AllObjects ) {
+		Obj && Obj.BackClick();
+	}
+	for ( let Back of AllBackgrounds ) {
+		Back && Back.BackClick();
+	}
+	for ( let Eff of AllEffects ) {
+		Eff && Eff.BackClick();
+	}
+});
 
 
 

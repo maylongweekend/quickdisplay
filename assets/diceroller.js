@@ -6,7 +6,7 @@ class DiceRollerObj extends UIObj {
 	constructor() {
 		super("Dice roller");
 
-		this.dicestart = "1d6 + 1d20";
+		this.dicestart = "2d6 + 1d20";
 
 		this.scale = 11;//bigger is smaller, default 8
 
@@ -15,32 +15,80 @@ class DiceRollerObj extends UIObj {
 		this.container.style.zIndex = 6;
 		this.dice = new DICE.dice_box(this.container);
 		this.dice.owner = this.self;
-		this.dice.setDice(this.dicestart);
+		this.dice.setDice("2d6");
 
 		//UI
 		this.rollbutton = this.AddElement("button", undefined, "click");
 		this.rollbutton.innerHTML = `<span class="material-symbols-outlined ui-span">shuffle</span>`;
 		this.rollbutton.classList.add("margin-10");
+
+		this.AddElement("br");
+
 		this.dicebutton = this.AddElement("button", undefined, "click");
 		this.dicebutton.innerHTML = `<span class="material-symbols-outlined ui-span">dashboard_customize</span>`;
 		this.dicebutton.classList.add("margin-10");
+		this.cbut = this.AddElement("button");
+		this.cbut.innerHTML = `<span class="material-symbols-outlined ui-span">colors</span>`;
+		this.cbut.classList.add("margin-10");
+
+		let bgc = window.getComputedStyle(document.body).getPropertyValue('--ui-bg');
+		let bdc = window.getComputedStyle(document.body).getPropertyValue('--ui-border-c');
+		this.picker = new JSColor(this.cbut, {
+			mode: 'HSV',
+			alphaChannel: false,
+			previewElement: this.cbut,
+			preset:'large',
+			backgroundColor: bgc,
+			borderColor: bdc,
+			borderRadius: 5,
+			padding: 15
+		});
+		jscolor.install();
+		this.picker.randomize(70, 95, 80, 100);
+		this.picker.owner = this.self;
+		this.picker.option('onChange', function() {
+			this.owner.PickerInput(this);
+		});
+		this.color = this.picker.toHEXString();
+
+		this.dice.start_throw();
+		this.RollFresh();
+	}
+
+	PickerInput(picker) {
+		this.SetColor(this.picker.toHEXString());
+		this.RollFresh();
 	}
 
 	//receives the message that a new die has been created
 	NewDice(dice) {}
 
 	handleEvent(e) {
-		if ( e.target == this.rollbutton ) {
-			this.dice.start_throw();
+		log("click " + e.target )
+		if ( e.target == this.rollbutton || e.target == this.container ) {
+			this.RollNow();
 		}
 		else if ( e.target == this.dicebutton ) {
-			let s = prompt(`Enter dice in the format [Number][Type] + [Number][Type]`, this.dicestart);
+			let s = prompt(`Enter dice in this format:\n[amount][d#] + [amount][d#]\nEg: 3d6 + 1d12 + 2d20\n\nAllowed dice: d4, d6, d8, d10, d12, d20, d100`, this.dicestart);
+			if ( !s ) {
+				return;
+			}
 			while ( s.includes(" ") ) {
 				s = s.replace(" ", "");
 			}
 			this.dicestart = s;
 			this.dice.setDice(this.dicestart);
+			this.RollFresh();
 		}
+	}
+
+	RollNow() {
+		this.dice.push_dice();
+	}
+
+	RollFresh() {
+		this.dice.change_dice_color(this.color, this.picker.isLight());
+		this.dice.start_throw();
 	}
 
 	//dice can move pages
@@ -54,6 +102,14 @@ class DiceRollerObj extends UIObj {
 			'transition': "left 0.5s",
 		});
 		UIObj.prototype.HandleMove.call(this, w);
+	}
+
+	SpaceBar() {
+		this.RollNow();
+	}
+
+	BackClick() {
+		this.RollNow();
 	}
 
 	resetTransition() {

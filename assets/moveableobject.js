@@ -28,6 +28,18 @@ class BaseObject {
 	//called by children
 	//to take account of loaded changes
 	UpdateAfterLoad() {}
+
+	//called by main
+	//when spacebar is hit
+	SpaceBar() {}
+
+	//called by main
+	//when the backdrop is singleclicked
+	BackClick() {}
+
+	//called by main
+	//when page changed
+	HandleMove(w) {}
 }
 
 
@@ -47,7 +59,6 @@ class BaseObject {
 class MoveableObject extends BaseObject {
 
 	constructor(bdrag = true, bscale = true, btext = false, bcolor = false, bfont = false, banimate = false, blink = false) {
-
 		super();
 
 		this.bdrag = bdrag;
@@ -234,6 +245,7 @@ class MoveableObject extends BaseObject {
 	HandleInitialColor() {}
 
 	HandleMove(w) {
+		BaseObject.prototype.HandleMove.call(this, w);
 		let x = this.outerdiv.getBoundingClientRect().left;
 		//set new location
 		x -= w;
