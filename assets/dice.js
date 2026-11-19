@@ -322,6 +322,7 @@ const DICE = (function() {
         }
         threeD_dice.dice_material = undefined;
         threeD_dice.d4_material = undefined;
+        threeD_dice.d100_material = undefined;
     }
 
 

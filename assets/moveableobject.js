@@ -32,6 +32,14 @@ class BaseObject {
 	//called by main
 	//when spacebar is hit
 	SpaceBar() {}
+
+	//called by main
+	//when the backdrop is singleclicked
+	BackClick() {}
+
+	//called by main
+	//when page changed
+	HandleMove(w) {}
 }
 
 
@@ -237,6 +245,7 @@ class MoveableObject extends BaseObject {
 	HandleInitialColor() {}
 
 	HandleMove(w) {
+		BaseObject.prototype.HandleMove.call(this, w);
 		let x = this.outerdiv.getBoundingClientRect().left;
 		//set new location
 		x -= w;

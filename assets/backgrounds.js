@@ -58,9 +58,6 @@ class BackgroundLayer extends BaseObject {
 		}
 	}
 
-	//most backgrounds don't move when the page is changed
-	HandleMove(w) {}
-
 	resetTransition() {}
 
 	//call on a child to handle animation

@@ -15,7 +15,7 @@ class DiceRollerObj extends UIObj {
 		this.container.style.zIndex = 6;
 		this.dice = new DICE.dice_box(this.container);
 		this.dice.owner = this.self;
-		this.dice.setDice(this.dicestart);
+		this.dice.setDice("2d6");
 
 		//UI
 		this.rollbutton = this.AddElement("button", undefined, "click");
@@ -44,7 +44,7 @@ class DiceRollerObj extends UIObj {
 			padding: 15
 		});
 		jscolor.install();
-		this.picker.randomize(65, 85, 80, 100);
+		this.picker.randomize(70, 95, 80, 100);
 		this.picker.owner = this.self;
 		this.picker.option('onChange', function() {
 			this.owner.PickerInput(this);
@@ -52,13 +52,11 @@ class DiceRollerObj extends UIObj {
 		this.color = this.picker.toHEXString();
 
 		this.dice.start_throw();
-		this.dice.change_dice_color(this.color, this.picker.isLight());
-		this.dice.start_throw();
+		this.RollFresh();
 	}
 
 	PickerInput(picker) {
 		this.SetColor(this.picker.toHEXString());
-		this.dice.change_dice_color(this.color, this.picker.isLight());
 		this.RollFresh();
 	}
 
@@ -66,11 +64,12 @@ class DiceRollerObj extends UIObj {
 	NewDice(dice) {}
 
 	handleEvent(e) {
-		if ( e.target == this.rollbutton ) {
+		log("click " + e.target )
+		if ( e.target == this.rollbutton || e.target == this.container ) {
 			this.RollNow();
 		}
 		else if ( e.target == this.dicebutton ) {
-			let s = prompt(`Enter dice in the format [Number][Type] + [Number][Type]`, this.dicestart);
+			let s = prompt(`Enter dice in this format:\n[amount][d#] + [amount][d#]\nEg: 3d6 + 1d12 + 2d20\n\nAllowed dice: d4, d6, d8, d10, d12, d20, d100`, this.dicestart);
 			if ( !s ) {
 				return;
 			}
@@ -88,6 +87,7 @@ class DiceRollerObj extends UIObj {
 	}
 
 	RollFresh() {
+		this.dice.change_dice_color(this.color, this.picker.isLight());
 		this.dice.start_throw();
 	}
 
@@ -105,6 +105,10 @@ class DiceRollerObj extends UIObj {
 	}
 
 	SpaceBar() {
+		this.RollNow();
+	}
+
+	BackClick() {
 		this.RollNow();
 	}
 
