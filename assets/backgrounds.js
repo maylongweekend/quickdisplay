@@ -42,11 +42,6 @@ class BackgroundLayer extends BaseObject {
 		AllObjects.push(this.ui);
 	}
 
-	//handles passing event listeners to child classes
-	//use switch ( e.type ) to detect eg "click" and call function on this
-	//you can pass the background to the ui to make ui clicks come back here
-	handleEvent(e) {}
-
 	ToggleAnimate() {
 		this.isanimating = !this.isanimating;
 	}
@@ -57,8 +52,6 @@ class BackgroundLayer extends BaseObject {
 			this.Frame(delta);
 		}
 	}
-
-	resetTransition() {}
 
 	//call on a child to handle animation
 	Frame(delta) {}

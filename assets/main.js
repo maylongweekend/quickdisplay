@@ -41,7 +41,6 @@ THE TODO LIST
 	- right click paste > menu item appears if clipboard has item, fix firefox issues
 	- shadow on analog clock
 	- elements with background shadows extend too wide? - firefox only, not on text
-	- changing resolutions after adding things can be buggy
 
  */
 
@@ -102,14 +101,8 @@ document.addEventListener('keyup', function(event) {
 		//OBJECTS: space bar
 			//TODO: only spacebar current page things?
 		case " ":
-			for ( let Obj of AllObjects ) {
+			for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
 				Obj && Obj.SpaceBar();
-			}
-			for ( let Back of AllBackgrounds ) {
-				Back && Back.SpaceBar();
-			}
-			for ( let Eff of AllEffects ) {
-				Eff && Eff.SpaceBar();
 			}
 			break;
 		//SETTINGS: blur toggle
@@ -159,20 +152,20 @@ document.addEventListener('keyup', function(event) {
 const rcloc = {
 	x: "0px",
 	y: "0px"
-}
+};
 
 //current mouse location at all times
 const mloc = {
 	x: "0px",
 	y: "0px"
-}
+};
 
 //for grabbing video input streams
 const vidconstraints = {
 	video: true
 };
 
-//update this list if you add/remove pokemon from assets/poke_gifs director
+//update this list if you add/remove pokemon from assets/poke_gifs directory
 const PokeList = `abra.gif,aerodactyl.gif,alakazam.gif,articuno.gif,beautifly.gif,beedrill.gif,bellossom.gif,bellsprout.gif,blastoise.gif,bulbasaur.gif,butterfree.gif,caterpie.gif,celebi.gif,chansey.gif,charizard.gif,charmander.gif,charmeleon.gif,chespin.gif,chikorita.gif,clefable.gif,clefairy.gif,cleffa.gif,cloyster.gif,corsola.gif,cubone.gif,cyndaquil.gif,dedenne.gif,dewgong.gif,diglett.gif,ditto.gif,dragonite.gif,dratini.gif,dugtrio.gif,eevee1.gif,eevee2-starter.gif,electabuzz.gif,espeon.gif,farfetchd.gif,fennekin.gif,flareon.gif,flygon.gif,froakie.gif,furret.gif,gastly.gif,gengar.gif,girafarig.gif,glaceon.gif,groudon.gif,growlithe.gif,gyarados.gif,heracross.gif,hooh.gif,horsea.gif,houndoom.gif,igglybuff.gif,jigglypuff.gif,jolteon.gif,kyogre.gif,lapras.gif,latias.gif,latios.gif,leafeon.gif,litten.gif,lugia.gif,marill.gif,meowth.gif,mew.gif,mewtwo.gif,milotic.gif,mimikyu.gif,minun.gif,moltres.gif,mudkip.gif,ninetales.gif,onix.gif,pachirisu.gif,pichu.gif,pidgeot.gif,pidgey.gif,pikachu1.gif,pikachu2-f.gif,pikachu3-starter.gif,piplup.gif,plusle.gif,ponyta.gif,psyduck.gif,raichu.gif,raikou.gif,rattata.gif,rayquaza.gif,scorbunny.gif,scyther.gif,skitty.gif,slowpoke.gif,snorlax.gif,squirtle.gif,starmie.gif,sylveon.gif,teddiursa.gif,tepig.gif,togepi.gif,torchic.gif,torterra.gif,totodile.gif,turtwig.gif,typhlosion.gif,tyranitar.gif,umbreon.gif,vaporeon.gif,venomoth.gif,venonat.gif,venusaur.gif,vulpix.gif,weedle.gif,wigglytuff.gif,wobbuffet.gif,yamper.gif,zapdos.gif`;
 
 //catch right clicks on the background
@@ -205,19 +198,19 @@ window.onload = function() {
 	/Mobi|Android/i.test(navigator.userAgent) && alert("WARNING: Quick Display is not intended for mobile devices.");
 }
 
-//send click to all elements
-//TODO: only send to objects on current page
-clickdiv.addEventListener('click', function(event) {
-	for ( let Obj of AllObjects ) {
-		Obj && Obj.BackClick();
+//keep track of old window reset
+const oldres = {
+	w: window.innerWidth,
+	h: window.innerHeight
+};
+
+window.onresize = function() {
+	for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
+		Obj && Obj.resizeWindow(oldres.w, oldres.h);
 	}
-	for ( let Back of AllBackgrounds ) {
-		Back && Back.BackClick();
-	}
-	for ( let Eff of AllEffects ) {
-		Eff && Eff.BackClick();
-	}
-});
+	oldres.w = window.innerWidth;
+	oldres.h = window.innerHeight;
+};
 
 
 
@@ -260,15 +253,20 @@ function AnimationStep(timestamp) {
 	let delta = Math.floor(timestamp - lastdelta);
 	if ( delta > 0 ) {
 		lastdelta = timestamp;
-		for ( let Obj of AllObjects ) {
-			Obj.AnimateFrame(delta);
-		}
-		for ( let Backg of AllBackgrounds ) {
-			Backg.AnimateFrame(delta);
+		for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
+			Obj && Obj.AnimateFrame(delta);
 		}
 	}
 	requestAnimationFrame(AnimationStep);
 }
+
+//send click to all elements
+//TODO: only send to objects on current page
+clickdiv.addEventListener('click', function(event) {
+	for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
+		Obj && Obj.BackClick();
+	}
+});
 
 
 
@@ -795,27 +793,21 @@ $("#page-context").on("click", "li", function() {
 
 //handles moving elements according to pagination
 function MovePage(dir) {
-	let w = window.innerWidth * dir;
 	if ( !pageIsChanging ) {
 		pageIsChanging = true;
-		for ( let Obj of AllObjects ) {
-			Obj.HandleMove(w);
-		}
-		for ( let Back of AllBackgrounds ) {
-			Back.HandleMove(w);//most backgrounds have a blank function here
+		for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
+			Obj && Obj.HandleMove(dir);
 		}
 		setTimeout(resetTransition, 510);
 	}
 }
 
 //reset the transition for setting left
+//and reset page changing flag
 function resetTransition() {
 	pageIsChanging = false;
-	for ( let Obj of AllObjects ) {
-		Obj.resetTransition();
-	}
-	for ( let Back of AllBackgrounds ) {
-		Back.resetTransition();
+	for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
+		Obj && Obj.resetTransition();
 	}
 }
 
@@ -931,6 +923,7 @@ function HandlePaste(blob) {
 
 //handles text extracted from a copy/paste operation
 function HandleTextPaste(string) {
+	//check for line breaks
 	if ( /\r?\n/g.test(string) ) {
 		AllObjects.push(new NoteObj("Note", string));
 	} else {

@@ -29,6 +29,11 @@ class BaseObject {
 	//to take account of loaded changes
 	UpdateAfterLoad() {}
 
+	//handles passing event listeners to child classes
+	//use switch ( e.type ) to detect eg "click" and call function on this
+	//you can pass the background to the ui to make ui clicks come back here
+	handleEvent(e) {}
+
 	//called by main
 	//when spacebar is hit
 	SpaceBar() {}
@@ -39,7 +44,21 @@ class BaseObject {
 
 	//called by main
 	//when page changed
-	HandleMove(w) {}
+	HandleMove(dir) {}
+
+	//called by main
+	//after animating page move is done
+	resetTransition() {}
+
+	//called by main animation loop every frame
+	//delta is ms since last frame
+	AnimateFrame(delta) {}
+
+	//called by main on window resize
+	//receives the old width and height data
+	resizeWindow(ow, oh) {}
+
+	remove() {}
 }
 
 
@@ -76,6 +95,11 @@ class MoveableObject extends BaseObject {
 		this.isflipped = false;
 		this.colors = [];
 		this.pickers = [];
+		this.page = 0;
+		this.pageloc = {
+			x: rcloc.x,
+			y: rcloc.y
+		};
 
 		//create the div and handle basic drag/scale settings
 		this.outerdiv = document.createElement("div");
@@ -244,20 +268,91 @@ class MoveableObject extends BaseObject {
 	 //children can this to set the default color for picker
 	HandleInitialColor() {}
 
-	HandleMove(w) {
-		BaseObject.prototype.HandleMove.call(this, w);
-		let x = this.outerdiv.getBoundingClientRect().left;
-		//set new location
-		x -= w;
-		//transition for smooth page move
-		$(this.outerdiv).css({
-			'left': x,
-			'transition': "left 0.5s",
-		});
+	//objects keep track of their own pages
+	//they are only actually moved if the window would see the movement
+	//ie on current page or new page
+	HandleMove(dir) {
+		let x;
+		BaseObject.prototype.HandleMove.call(this, dir);
+		let box = this.div.getBoundingClientRect();
+		//if item is on current page, move it off
+		//if item is on new page, move it on
+		//other items stay where they are
+		if ( this.page == 0 ) {
+			//save the location for bringing it back
+			this.pageloc.x = box.x;
+			this.pageloc.y = box.y;
+			//if offscreen either way, move it on
+			if ( box.x >= window.innerWidth ) {
+				this.pageloc.x = window.innerWidth - Math.floor(box.width / 8);
+				$(this.outerdiv).css({'left': this.pageloc.x});
+			} else if ( box.x + box.width <= 0 ) {
+				this.pageloc.x = Math.floor(box.width / 8) - box.width;
+				$(this.outerdiv).css({'left': this.pageloc.x});
+			}
+			//set new location
+			//IMPORTANT: double distance away
+			//this helps prevent things overlapping the edge from showing up on the next page
+			x = box.x - ( dir * window.innerWidth * 2 );
+			//transition for smooth page move
+			$(this.outerdiv).css({
+				'left': x,
+				'transition': "left 0.5s",
+			});
+		} else if ( this.page == dir ) {
+			$(this.outerdiv).css({
+				'left': this.pageloc.x,
+				'transition': "left 0.5s",
+			});
+		}
+		this.page -= dir;
 	}
 
 	resetTransition() {
 		$(this.outerdiv).css('transition', 'left 0s');
+	}
+
+	//on each resize, check if we are off screen
+	//if so, adjust to the new screen size
+	//and take into account if we were over the edge
+	//attempt to stay over the edge on new resolution
+	resizeWindow(ow, oh) {
+		let box = this.div.getBoundingClientRect();
+		let x;
+		let y;
+		let i;
+		let d;
+		//check if any element goes off the page, and adjust if needed
+		//first check left-right
+		if ( this.page == 0 ) {
+			//if on main page, test current coords
+			if ( box.right > window.innerWidth ) {
+				i = box.right > ow ? box.right - ow : 0;
+				x = window.innerWidth - box.width + i;
+				$(this.outerdiv).css({'left': x});
+			}
+		} else {
+			//if not on main page, test saved coords
+			//if the saved coords are on the edge, adjust them
+			if ( box.width + this.pageloc.x > window.innerWidth ) {
+				//if we're on the edge, slide pageloc over
+				i = box.width + this.pageloc.x > ow ? box.width + this.pageloc.x - ow : 0;
+				//set the new x position to be saved
+				this.pageloc.x = window.innerWidth - box.width + i;
+			}
+			//always adjust off-screen positions so they don't come into view by accident
+			//figure out if we're left or right of the main page
+			d = box.x > this.pageloc.x ? 1 : -1;
+			//set new location and offset by page width * direction
+			$(this.outerdiv).css({'left': this.pageloc.x + ( d * window.innerWidth )});
+		}
+		//repeat the process but for height resize
+		//pages makes no difference on this one
+		if ( box.bottom > window.innerHeight ) {
+			i = box.bottom > oh ? box.bottom - oh : 0;
+			y = window.innerHeight - box.height + i;
+			$(this.outerdiv).css({'top': y});
+		}
 	}
 
 	AddColorPicker(elem, preview = '', defaultcolor = '', mode = 'HSV', alpha = true) {
@@ -363,10 +458,6 @@ class MoveableObject extends BaseObject {
 		}
 		return newelem;
 	}
-
-	//handles passing event listeners to child classes
-	//use switch ( e.type ) to detect eg "click" and call function on this
-	handleEvent(e) {}
 
 	//moveable objects need to be able to load extra keys
 	//xy location, scale
