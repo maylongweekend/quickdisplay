@@ -59,12 +59,9 @@ QD supports quickly searching some popular sites directly from the right-click m
 
 ### Page controls
 
-QD supports arranging objects into basic pages.  Use the keyboard arrow keys, or choose `Toggle page controls` in the Settings menu to show the page control buttons.  Switching pages will slide all objects according to their placement in the page order.  The background of QD will remain unchanged.
+QD supports arranging objects into basic pages.  Use the keyboard arrow keys to move pages, or choose `Toggle page controls` in the Settings menu to show the page control buttons.  Switching pages will slide all objects according to their placement in the page order.  The background of QD will remain unchanged.
 
 ![Pages in action](readme_img/qd_pages.webp)
-
-> [!NOTE]
-> "Pages" work in QD by sliding all objects left or right by the width of your window.  You may experience bugs if you change resolutions.
 
 
 ### Hidden objects
