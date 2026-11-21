@@ -93,15 +93,18 @@ class DiceRollerObj extends UIObj {
 
 	//dice can move pages
 	HandleMove(w) {
-		let x = this.container.getBoundingClientRect().left;
+		let oldx = this.div.getBoundingClientRect().x;
+		UIObj.prototype.HandleMove.call(this, w);
+		let x = this.container.getBoundingClientRect().x;
 		//set new location
-		x -= w;
+		//use the difference calculation for the ui div
+		let diff = this.goingtox - oldx;
+		x += diff;
 		//transition for smooth page move
 		$(this.container).css({
 			'left': x,
 			'transition': "left 0.5s",
 		});
-		UIObj.prototype.HandleMove.call(this, w);
 	}
 
 	SpaceBar() {

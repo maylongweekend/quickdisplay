@@ -96,10 +96,7 @@ class MoveableObject extends BaseObject {
 		this.colors = [];
 		this.pickers = [];
 		this.page = 0;
-		this.pageloc = {
-			x: rcloc.x,
-			y: rcloc.y
-		};
+		this.goingtox = 0;//so child classes can know final page location before animation is done
 
 		//create the div and handle basic drag/scale settings
 		this.outerdiv = document.createElement("div");
@@ -117,6 +114,11 @@ class MoveableObject extends BaseObject {
 		});
 		this.div.owner = this.self;
 		this.outerdiv.owner = this.self;
+
+		this.pageloc = {
+			x: this.div.getBoundingClientRect().x,
+			y: this.div.getBoundingClientRect().y
+		};
 
 		//set up the context menu
 		this.menu = document.getElementById("default-context").cloneNode(true);
@@ -294,12 +296,14 @@ class MoveableObject extends BaseObject {
 			//IMPORTANT: double distance away
 			//this helps prevent things overlapping the edge from showing up on the next page
 			x = box.x - ( dir * window.innerWidth * 2 );
+			this.goingtox = x;
 			//transition for smooth page move
 			$(this.outerdiv).css({
 				'left': x,
 				'transition': "left 0.5s",
 			});
 		} else if ( this.page == dir ) {
+			this.goingtox = this.pageloc.x;
 			$(this.outerdiv).css({
 				'left': this.pageloc.x,
 				'transition': "left 0.5s",
