@@ -112,11 +112,14 @@ class GraphPaperObj extends UIObj {
 		$(this.grid).css('background-image', p);
 	}
 
-	HandleMove(w) {
-		MoveableObject.prototype.HandleMove.call(this, w);
-		let x = this.grid.getBoundingClientRect().left;
+	HandleMove(dir) {
+		let oldx = this.div.getBoundingClientRect().x;
+		MoveableObject.prototype.HandleMove.call(this, dir);
+		let x = this.grid.getBoundingClientRect().x;
 		//set new location
-		x -= w;
+		//use the difference calculation for the ui div
+		let diff = this.goingtox - oldx;
+		x += diff;
 		//transition for smooth page move
 		$(this.grid).css({
 			'left': x,

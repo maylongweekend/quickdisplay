@@ -12,7 +12,7 @@ class DiceRollerObj extends UIObj {
 
 		this.container = this.AddElement("div", document.body);
 		this.container.classList.add("background-overlay");
-		this.container.style.zIndex = 6;
+		this.container.style.zIndex = 21;//not sure where to put this? - on top of all but able to be easily under?
 		this.dice = new DICE.dice_box(this.container);
 		this.dice.owner = this.self;
 		this.dice.setDice("2d6");
@@ -93,15 +93,18 @@ class DiceRollerObj extends UIObj {
 
 	//dice can move pages
 	HandleMove(w) {
-		let x = this.container.getBoundingClientRect().left;
+		let oldx = this.div.getBoundingClientRect().x;
+		UIObj.prototype.HandleMove.call(this, w);
+		let x = this.container.getBoundingClientRect().x;
 		//set new location
-		x -= w;
+		//use the difference calculation for the ui div
+		let diff = this.goingtox - oldx;
+		x += diff;
 		//transition for smooth page move
 		$(this.container).css({
 			'left': x,
 			'transition': "left 0.5s",
 		});
-		UIObj.prototype.HandleMove.call(this, w);
 	}
 
 	SpaceBar() {
