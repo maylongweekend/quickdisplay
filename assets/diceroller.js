@@ -12,7 +12,7 @@ class DiceRollerObj extends UIObj {
 
 		this.container = this.AddElement("div", document.body);
 		this.container.classList.add("background-overlay");
-		this.container.style.zIndex = 6;
+		this.container.style.zIndex = 21;//not sure where to put this? - on top of all but able to be easily under?
 		this.dice = new DICE.dice_box(this.container);
 		this.dice.owner = this.self;
 		this.dice.setDice("2d6");
