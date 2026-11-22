@@ -55,6 +55,8 @@ THE TODO LIST
 //moveableobject.js
 //objects.js
 //backgrounds.js
+//diceroller.js
+//drawing.js
 
 
 
@@ -96,7 +98,7 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-			//AllObjects.push(new DiceLayer());
+			AllObjects.push(new DrawingObj());
 			break;
 		//OBJECTS: space bar
 			//TODO: only spacebar current page things?
