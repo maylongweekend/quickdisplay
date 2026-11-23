@@ -26,7 +26,7 @@ Right-click on a blank area of the background to add something.  You can load an
 
 ### Drawing
 
-[QD uses Atrament by jakubfiala](https://github.com/jakubfiala/atrament) to handle drawing.  You can choose "Drawing" from the menu or press the `p` button on the keyboard.  Switch back to your mouse with the mouse button or the `m` key on the keyboard.
+[QD uses Atrament by jakubfiala](https://github.com/jakubfiala/atrament) to handle drawing.  You can choose "Drawing" from the menu or press the `p` button on the keyboard.  Switch back to your mouse with the mouse button or the `m` key on the keyboard.  You can erase with the `Clear` button or with the eraser button; you can also choose the eraser with the `e` key if on a page with a current drawing.
 
 ![Drawing screenshot](readme_img/qd_draw.png)
 
