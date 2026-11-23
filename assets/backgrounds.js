@@ -91,7 +91,7 @@ class ParticlesLayer extends BackgroundLayer {
 
 		//set the defaults here before initializing controls
 		this.options = {};
-		this.count = 350;
+		this.count = 100;
 		this.blur = 10;
 
 		this.posselect = this.ui.AddElement("select", undefined, "change", this.self);
@@ -205,7 +205,7 @@ class ShapesLayer extends ParticlesLayer {
 
 	initUI() {
 		//set variables before super
-		this.count = 480;
+		this.count = 180;
 		this.uititle = "Flying Shapes";
 		this.speed = 195;
 		this.size = 40;
@@ -387,7 +387,7 @@ class SnowLayer extends ParticlesLayer {
 	initUI() {
 		//set variables before super
 		this.size = 35;
-		this.count = 350;
+		this.count = 150;
 		this.speed = 200;
 		this.uititle = "Snowflakes";
 
@@ -438,7 +438,7 @@ class HeartsLayer extends SnowLayer {
 		this.slidsize.min = "30";
 		this.slidsize.max = "500";
 		this.slidsize.value = this.size;
-		this.count = 100;
+		this.count = 80;
 		this.slidcount.value = this.count;
 		this.options = {
 			"count": this.count,

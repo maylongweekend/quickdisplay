@@ -64,7 +64,6 @@ class DiceRollerObj extends UIObj {
 	NewDice(dice) {}
 
 	handleEvent(e) {
-		log("click " + e.target )
 		if ( e.target == this.rollbutton || e.target == this.container ) {
 			this.RollNow();
 		}
