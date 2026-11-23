@@ -7,6 +7,9 @@ class DrawingObj extends UIObj {
 
 		this.colors = ["#000000", "#ffffff"];
 
+		this.isanimating = true;
+		this.israinbow = false;
+
 		this.canvas = this.AddElement("canvas", document.body);
 		this.canvas.classList.add("background-overlay");
 		this.canvas.owner = this.self;
@@ -31,7 +34,7 @@ class DrawingObj extends UIObj {
 		this.slidsize.type = "range";
 		this.slidsize.value = 3;
 		this.slidsize.min = 1;
-		this.slidsize.max = 50;
+		this.slidsize.max = 150;
 		let p = this.AddElement("label");
 		p.textContent = "Size";
 
@@ -132,13 +135,13 @@ class DrawingObj extends UIObj {
 		} else if ( e.target == this.button0brush ) {
 			this.picker.fromString(this.colors[0]);
 			this.SetColor(this.picker.toHEXString());
-			this.isanimating = false;
+			this.israinbow = false;
 			this.buttonrbow.innerHTML = `<span class="material-symbols-outlined ui-span">check_box_outline_blank</span><span class="material-symbols-outlined ui-span">looks</span>`;
 			this.Paint();
 		} else if ( e.target == this.button1brush ) {
 			this.picker.fromString(this.colors[1]);
 			this.SetColor(this.picker.toHEXString());
-			this.isanimating = false;
+			this.israinbow = false;
 			this.buttonrbow.innerHTML = `<span class="material-symbols-outlined ui-span">check_box_outline_blank</span><span class="material-symbols-outlined ui-span">looks</span>`;
 			this.Paint();
 		} else if ( e.target == this.slidsize ) {
@@ -146,8 +149,8 @@ class DrawingObj extends UIObj {
 		} else if ( e.target == this.slidsmooth ) {
 			this.drawing.smoothing = Number(e.target.value) / 10 - 0.1;
 		} else if ( e.target == this.buttonrbow ) {
-			this.ToggleAnimate();
-			if ( this.isanimating ) {
+			this.israinbow = !this.israinbow;
+			if ( this.israinbow ) {
 				this.buttonrbow.innerHTML = `<span class="material-symbols-outlined ui-span">check_box</span><span class="material-symbols-outlined ui-span">looks</span>`;
 			} else {
 				this.buttonrbow.innerHTML = `<span class="material-symbols-outlined ui-span">check_box_outline_blank</span><span class="material-symbols-outlined ui-span">looks</span>`;
@@ -158,11 +161,13 @@ class DrawingObj extends UIObj {
 	}
 
 	Frame(delta) {
-		let h = this.picker.channel("H");
-		h = ( h + 0.4 )  % 360;
-		this.picker.fromHSVA(h, null, null, null);
-		this.SetColor(this.picker.toHEXString());
-		this.drawing.color = this.color;
+		if ( this.israinbow ) {
+			let h = this.picker.channel("H");
+			h = ( h + 0.4 )  % 360;
+			this.picker.fromHSVA(h, null, null, null);
+			this.SetColor(this.picker.toHEXString());
+			this.drawing.color = this.color;
+		}
 	}
 
 	Paint() {

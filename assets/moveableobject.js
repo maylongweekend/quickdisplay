@@ -58,6 +58,11 @@ class BaseObject {
 	//receives the old width and height data
 	resizeWindow(ow, oh) {}
 
+	//moveable objects will modify this
+	IsOnPage() {
+		return true;
+	}
+
 	remove() {}
 }
 
@@ -270,6 +275,10 @@ class MoveableObject extends BaseObject {
 	 //children can this to set the default color for picker
 	HandleInitialColor() {}
 
+	IsOnPage() {
+		return ( this.page == 0 );
+	}
+
 	//objects keep track of their own pages
 	//they are only actually moved if the window would see the movement
 	//ie on current page or new page
@@ -280,7 +289,7 @@ class MoveableObject extends BaseObject {
 		//if item is on current page, move it off
 		//if item is on new page, move it on
 		//other items stay where they are
-		if ( this.page == 0 ) {
+		if ( this.IsOnPage() ) {
 			//save the location for bringing it back
 			this.pageloc.x = box.x;
 			this.pageloc.y = box.y;
