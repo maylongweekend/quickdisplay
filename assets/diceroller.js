@@ -107,6 +107,27 @@ class DiceRollerObj extends UIObj {
 		});
 	}
 
+	//TODO:
+	//resize messes up the dice area
+	resizeWindow(ow, oh) {
+		let i;
+		let x;
+		UIObj.prototype.resizeWindow.call(this, ow, oh);
+		if ( this.page == 0 ) {
+			x = 0;
+		} else {
+			i = this.div.getBoundingClientRect().x >= 0 ? 1 : -1;
+			x = i * window.innerWidth;
+		}
+		$(this.container).css({
+			'width': window.innerWidth,
+			'height': window.innerHeight,
+			'left': x
+		});
+		this.dice.setDice(this.dicestart);
+		this.RollFresh();
+	}
+
 	SpaceBar() {
 		this.RollNow();
 	}
@@ -117,6 +138,10 @@ class DiceRollerObj extends UIObj {
 
 	resetTransition() {
 		$(this.container).css('transition', 'left 0s');
+		//to fix bug with dice container resize
+		if ( this.container.getBoundingClientRect().x != 0 ) {
+			this.page == 0 && $(this.container).css('left', '0');
+		}
 		UIObj.prototype.resetTransition.call(this);
 	}
 

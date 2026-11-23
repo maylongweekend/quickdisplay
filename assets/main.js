@@ -55,6 +55,8 @@ THE TODO LIST
 //moveableobject.js
 //objects.js
 //backgrounds.js
+//diceroller.js
+//drawing.js
 
 
 
@@ -96,15 +98,25 @@ document.addEventListener('keyup', function(event) {
 		//TEST
 		//TODO: delete this
 		case "t":
-			//AllObjects.push(new DiceLayer());
+			//AllObjects.push(new DrawingObj());
 			break;
 		//OBJECTS: space bar
-			//TODO: only spacebar current page things?
 		case " ":
 			for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
-				Obj && Obj.SpaceBar();
+				Obj && Obj.IsOnPage() && Obj.SpaceBar();
 			}
 			break;
+		//OBJECTS: paint
+		case "p":
+			StartDrawing();
+			break;
+		//OBJECTS: paint go back to mouse control
+		case "m":
+			for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
+				if ( Obj && Obj instanceof DrawingObj ) {
+					Obj.buttonmouse.click();
+				}
+			}
 		//SETTINGS: blur toggle
 		case "b":
 			ToggleBlur();
@@ -261,10 +273,9 @@ function AnimationStep(timestamp) {
 }
 
 //send click to all elements
-//TODO: only send to objects on current page
 clickdiv.addEventListener('click', function(event) {
 	for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
-		Obj && Obj.BackClick();
+		Obj && Obj.IsOnPage() && Obj.BackClick();
 	}
 });
 
@@ -335,6 +346,10 @@ $("#background-context").on("click", "li", function() {
 			$(".context").hide(100);
 			AllObjects.push(new StickyNoteObj());
 			//CreateSticky(prompt("Enter your text", "Sticky note contents"));
+			break;
+		case "draw":
+			$(".context").hide(100);
+			StartDrawing();
 			break;
 		case "emoji":
 			$(".context").hide(100);
@@ -1034,13 +1049,8 @@ function ToggleBlur() {
 
 //show hidden objects on current page
 function ShowHidden() {
-	let divs = document.getElementsByClassName("object-div");
-	for ( let i = 0; i < divs.length; i++ ) {
-		//reveal hidden items only on current page
-		let l = divs[i].getBoundingClientRect().left;
-		if ( ( l >= 0 ) && ( l < window.innerWidth )) {
-			$(divs[i]).css('visibility', 'visible');
-		}
+	for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
+		Obj && Obj.IsOnPage() && Obj.div && $(Obj.div).css('visibility', 'visible');
 	}
 }
 
@@ -1119,7 +1129,17 @@ function CreateForegroundLayer () {
 	return div;
 }
 
-
+//looks for drawing on the current page and enables if found
+function StartDrawing() {
+	let found = false;
+	for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
+		if ( Obj && Obj instanceof DrawingObj && Obj.IsOnPage() ) {
+			found = true;
+			Obj.buttonbrush.click();
+		}
+	}
+	!found && AllObjects.push(new DrawingObj());
+}
 
 
 

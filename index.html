@@ -27,6 +27,7 @@
 	<script src="assets/cannon.min.js"></script>
 	<script src="assets/teal.js"></script>
 	<script src="assets/dice.js"></script>
+	<script src="assets/atrament.js"></script>
 </head>
 <body>
 
@@ -48,12 +49,12 @@
 
 		<!-- main menu -->
 		<div class='menu-main'>
-			<li data-action="add" name="add"><span class="material-symbols-outlined">desktop_landscape_add</span>Load file</li>
-			<li data-action="sticky" name="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
-			<li data-action="emoji" name="emoji" id="emoj-menu"><span class="material-symbols-outlined">add_reaction</span>Emoji</li>
-			<li data-action="title" name="title"><span class="material-symbols-outlined">new_label</span>Title text</li>
-			<li data-action="paste" name="paste" style="display: none;"><span class="material-symbols-outlined">content_paste_go</span>Paste clipboard</li>
-			<li data-action="more" name="more"><span class="material-symbols-outlined">list_alt_add</span>More items ...</li>
+			<li data-action="add""><span class="material-symbols-outlined">desktop_landscape_add</span>Load file</li>
+			<li data-action="sticky"><span class="material-symbols-outlined">sticker_add</span>Sticky note</li>
+			<li data-action="title"><span class="material-symbols-outlined">new_label</span>Title text</li>
+			<li data-action="draw"><span class="material-symbols-outlined">draw</span>Drawing</li>
+			<li data-action="paste" style="display: none;"><span class="material-symbols-outlined">content_paste_go</span>Paste clipboard</li>
+			<li data-action="more"><span class="material-symbols-outlined">list_alt_add</span>More items ...</li>
 			<hr />
 			<li data-action="backmenu" name="backmenu"><span class="material-symbols-outlined">wallpaper</span>Backgrounds ...</li>
 			<hr />
@@ -66,6 +67,7 @@
 		<div class="menu-more" style="display: none;">
 			<li data-action="back"><span class="material-symbols-outlined">undo</span>Go back</li>
 			<hr />
+			<li data-action="emoji" id="emoj-menu"><span class="material-symbols-outlined">add_reaction</span>Emoji</li>
 			<li data-action="clockd"><span class="material-symbols-outlined">123</span>Digital clock</li>
 			<li data-action="stopw"><span class="material-symbols-outlined">timer</span>Stopwatch</li>
 			<li data-action="timer"><span class="material-symbols-outlined">av_timer</span>Timer</li>
@@ -183,5 +185,6 @@
 <script src="assets/objects.js"></script>
 <script src="assets/clocks.js"></script>
 <script src="assets/diceroller.js"></script>
+<script src="assets/drawing.js"></script>
 <script src="assets/backgrounds.js"></script>
 <script src="assets/main.js"></script>

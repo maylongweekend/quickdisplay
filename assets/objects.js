@@ -90,8 +90,13 @@ class GraphPaperObj extends UIObj {
 	}
 
 	SetColor(s) {
-		MoveableObject.prototype.SetColor.call(this, s);
+		UIObj.prototype.SetColor.call(this, s);
 		this.SetBackground();
+	}
+
+	resizeWindow(ow, oh) {
+		UIObj.prototype.resizeWindow.call(this, ow, oh);
+		$(this.grid).css({'width': window.innerWidth, 'height': window.innerHeight});
 	}
 
 	SetBackground() {
@@ -113,18 +118,9 @@ class GraphPaperObj extends UIObj {
 	}
 
 	HandleMove(dir) {
-		let oldx = this.div.getBoundingClientRect().x;
 		MoveableObject.prototype.HandleMove.call(this, dir);
-		let x = this.grid.getBoundingClientRect().x;
-		//set new location
-		//use the difference calculation for the ui div
-		let diff = this.goingtox - oldx;
-		x += diff;
-		//transition for smooth page move
-		$(this.grid).css({
-			'left': x,
-			'transition': "left 0.5s",
-		});
+		let v = this.page == 0 ? 'visible' : 'hidden';
+		$(this.grid).css('visibility', v);
 	}
 
 	resetTransition() {
