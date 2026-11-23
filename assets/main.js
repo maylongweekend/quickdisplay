@@ -110,6 +110,14 @@ document.addEventListener('keyup', function(event) {
 		case "p":
 			StartDrawing();
 			break;
+		//OBJECTS: erase
+		case "e":
+			for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
+				if ( Obj && Obj.IsOnPage() && Obj instanceof DrawingObj ) {
+					Obj.buttonerase.click();
+				}
+			}
+			break;
 		//OBJECTS: paint go back to mouse control
 		case "m":
 			for ( let Obj of AllObjects.concat(AllBackgrounds).concat(AllEffects) ) {
