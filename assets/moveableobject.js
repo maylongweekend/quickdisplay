@@ -109,7 +109,18 @@ class MoveableObject extends BaseObject {
 		this.div = document.createElement("div");
 		this.div.classList.add("object-div");
 		this.outerdiv.appendChild(this.div);
-		$(this.outerdiv).draggable();
+		this.div.owner = this.self;
+		this.outerdiv.owner = this.self;
+		let tx = this.div.getBoundingClientRect().x;
+		let ty = this.div.getBoundingClientRect().y;
+		this.loc = {
+			x: tx,
+			y: ty
+		};
+		$(this.outerdiv).draggable({stop: function() {
+			this.owner.loc.x = this.owner.div.getBoundingClientRect().x;
+			this.owner.loc.y = this.owner.div.getBoundingClientRect().y;
+		}});
 		this.SetDraggable(bdrag);
 		$(this.div).css('transform', 'scale(1, 1)');//init the transform style for later scaling/flipping
 		this.SetScalable(bscale);
@@ -117,13 +128,6 @@ class MoveableObject extends BaseObject {
 			top: rcloc.y,
 			left: rcloc.x,
 		});
-		this.div.owner = this.self;
-		this.outerdiv.owner = this.self;
-
-		this.pageloc = {
-			x: this.div.getBoundingClientRect().x,
-			y: this.div.getBoundingClientRect().y
-		};
 
 		//set up the context menu
 		this.menu = document.getElementById("default-context").cloneNode(true);
@@ -279,6 +283,18 @@ class MoveableObject extends BaseObject {
 		return ( this.page == 0 );
 	}
 
+	CheckOnPageAndAdjust() {
+		let box = this.div.getBoundingClientRect();
+		//if we're offscreen right, adjust so visible again
+		if ( box.x >= window.innerWidth ) {
+				this.loc.x = window.innerWidth - Math.floor(box.width / 8);
+		}
+		//same offscreen left
+		if ( box.x + box.width <= 0 ) {
+				this.loc.x = Math.floor(box.width / 8) - box.width;
+		}
+	}
+
 	//objects keep track of their own pages
 	//they are only actually moved if the window would see the movement
 	//ie on current page or new page
@@ -291,15 +307,15 @@ class MoveableObject extends BaseObject {
 		//other items stay where they are
 		if ( this.IsOnPage() ) {
 			//save the location for bringing it back
-			this.pageloc.x = box.x;
-			this.pageloc.y = box.y;
+			this.loc.x = box.x;
+			this.loc.y = box.y;
 			//if offscreen either way, move it on
 			if ( box.x >= window.innerWidth ) {
-				this.pageloc.x = window.innerWidth - Math.floor(box.width / 8);
-				$(this.outerdiv).css({'left': this.pageloc.x});
+				this.loc.x = window.innerWidth - Math.floor(box.width / 8);
+				$(this.outerdiv).css({'left': this.loc.x});
 			} else if ( box.x + box.width <= 0 ) {
-				this.pageloc.x = Math.floor(box.width / 8) - box.width;
-				$(this.outerdiv).css({'left': this.pageloc.x});
+				this.loc.x = Math.floor(box.width / 8) - box.width;
+				$(this.outerdiv).css({'left': this.loc.x});
 			}
 			//set new location
 			//IMPORTANT: double distance away
@@ -312,9 +328,9 @@ class MoveableObject extends BaseObject {
 				'transition': "left 0.5s",
 			});
 		} else if ( this.page == dir ) {
-			this.goingtox = this.pageloc.x;
+			this.goingtox = this.loc.x;
 			$(this.outerdiv).css({
-				'left': this.pageloc.x,
+				'left': this.loc.x,
 				'transition': "left 0.5s",
 			});
 		}
@@ -347,17 +363,17 @@ class MoveableObject extends BaseObject {
 		} else {
 			//if not on main page, test saved coords
 			//if the saved coords are on the edge, adjust them
-			if ( box.width + this.pageloc.x > window.innerWidth ) {
-				//if we're on the edge, slide pageloc over
-				i = box.width + this.pageloc.x > ow ? box.width + this.pageloc.x - ow : 0;
+			if ( box.width + this.loc.x > window.innerWidth ) {
+				//if we're on the edge, slide loc over
+				i = box.width + this.loc.x > ow ? box.width + this.loc.x - ow : 0;
 				//set the new x position to be saved
-				this.pageloc.x = window.innerWidth - box.width + i;
+				this.loc.x = window.innerWidth - box.width + i;
 			}
 			//always adjust off-screen positions so they don't come into view by accident
 			//figure out if we're left or right of the main page
-			d = box.x > this.pageloc.x ? 1 : -1;
+			d = box.x > this.loc.x ? 1 : -1;
 			//set new location and offset by page width * direction
-			$(this.outerdiv).css({'left': this.pageloc.x + ( d * window.innerWidth )});
+			$(this.outerdiv).css({'left': this.loc.x + ( d * window.innerWidth )});
 		}
 		//repeat the process but for height resize
 		//pages makes no difference on this one
