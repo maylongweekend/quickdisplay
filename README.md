@@ -3,7 +3,7 @@
 
 A fast and simple display webapp intended for SMART boards and educational interactive whiteboards - created by Mr L.
 
-Meant for teachers wanting to display notes, gifs, videos, to-do lists, etc. Fast, minimal interface, **RUNS LOCAL-ONLY**, won't bother your school's IT, and guaranteed **COMPLETELY AI-FREE**.
+Meant for teachers wanting to display notes, gifs, videos, to-do lists, etc. Fast, minimal interface, runs locally only, won't bother your school's IT, and guaranteed **COMPLETELY AI-FREE**.
 
 
 ## Getting Quick Display on your SMART Board
@@ -26,20 +26,20 @@ Right-click on a blank area of the background to add something.  You can load an
 
 ### Drawing
 
-[QD uses Atrament by jakubfiala](https://github.com/jakubfiala/atrament) to handle drawing.  You can choose "Drawing" from the menu or press the `p` button on the keyboard.  Switch back to your mouse with the mouse button or the `m` key on the keyboard.  You can erase with the `Clear` button or with the eraser button; you can also choose the eraser with the `e` key if on a page with a current drawing.
+Choose "Drawing" from the menu or press the `p` button on the keyboard.  Switch back to your mouse with the mouse button or the `m` key on the keyboard.  You can erase with the `Clear` button or with the eraser button; you can also choose the eraser with the `e` key if on a page with a current drawing.
 
 ![Drawing screenshot](readme_img/qd_draw.png)
 
-Drawing supports changing colors including a rainbow color effect.  You can also turn your drawing into an interactable image object by choosing the `Drawing to object` option.
+Drawing supports changing colors including a rainbow color effect.  You can also turn your drawing into an interactable image object by choosing the `Drawing to object` option.  [QD makes use of "Atrament" by jakubfiala](https://github.com/jakubfiala/atrament) to handle drawing.
 
 
 ### Dice roller
 
-[QD uses 3D Dice Roller by Anton Natarov and sarahRosannaBusch](https://github.com/sarahRosannaBusch/dice) to handle physically-simulated dice.  You can choose what dice you want by clicking the button and entering dice in the format "<#>d<#>" eg `3d6` or `d20 + 3d8` etc.
+You can choose what dice you want by clicking the button and entering dice in the format "<#>d<#>" eg `3d6` or `d20 + 3d8` etc.
 
 ![Dice screenshot](readme_img/qd_dice.png)
 
-Be aware that the simulated dice can be intensive for weaker computers.
+[QD makes use of "3D Dice Roller" by Anton Natarov and sarahRosannaBusch](https://github.com/sarahRosannaBusch/dice) and the [three.js](https://threejs.org/) library to handle physically-simulated dice.  Be aware that the simulated dice can be intensive for weaker computers.
 
 
 ### Pokémon
@@ -51,15 +51,13 @@ You can quickly add some favorite Pokémon gifs using this option.  I've only in
 
 ### Effects
 
-[QD uses Sparticles by simeydotme](https://github.com/simeydotme/sparticles) to handle particle effects.  Be aware that particles may be intensive on weaker computers.
-
 ![Effect screenshot](readme_img/qd_effects.png)
 
 Hearts and snowflakes are built in, and other effects can be created with the `Flying shapes` option.
 
 ![Effect screenshot](readme_img/qd_stareffect.png)
 
-You can reset/delete all particle effects at once with the `Reset effects` button.
+You can reset/delete all particle effects at once with the `Reset effects` button.  [QD makes use of Sparticles by simeydotme](https://github.com/simeydotme/sparticles) to handle particle effects.  Be aware that particles may be intensive on weaker computers.
 
 
 ## Interacting with objects
@@ -73,7 +71,7 @@ Be aware that cloned objects may be buggy or not have the same interaction optio
 
 ## Backgrounds
 
-QD supports the use of pictures, videos, and scripts for your wallpaper.  Choose from built-in options or `Load file` to set.  The gradient builder background has further settings available in a settings panel, such as rainbow hue cycling.
+QD supports the use of pictures, videos, and scripts for your wallpaper.  Choose from built-in options or `Load file` to set.  The gradient builder background can be used to create colors of your choice; use the `+` button to add colors.  It has further settings available, such as rotation and rainbow hue cycling.
 
 
 ![Background menu screenshot](readme_img/qd_vidbg.png) ![Background gradient screenshot](readme_img/qd_grad.png)
@@ -124,7 +122,7 @@ Many translucent objects in QD can have a visual blur applied behind them.  Beca
 You can do what you like with this code as long as:
 - you release any derivative works for free
 - you in no way use generative AI or large-language models to modify, edit, analyze, train, or otherwise interact with this code
-- you are an individual user ONLY
+- you give credit somewhere in your source
 
 This project makes use of the following libraries; each is the property of their respective authors.
 
@@ -140,7 +138,7 @@ This project makes use of the following libraries; each is the property of their
 This project uses the likeness of characters from [Pokémon](https://www.pokemon.com/us), property of Nintendo.  This project uses videos from [Pexels](https://www.pexels.com/search/videos/powerpoint%20background/?resolution_name=1080p&max_duration=60&orientation=landscape) and [Pixabay](https://pixabay.com/videos/search/powerpoint%20background/?orientation=horizontal), under their Free license.
 
 > [!IMPORTANT]
-> This software is in no way affiliated with any school division, school authority, provincial or state educational authority, or any other group.  This is the personal project of "Mr L".
+> This software is in no way affiliated with any school division, school authority, provincial or state educational authority, or any other group.
 
 > [!NOTE]
-> This software is fully free.  If you like what I do and want to support educators and students, consider donating some money to an LGBTQ-friendly organization, such as [Egale Canada](https://egale.ca/donate/).  These organizations make life-saving differences for students with their research and advocacy.
+> This software is fully free and I do not accept donations.  If you like what I do and want to support educators and students, consider donating some money to an LGBTQ-friendly organization, such as [Egale Canada](https://egale.ca/donate/).  These organizations make life-saving differences for students with their research and advocacy.
