@@ -283,18 +283,6 @@ class MoveableObject extends BaseObject {
 		return ( this.page == 0 );
 	}
 
-	CheckOnPageAndAdjust() {
-		let box = this.div.getBoundingClientRect();
-		//if we're offscreen right, adjust so visible again
-		if ( box.x >= window.innerWidth ) {
-				this.loc.x = window.innerWidth - Math.floor(box.width / 8);
-		}
-		//same offscreen left
-		if ( box.x + box.width <= 0 ) {
-				this.loc.x = Math.floor(box.width / 8) - box.width;
-		}
-	}
-
 	//objects keep track of their own pages
 	//they are only actually moved if the window would see the movement
 	//ie on current page or new page
